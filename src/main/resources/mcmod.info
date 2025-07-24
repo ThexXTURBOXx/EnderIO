@@ -1,0 +1,21 @@
+[
+{
+  "modid": "EnderIO",
+  "name": "Ender IO",
+  "description": "Compact conduits, painted things and access to your stuff through an eye of ender.",
+  "version": "${mod_version}",
+  "mcversion": "${mc_version}",
+  "url": "http://www.minecraftforum.net/topic/1937619-162152-ender-io-how-many-pipes-in-one-block-updated-198/",
+  "updateUrl": "",
+  "authors": [
+    "crazypants"
+  ],
+  "credits": "By crazypants, using the buildcraft API, and the cglib library.",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

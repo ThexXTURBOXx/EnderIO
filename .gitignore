@@ -4,3 +4,7 @@
 /.settings/org.eclipse.jdt.core.prefs
 
 /eclipseBin
+
+.gradle/
+.idea/
+run/
