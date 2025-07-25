@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.ForgeDirection;
@@ -99,7 +98,8 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     // RenderUtil.setTesselatorBrightness(te.worldObj, te.xCoord, te.yCoord,
     // te.zCoord);
     // }
-    CubeRenderer.render(BoundingBox.UNIT_CUBE, EnderIO.blockCapacitorBank.getIcon(0, 0));
+    CubeRenderer.bind(EnderIO.blockCapacitorBank.getTextureFile());
+    CubeRenderer.render(BoundingBox.UNIT_CUBE, EnderIO.blockCapacitorBank.getBlockTextureFromSideAndMetadata(0, 0));
     tes.draw();
 
     GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
@@ -137,9 +137,9 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
   }
 
   private void renderBorder(IBlockAccess blockAccess, int x, int y, int z) {
-    Icon texture = EnderIO.blockAlloySmelter.getBlockTextureFromSide(3);
+    int index = EnderIO.blockAlloySmelter.getBlockTextureFromSide(3);
     for (ForgeDirection face : ForgeDirection.VALID_DIRECTIONS) {
-      RenderUtil.renderConnectedTextureFace(blockAccess, x, y, z, face, texture,
+      RenderUtil.renderConnectedTextureFace(blockAccess, x, y, z, face, index,
           blockAccess == null, false, false);
     }
   }
@@ -157,18 +157,20 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     return res;
   }
 
-  private void renderGaugeOnFace(GaugeBounds gb, Icon icon) {
+  private void renderGaugeOnFace(GaugeBounds gb, int index) {
     Tessellator tes = Tessellator.instance;
     tes.setNormal(gb.face.offsetX, gb.face.offsetY, gb.face.offsetZ);
-    Vector2f u = gb.getMinMaxU(icon);
-    List<Vertex> corners = gb.bb.getCornersWithUvForFace(gb.face, u.x, u.y, icon.getMinV(), icon.getMaxV());
+    Vector2f u = gb.getMinMaxU(index);
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    List<Vertex> corners = gb.bb.getCornersWithUvForFace(gb.face, u.x, u.y, minV, maxV);
     for (Vertex coord : corners) {
       tes.setNormal(coord.nx(), coord.ny(), coord.nz());
       tes.addVertexWithUV(coord.x(), coord.y(), coord.z(), coord.u(), coord.v());
     }
   }
 
-  private void renderFillBarOnFace(GaugeBounds gb, Icon icon, float filledRatio) {
+  private void renderFillBarOnFace(GaugeBounds gb, int index, float filledRatio) {
 
     int totalPixels;
     if (gb.vInfo.verticalHeight == 1) {
@@ -194,14 +196,17 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     int numPixelsLeft = targetPixelCount - pixelsBellowFace;
     int fillPixels = Math.min(numPixelsLeft, yPos.numFillPixels);
 
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
+
     double maxY = (yPos.fillOffset * PIXEL_SIZE) + (fillPixels * PIXEL_SIZE);
-    float vWidth = icon.getMaxV() - icon.getMinV();
-    float maxV = icon.getMinV() + ((float) maxY * vWidth);
+    float vWidth = maxV - minV;
+    float maxV2 = minV + ((float) maxY * vWidth);
 
     Tessellator tes = Tessellator.instance;
     tes.setNormal(gb.face.offsetX, gb.face.offsetY, gb.face.offsetZ);
-    Vector2f u = gb.getMinMaxU(icon);
-    List<crazypants.vecmath.Vertex> corners = gb.bb.getCornersWithUvForFace(gb.face, u.x, u.y, icon.getMinV(), maxV);
+    Vector2f u = gb.getMinMaxU(index);
+    List<crazypants.vecmath.Vertex> corners = gb.bb.getCornersWithUvForFace(gb.face, u.x, u.y, minV, maxV2);
     for (Vertex coord : corners) {
       tes.addVertexWithUV(coord.x(), Math.min(coord.y(), maxY), coord.z(), coord.u(), coord.v());
     }
@@ -272,13 +277,16 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
       bb = BoundingBox.UNIT_CUBE.scale(scaleX, scaleY, scaleZ);
     }
 
-    Vector2f getMinMaxU(Icon icon) {
+    Vector2f getMinMaxU(int index) {
+      float minU = (index % 16 * 16 + 0) / 256.0F;
+      float maxU = (index / 16 * 16 + 0) / 256.0F;
+
       VPos yPos = vInfo.pos;
-      float uWidth = icon.getMaxU() - icon.getMinU();
+      float uWidth = maxU - minU;
       float uOffset = yPos.uOffset * uWidth;
-      float minU = icon.getMinU() + uOffset;
-      float maxU = minU + (uWidth * 0.25f);
-      return new Vector2f(minU, maxU);
+      float minU2 = minU + uOffset;
+      float maxU2 = minU + (uWidth * 0.25f);
+      return new Vector2f(minU2, maxU2);
     }
 
     private VInfo getVPosForFace(BlockCoord me, BlockCoord[] mb, ForgeDirection face) {

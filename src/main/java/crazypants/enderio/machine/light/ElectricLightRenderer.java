@@ -1,9 +1,9 @@
 package crazypants.enderio.machine.light;
 
+import java.util.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -22,7 +22,9 @@ public class ElectricLightRenderer implements ISimpleBlockRenderingHandler {
       doDraw = true;
       Tessellator.instance.startDrawingQuads();
     }
-    Icon[] textures = new Icon[6];
+    String[] files = new String[6];
+    Arrays.fill(files, block.getTextureFile());
+    int[] textures = new int[6];
     textures[0] = block.getBlockTextureFromSide(ForgeDirection.NORTH.ordinal());
     textures[1] = block.getBlockTextureFromSide(ForgeDirection.SOUTH.ordinal());
     textures[2] = block.getBlockTextureFromSide(ForgeDirection.DOWN.ordinal());
@@ -30,7 +32,7 @@ public class ElectricLightRenderer implements ISimpleBlockRenderingHandler {
     textures[4] = block.getBlockTextureFromSide(ForgeDirection.WEST.ordinal());
     textures[5] = block.getBlockTextureFromSide(ForgeDirection.EAST.ordinal());
 
-    CubeRenderer.render(bb, textures, null);
+    CubeRenderer.render(bb, files, textures, null);
 
     if (doDraw) {
       Tessellator.instance.draw();
@@ -46,7 +48,9 @@ public class ElectricLightRenderer implements ISimpleBlockRenderingHandler {
     bb = bb.translate(x, y, z);
     RenderUtil.setTesselatorBrightness(world, x, y, z);
 
-    Icon[] textures = new Icon[6];
+    String[] files = new String[6];
+    Arrays.fill(files, block.getTextureFile());
+    int[] textures = new int[6];
     textures[0] = block.getBlockTexture(world, x, y, z, ForgeDirection.NORTH.ordinal());
     textures[1] = block.getBlockTexture(world, x, y, z, ForgeDirection.SOUTH.ordinal());
     textures[2] = block.getBlockTexture(world, x, y, z, ForgeDirection.UP.ordinal());
@@ -54,7 +58,7 @@ public class ElectricLightRenderer implements ISimpleBlockRenderingHandler {
     textures[4] = block.getBlockTexture(world, x, y, z, ForgeDirection.WEST.ordinal());
     textures[5] = block.getBlockTexture(world, x, y, z, ForgeDirection.EAST.ordinal());
 
-    CubeRenderer.render(bb, textures, null);
+    CubeRenderer.render(bb, files, textures, null);
 
     return true;
   }

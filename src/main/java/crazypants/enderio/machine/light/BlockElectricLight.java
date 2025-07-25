@@ -1,12 +1,11 @@
 package crazypants.enderio.machine.light;
 
+import crazypants.enderio.EnderIO;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -18,7 +17,7 @@ import crazypants.enderio.EnderIOTab;
 import crazypants.enderio.ModObject;
 import crazypants.vecmath.Vector3f;
 
-public class BlockElectricLight extends Block implements ITileEntityProvider {
+public class BlockElectricLight extends BlockContainer {
 
   private static final float BLOCK_HEIGHT = 0.05f;
   private static final float BLOCK_WIDTH = 0.3f;
@@ -34,14 +33,14 @@ public class BlockElectricLight extends Block implements ITileEntityProvider {
     return result;
   }
 
-  private Icon blockIconOff;
-  private Icon blockIconSide;
+  private int blockIconOff;
+  private int blockIconSide;
 
   public BlockElectricLight() {
     super(ModObject.blockElectricLight.id, Material.rock);
     setHardness(2.0F);
     setStepSound(soundGlassFootstep);
-    setUnlocalizedName(ModObject.blockElectricLight.unlocalisedName);
+    setBlockName(ModObject.blockElectricLight.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
     setLightOpacity(0);
     setLightValue(0);
@@ -52,6 +51,9 @@ public class BlockElectricLight extends Block implements ITileEntityProvider {
     LanguageRegistry.addName(this, ModObject.blockElectricLight.name);
     GameRegistry.registerBlock(this, ModObject.blockElectricLight.unlocalisedName);
     GameRegistry.registerTileEntity(TileElectricLight.class, ModObject.blockElectricLight.unlocalisedName + "TileEntity");
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:blockElectricLightFace");
+    blockIconOff = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:blockElectricLightFaceOff");
+    blockIconSide = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitConnector");
   }
 
   @Override
@@ -60,33 +62,26 @@ public class BlockElectricLight extends Block implements ITileEntityProvider {
   }
 
   @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:blockElectricLightFace");
-    blockIconOff = iconRegister.registerIcon("enderio:blockElectricLightFaceOff");
-    blockIconSide = iconRegister.registerIcon("enderio:conduitConnector");
-  }
-
-  @Override
   @SideOnly(Side.CLIENT)
-  public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side) {
+  public int getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side) {
 
     TileEntity te = blockAccess.getBlockTileEntity(x, y, z);
     if (te instanceof TileElectricLight) {
       ForgeDirection onFace = ((TileElectricLight) te).getFace();
       if (side == (onFace.offsetX == 0 ? onFace.getOpposite().ordinal() : onFace.ordinal())) {
         boolean on = blockAccess.getBlockMetadata(x, y, z) != 0;
-        return on ? blockIcon : blockIconOff;
+        return on ? blockIndexInTexture : blockIconOff;
       }
       return blockIconSide;
     }
-    return getIcon(side, 0);
+    return getBlockTextureFromSideAndMetadata(side, 0);
   }
 
   @Override
   @SideOnly(Side.CLIENT)
-  public Icon getIcon(int side, int par2) {
+  public int getBlockTextureFromSideAndMetadata(int side, int par2) {
     if (side == ForgeDirection.DOWN.ordinal()) {
-      return blockIcon;
+      return blockIndexInTexture;
     }
     return blockIconSide;
   }
@@ -172,7 +167,7 @@ public class BlockElectricLight extends Block implements ITileEntityProvider {
     if (te instanceof TileElectricLight) {
       ((TileElectricLight) te).setFace(onFace);
     }
-    world.setBlockMetadataWithNotify(x, y, z, 0, 0);
+    world.setBlockMetadata(x, y, z, 0);
   }
 
   @Override

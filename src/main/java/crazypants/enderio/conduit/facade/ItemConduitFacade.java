@@ -3,11 +3,9 @@ package crazypants.enderio.conduit.facade;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,27 +29,23 @@ public class ItemConduitFacade extends Item {
     return result;
   }
 
-  protected Icon overlayIcon;
+  protected int overlayIcon;
 
   protected ItemConduitFacade() {
     super(ModObject.itemConduitFacade.id);
     setCreativeTab(EnderIOTab.tabEnderIO);
-    setUnlocalizedName(ModObject.itemConduitFacade.unlocalisedName);
+    setItemName(ModObject.itemConduitFacade.unlocalisedName);
     setMaxStackSize(64);
   }
 
   protected void init() {
     LanguageRegistry.addName(this, ModObject.itemConduitFacade.name);
     GameRegistry.registerItem(this, ModObject.itemConduitFacade.unlocalisedName);
+    setIconIndex(EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitFacadeItem"));
+    overlayIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitFacadeOverlay");
   }
 
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    itemIcon = iconRegister.registerIcon("enderio:conduitFacade");
-    overlayIcon = iconRegister.registerIcon("enderio:conduitFacadeOverlay");
-  }
-
-  public Icon getOverlayIcon() {
+  public int getOverlayIcon() {
     return overlayIcon;
   }
 
@@ -71,7 +65,7 @@ public class ItemConduitFacade extends Item {
     if (player.canPlayerEdit(placeX, placeY, placeZ, side, itemStack) && world.isAirBlock(placeX, placeY, placeZ)
         && PainterUtil.getSourceBlockId(itemStack) > 0) {
 
-      world.setBlock(placeX, placeY, placeZ, EnderIO.blockConduitBundle.blockID);
+      world.setBlockAndMetadataWithNotify(placeX, placeY, placeZ, EnderIO.blockConduitBundle.blockID, 0);
       IConduitBundle bundle = (IConduitBundle) world.getBlockTileEntity(placeX, placeY, placeZ);
       bundle.setFacadeId(PainterUtil.getSourceBlockId(itemStack));
       bundle.setFacadeMetadata(PainterUtil.getSourceBlockMetadata(itemStack));

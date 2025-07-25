@@ -1,5 +1,6 @@
 package crazypants.enderio;
 
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraftforge.common.MinecraftForge;
 import buildcraft.api.gates.ActionManager;
 import buildcraft.api.gates.ITrigger;
@@ -125,6 +126,9 @@ public class EnderIO {
   public static ITrigger triggerFullEnergy;
   public static ITrigger triggerIsCharging;
   public static ITrigger triggerFinishedCharging;
+
+  public static AtlasResolver ATLAS_RESOLVER = new AtlasResolver(
+          "enderio", "/mods/enderio/textures/atlas", EnderIO.class);
 
   @PreInit
   public void preInit(FMLPreInitializationEvent event) {

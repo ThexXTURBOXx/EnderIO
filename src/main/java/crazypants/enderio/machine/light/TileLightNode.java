@@ -28,7 +28,7 @@ public class TileLightNode extends TileEntity {
     if (worldObj.getWorldTime() % 42 == 0) {
       if (worldObj.getBlockId(parentX, parentY, parentZ) != ModObject.blockElectricLight.actualId) {
         System.out.println("TileLightNode.updateEntity: ");
-        worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+        worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord, zCoord, 0, 0);
       }
     }
   }

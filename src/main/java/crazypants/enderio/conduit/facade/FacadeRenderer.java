@@ -15,7 +15,7 @@ public class FacadeRenderer implements IItemRenderer {
 
   @Override
   public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-    return type == ItemRenderType.ENTITY || type == ItemRenderType.EQUIPPED || type == ItemRenderType.INVENTORY || type == ItemRenderType.EQUIPPED_FIRST_PERSON;
+    return type == ItemRenderType.ENTITY || type == ItemRenderType.EQUIPPED || type == ItemRenderType.INVENTORY;
   }
 
   @Override
@@ -28,7 +28,7 @@ public class FacadeRenderer implements IItemRenderer {
     if (type == ItemRenderType.INVENTORY) {
       RenderBlocks renderBlocks = (RenderBlocks) data[0];
       renderToInventory(item, renderBlocks);
-    } else if (type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
+    } else if (type == ItemRenderType.EQUIPPED) {
       renderEquipped(item, (RenderBlocks) data[0]);
     } else if (type == ItemRenderType.ENTITY) {
       renderEntity(item, (RenderBlocks) data[0]);

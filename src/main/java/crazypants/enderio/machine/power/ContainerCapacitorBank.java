@@ -14,33 +14,13 @@ public class ContainerCapacitorBank extends Container {
 
     tileEntity = te;
 
-    addSlotToContainer(new Slot(tileEntity, 0, 59, 59) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(0, itemStack);
-      }
-    });
+    addSlotToContainer(new ChargableSlot(tileEntity, 0, 59, 59));
 
-    addSlotToContainer(new Slot(tileEntity, 1, 79, 59) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(1, itemStack);
-      }
-    });
+    addSlotToContainer(new ChargableSlot(tileEntity, 1, 79, 59));
 
-    addSlotToContainer(new Slot(tileEntity, 2, 99, 59) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(2, itemStack);
-      }
-    });
+    addSlotToContainer(new ChargableSlot(tileEntity, 2, 99, 59));
 
-    addSlotToContainer(new Slot(tileEntity, 3, 119, 59) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(3, itemStack);
-      }
-    });
+    addSlotToContainer(new ChargableSlot(tileEntity, 3, 119, 59));
 
     // add players inventory
     for (int i = 0; i < 3; ++i) {
@@ -84,7 +64,7 @@ public class ContainerCapacitorBank extends Container {
       } else {
         // Check from inv-> charge then inv->hotbar or hotbar->inv
         if(slotIndex >= startPlayerSlot) {
-          if(!tileEntity.isStackValidForSlot(0, origStack) || !mergeItemStack(origStack, 0, 4, false)) {
+          if(!getSlot(0).isItemValid(origStack) || !mergeItemStack(origStack, 0, 4, false)) {
 
             if(slotIndex <= endPlayerSlot) {
               if(!mergeItemStack(origStack, startHotBarSlot, endHotBarSlot, false)) {

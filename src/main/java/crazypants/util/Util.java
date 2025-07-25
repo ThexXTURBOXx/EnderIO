@@ -110,7 +110,7 @@ public class Util {
       return null;
     } else if (y == 255 && Block.blocksList[blockIdToBePlaced].blockMaterial.isSolid()) {
       return null;
-    } else if (world.canPlaceEntityOnSide(blockIdToBePlaced, x, y, z, false, side, player, itemUsed)) {
+    } else if (world.canPlaceEntityOnSide(blockIdToBePlaced, x, y, z, false, side, player)) {
       return new BlockCoord(x, y, z);
     }
     return null;

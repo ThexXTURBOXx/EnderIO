@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.generator;
 
+import crazypants.enderio.machine.MachineSlot;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -14,12 +15,7 @@ public class StirlingGeneratorContainer extends AbstractMachineContainer {
 
   @Override
   protected void addMachineSlots(InventoryPlayer playerInv) {
-    addSlotToContainer(new Slot(tileEntity, 0, 80, 34) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(0, itemStack);
-      }
-    });
+    addSlotToContainer(new MachineSlot(tileEntity, 0, 80, 34));
   }
 
 }

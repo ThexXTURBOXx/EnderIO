@@ -58,41 +58,6 @@ public abstract class AbstractMachineEntity extends TileEntity implements IInven
     return slotDefinition;
   }
 
-  public boolean isValidUpgrade(ItemStack itemstack) {
-    for (int i = slotDefinition.getMinUpgradeSlot(); i <= slotDefinition.getMaxUpgradeSlot(); i++) {
-      if (isStackValidForSlot(i, itemstack)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public boolean isValidInput(ItemStack itemstack) {
-    for (int i = slotDefinition.getMinInputSlot(); i <= slotDefinition.getMaxInputSlot(); i++) {
-      if (isStackValidForSlot(i, itemstack)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public boolean isValidOutput(ItemStack itemstack) {
-    for (int i = slotDefinition.getMinOutputSlot(); i <= slotDefinition.getMaxOutputSlot(); i++) {
-      if (isStackValidForSlot(i, itemstack)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public final boolean isStackValidForSlot(int i, ItemStack itemstack) {
-    if (slotDefinition.isUpgradeSlot(i)) {
-      return itemstack.itemID == ModObject.itemBasicCapacitor.actualId && itemstack.getItemDamage() > 0;
-    }
-    return isMachineItemValidForSlot(i, itemstack);
-  }
-
   protected abstract boolean isMachineItemValidForSlot(int i, ItemStack itemstack);
 
   public RedstoneControlMode getRedstoneControlMode() {
@@ -168,6 +133,11 @@ public abstract class AbstractMachineEntity extends TileEntity implements IInven
 
   @Override
   public void doWork() {
+  }
+
+  @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
   }
 
   @Override
@@ -296,11 +266,6 @@ public abstract class AbstractMachineEntity extends TileEntity implements IInven
 
   // ---- Inventory
   // ------------------------------------------------------------------------------
-
-  @Override
-  public boolean isInvNameLocalized() {
-    return false;
-  }
 
   @Override
   public boolean isUseableByPlayer(EntityPlayer player) {

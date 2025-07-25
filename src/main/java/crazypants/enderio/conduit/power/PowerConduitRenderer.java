@@ -7,7 +7,6 @@ import java.util.EnumMap;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.enderio.conduit.ConnectionMode;
 import crazypants.enderio.conduit.IConduit;
@@ -117,34 +116,39 @@ public class PowerConduitRenderer extends DefaultConduitRenderer {
     }
     IPowerConduit pc = (IPowerConduit) conduit;
     for (ForgeDirection dir : conduit.getExternalConnections()) {
-      Icon tex = null;
+      int tex = -1;
       if (conduit.getConectionMode(dir) == ConnectionMode.INPUT) {
         tex = pc.getTextureForInputMode();
       } else if (conduit.getConectionMode(dir) == ConnectionMode.OUTPUT) {
         tex = pc.getTextureForOutputMode();
       }
-      if (tex != null) {
+      if (tex >= 0) {
         renderModeConnector(pc, dir, tex);
       }
     }
 
   }
 
-  private void renderModeConnector(IPowerConduit pc, ForgeDirection dir, Icon tex) {
+  private void renderModeConnector(IPowerConduit pc, ForgeDirection dir, int index) {
     List<Vertex> verts = VERTS.get(dir);
     if (verts == null) {
       return;
     }
 
-    float uWidth = tex.getMaxU() - tex.getMinU();
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
+
+    float uWidth = maxU - minU;
     float uScale = uWidth * 0.64f;
-    float minU = tex.getMinU() + (uWidth - uScale);
-    float vScale = tex.getMaxV() - tex.getMinV();
+    float minU2 = minU + (uWidth - uScale);
+    float vScale = maxV - minV;
 
     Tessellator tes = Tessellator.instance;
     for (Vertex v : verts) {
       tes.setNormal(v.nx(), v.ny(), v.nz());
-      tes.addVertexWithUV(v.x(), v.y(), v.z(), minU + (v.u() * uScale), tex.getMinV() + (v.v() * vScale));
+      tes.addVertexWithUV(v.x(), v.y(), v.z(), minU2 + (v.u() * uScale), minV + (v.v() * vScale));
     }
 
   }

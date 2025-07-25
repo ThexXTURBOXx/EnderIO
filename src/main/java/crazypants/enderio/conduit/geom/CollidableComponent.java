@@ -1,10 +1,14 @@
 package crazypants.enderio.conduit.geom;
 
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.render.BoundingBox;
 
 public class CollidableComponent {
+
+  public static MovingObjectPosition currentMop = null;
+  public static CollidableComponent currentComponent = null;
 
   public final Class<? extends IConduit> conduitType;
   public final BoundingBox bound;

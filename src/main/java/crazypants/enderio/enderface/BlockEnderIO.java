@@ -1,14 +1,12 @@
 package crazypants.enderio.enderface;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -17,7 +15,7 @@ import crazypants.enderio.EnderIO;
 import crazypants.enderio.EnderIOTab;
 import crazypants.enderio.ModObject;
 
-public class BlockEnderIO extends Block implements ITileEntityProvider {
+public class BlockEnderIO extends BlockContainer {
 
   public static BlockEnderIO create() {
     BlockEnderIO result = new BlockEnderIO();
@@ -25,13 +23,13 @@ public class BlockEnderIO extends Block implements ITileEntityProvider {
     return result;
   }
 
-  Icon frameIcon;
+  int frameIcon;
 
   private BlockEnderIO() {
     super(ModObject.blockEnderIo.id, Material.rock);
     setHardness(0.5F);
     setStepSound(Block.soundStoneFootstep);
-    setUnlocalizedName(ModObject.blockEnderIo.unlocalisedName);
+    setBlockName(ModObject.blockEnderIo.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
   }
 
@@ -39,6 +37,8 @@ public class BlockEnderIO extends Block implements ITileEntityProvider {
     LanguageRegistry.addName(this, ModObject.blockEnderIo.name);
     GameRegistry.registerBlock(this, ModObject.blockEnderIo.unlocalisedName);
     GameRegistry.registerTileEntity(TileEnderIO.class, ModObject.blockEnderIo.unlocalisedName + "TileEntity");
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:enderIO");
+    frameIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:enderIOFrame");
   }
 
   @Override
@@ -94,12 +94,6 @@ public class BlockEnderIO extends Block implements ITileEntityProvider {
   @Override
   public int getLightOpacity(World world, int x, int y, int z) {
     return 100;
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:enderIO");
-    frameIcon = iconRegister.registerIcon("enderio:enderIOFrame");
   }
 
   @Override

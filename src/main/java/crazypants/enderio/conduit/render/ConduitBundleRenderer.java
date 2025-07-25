@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -107,9 +106,11 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
         IConduit con = bundle.getConduit(component.conduitType);
         float selfIllum = Math.max(brightness, con.getSelfIlluminationForState(component));
         tessellator.setColorRGBA_F(selfIllum, selfIllum, selfIllum, 1);
+        CubeRenderer.bind(con.getTextureFileForState(component));
         CubeRenderer.render(component.bound, con.getTextureForState(component));
       } else {
-        Icon tex = EnderIO.blockConduitBundle.getConnectorIcon();
+        int tex = EnderIO.blockConduitBundle.getConnectorIcon();
+        CubeRenderer.bind(EnderIO.blockConduitBundle.getConnectorIconFile());
         CubeRenderer.render(component.bound, tex);
       }
     }
@@ -130,8 +131,9 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
   }
 
   private void renderExternalConnection(ForgeDirection dir) {
-    Icon tex = EnderIO.blockConduitBundle.getConnectorIcon();
+    int tex = EnderIO.blockConduitBundle.getConnectorIcon();
     BoundingBox[] bbs = connectorBounds.get(dir);
+    CubeRenderer.bind(EnderIO.blockConduitBundle.getConnectorIconFile());
     for (BoundingBox bb : bbs) {
       CubeRenderer.render(bb, tex);
     }

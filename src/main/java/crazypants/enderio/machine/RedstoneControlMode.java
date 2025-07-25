@@ -20,13 +20,13 @@ public enum RedstoneControlMode {
     if (redstoneControlMode == RedstoneControlMode.NEVER) {
       redstoneCheckPassed = false;
     } else if (redstoneControlMode == RedstoneControlMode.ON) {
-      int powerLevel = te.worldObj.getStrongestIndirectPower(te.xCoord, te.yCoord, te.zCoord);
-      if (powerLevel < 1) {
+      boolean powered = te.worldObj.isBlockIndirectlyGettingPowered(te.xCoord, te.yCoord, te.zCoord);
+      if (!powered) {
         redstoneCheckPassed = false;
       }
     } else if (redstoneControlMode == RedstoneControlMode.OFF) {
-      int powerLevel = te.worldObj.getStrongestIndirectPower(te.xCoord, te.yCoord, te.zCoord);
-      if (powerLevel > 0) {
+      boolean powered = te.worldObj.isBlockIndirectlyGettingPowered(te.xCoord, te.yCoord, te.zCoord);
+      if (powered) {
         redstoneCheckPassed = false;
       }
     }

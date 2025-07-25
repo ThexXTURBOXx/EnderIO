@@ -1,5 +1,6 @@
 package crazypants.enderio.material;
 
+import crazypants.enderio.compat.CompatItems;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +22,7 @@ public class FusedQuartzRecipe implements IMachineRecipe, IAlloyRecipe {
   @Override
   public boolean isValidRecipeComponents(ItemStack... items) {
     for (ItemStack item : items) {
-      if(item != null && item.itemID != Item.netherQuartz.itemID) {
+      if(item != null && item.itemID != CompatItems.netherQuartz.itemID) {
         return false;
       }
     }
@@ -42,7 +43,7 @@ public class FusedQuartzRecipe implements IMachineRecipe, IAlloyRecipe {
   public boolean isRecipe(MachineRecipeInput... inputs) {
     int numQuartz = 0;
     for (MachineRecipeInput input : inputs) {
-      if(input != null && input.item != null && input.item.itemID == Item.netherQuartz.itemID) {
+      if(input != null && input.item != null && input.item.itemID == CompatItems.netherQuartz.itemID) {
         numQuartz += input.item.stackSize;
       }
     }
@@ -56,7 +57,7 @@ public class FusedQuartzRecipe implements IMachineRecipe, IAlloyRecipe {
 
   @Override
   public boolean isValidInput(MachineRecipeInput input) {
-    if(input != null && input.item != null && input.item.itemID == Item.netherQuartz.itemID) {
+    if(input != null && input.item != null && input.item.itemID == CompatItems.netherQuartz.itemID) {
       return true;
     }
     return false;
@@ -98,7 +99,7 @@ public class FusedQuartzRecipe implements IMachineRecipe, IAlloyRecipe {
     List<MachineRecipeInput> res = new ArrayList<MachineRecipeInput>();
     for (int i = 0; i < consumedPerInput.length; i++) {
       if(consumedPerInput[i] > 0) {
-        MachineRecipeInput consumed = new MachineRecipeInput(inputs[i].slotNumber, new ItemStack(Item.netherQuartz, consumedPerInput[i]));
+        MachineRecipeInput consumed = new MachineRecipeInput(inputs[i].slotNumber, new ItemStack(CompatItems.netherQuartz, consumedPerInput[i]));
         res.add(consumed);
       }
     }
@@ -106,7 +107,7 @@ public class FusedQuartzRecipe implements IMachineRecipe, IAlloyRecipe {
   }
 
   private int getQuartzQuanity(MachineRecipeInput ri) {
-    if(ri != null && ri.item != null && ri.item.itemID == Item.netherQuartz.itemID) {
+    if(ri != null && ri.item != null && ri.item.itemID == CompatItems.netherQuartz.itemID) {
       return ri.item.stackSize;
     }
     return 0;
@@ -123,7 +124,7 @@ public class FusedQuartzRecipe implements IMachineRecipe, IAlloyRecipe {
   @Override
   public List<IEnderIoRecipe> getAllRecipes() {
     IEnderIoRecipe recipe = new EnderIoRecipe(IEnderIoRecipe.ALLOY_SMELTER_ID, BasicAlloyRecipe.DEFAULT_ENERGY_USE,
-        new ItemStack(Item.netherQuartz, NUM_QUARTZ),
+        new ItemStack(CompatItems.netherQuartz, NUM_QUARTZ),
         new ItemStack(
             ModObject.blockFusedQuartz.actualId, 1, 0));
     return Collections.singletonList(recipe);

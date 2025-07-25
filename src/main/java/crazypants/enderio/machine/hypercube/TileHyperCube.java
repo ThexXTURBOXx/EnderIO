@@ -260,7 +260,7 @@ public class TileHyperCube extends TileEntity implements IInternalPowerReceptor,
           if (receptor.receptor instanceof IInternalPowerReceptor) {
             used = PowerHandlerUtil.transmitInternal((IInternalPowerReceptor) receptor.receptor, canTransmit, receptor.fromDir.getOpposite());
           } else {
-            used = Math.min(canTransmit, receptor.receptor.powerRequest(receptor.fromDir.getOpposite()));
+            used = Math.min(canTransmit, receptor.receptor.powerRequest());
             used = Math.min(used, pp.getMaxEnergyStored() - pp.getEnergyStored());
             pp.receiveEnergy(used, receptor.fromDir.getOpposite());
           }
@@ -304,6 +304,11 @@ public class TileHyperCube extends TileEntity implements IInternalPowerReceptor,
 
   @Override
   public void doWork() {
+  }
+
+  @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
   }
 
   @Override

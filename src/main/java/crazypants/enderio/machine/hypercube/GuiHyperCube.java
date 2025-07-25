@@ -176,7 +176,7 @@ public class GuiHyperCube extends GuiScreenBase {
   public void initGui() {
     super.initGui();
 
-    buttonList.clear();
+    controlList.clear();
 
     int x = guiLeft + 203;
     int y = guiTop + 12;
@@ -185,14 +185,14 @@ public class GuiHyperCube extends GuiScreenBase {
         .getInputControlMode()),
         RenderUtil.BLOCK_TEX);
     powerInputRedstoneButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
-    buttonList.add(powerInputRedstoneButton);
+    controlList.add(powerInputRedstoneButton);
 
     x = x + 5 + BUTTON_SIZE;
     powerOutputRedstoneButton = new IconButton(fontRenderer, POWER_OUTPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(cube
         .getOutputControlMode()),
         RenderUtil.BLOCK_TEX);
     powerOutputRedstoneButton.setSize(GuiMachineBase.BUTTON_SIZE, GuiMachineBase.BUTTON_SIZE);
-    buttonList.add(powerOutputRedstoneButton);
+    controlList.add(powerOutputRedstoneButton);
 
     y = guiTop + 12;
     x = guiLeft + 8;
@@ -329,8 +329,8 @@ public class GuiHyperCube extends GuiScreenBase {
     publicChannelList.drawScreen(mouseX, mouseY, partialTick);
     privateChannelList.drawScreen(mouseX, mouseY, partialTick);
 
-    for (int i = 0; i < buttonList.size(); ++i) {
-      GuiButton guibutton = (GuiButton) this.buttonList.get(i);
+    for (int i = 0; i < controlList.size(); ++i) {
+      GuiButton guibutton = (GuiButton) this.controlList.get(i);
       guibutton.drawButton(this.mc, 0, 0);
     }
 

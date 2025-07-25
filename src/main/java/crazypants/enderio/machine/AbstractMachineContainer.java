@@ -15,12 +15,7 @@ public abstract class AbstractMachineContainer extends Container {
 
     addMachineSlots(playerInv);
 
-    addSlotToContainer(new Slot(te, te.getSlotDefinition().getMinUpgradeSlot(), 12, 60) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(tileEntity.getSlotDefinition().getMinUpgradeSlot(), itemStack);
-      }
-    });
+    addSlotToContainer(new MachineSlot(te, te.getSlotDefinition().getMinUpgradeSlot(), 12, 60));
 
     // add players inventory
     for (int i = 0; i < 3; ++i) {

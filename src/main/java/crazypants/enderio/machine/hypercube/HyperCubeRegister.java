@@ -59,18 +59,18 @@ public class HyperCubeRegister {
       config.load();
 
       Property pcNamesProp = config.get(CATEGORY_PUBLIC_CHANNELS, "names", new String[] {});
-      String[] pcNames = pcNamesProp.getStringList();
+      String[] pcNames = pcNamesProp.valueList;
       if(pcNames != null) {
         for (String name : pcNames) {
           publicChannels.add(new Channel(name, null));
         }
       }
       Property userNamesProp = config.get(CATEGORY_PRIVATE_CHANNELS, "users", new String[] {});
-      String[] userNames = userNamesProp.getStringList();
+      String[] userNames = userNamesProp.valueList;
       if(userNames != null) {
         for (String user : userNames) {
           Property userChannles = config.get(CATEGORY_PRIVATE_CHANNELS, user + ".channels", new String[] {});
-          String[] channelNames = userChannles.getStringList();
+          String[] channelNames = userChannles.valueList;
           if(channelNames != null && channelNames.length > 0) {
             List<Channel> channels = getChannelsForUser(user);
             for (String chanName : channelNames) {

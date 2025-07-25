@@ -81,10 +81,10 @@ public class TileElectricLight extends TileEntity implements IInternalPowerRecep
     }
 
     if (isActivated != lastActive || init) {
-      worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, isActivated ? 1 : 0, 2);
+      worldObj.setBlockMetadata(xCoord, yCoord, zCoord, isActivated ? 1 : 0);
       for (TileLightNode ln : lightNodes) {
         if (ln != null) {
-          worldObj.setBlockMetadataWithNotify(ln.xCoord, ln.yCoord, ln.zCoord, isActivated ? 1 : 0, 2);
+          worldObj.setBlockMetadata(ln.xCoord, ln.yCoord, ln.zCoord, isActivated ? 1 : 0);
           worldObj.markBlockForUpdate(ln.xCoord, ln.yCoord, ln.zCoord);
           worldObj.updateLightByType(EnumSkyBlock.Block, ln.xCoord, ln.yCoord, ln.zCoord);
         }
@@ -163,7 +163,7 @@ public class TileElectricLight extends TileEntity implements IInternalPowerRecep
         clearLightNodes();
 
         for (NodeEntry entry : after) {
-          worldObj.setBlock(entry.coord.x, entry.coord.y, entry.coord.z, ModObject.blockLightNode.actualId);
+          worldObj.setBlockAndMetadataWithNotify(entry.coord.x, entry.coord.y, entry.coord.z, ModObject.blockLightNode.actualId, 0);
           TileEntity te = worldObj.getBlockTileEntity(entry.coord.x, entry.coord.y, entry.coord.z);
           if (te instanceof TileLightNode) {
             TileLightNode ln = (TileLightNode) te;
@@ -242,7 +242,7 @@ public class TileElectricLight extends TileEntity implements IInternalPowerRecep
     if (lightNodes != null) {
       for (TileLightNode ln : lightNodes) {
         if (worldObj.getBlockId(ln.xCoord, ln.yCoord, ln.zCoord) == ModObject.blockLightNode.actualId) {
-          worldObj.setBlockToAir(ln.xCoord, ln.yCoord, ln.zCoord);
+          worldObj.setBlockAndMetadataWithNotify(ln.xCoord, ln.yCoord, ln.zCoord, 0, 0);
         }
       }
       lightNodes.clear();
@@ -322,7 +322,7 @@ public class TileElectricLight extends TileEntity implements IInternalPowerRecep
   }
 
   private boolean hasRedstoneSignal() {
-    return worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0;
+    return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
   }
 
   @Override
@@ -345,6 +345,11 @@ public class TileElectricLight extends TileEntity implements IInternalPowerRecep
 
   @Override
   public void doWork() {
+  }
+
+  @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
   }
 
   @Override

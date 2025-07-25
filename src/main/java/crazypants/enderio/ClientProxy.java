@@ -44,7 +44,7 @@ import crazypants.enderio.material.BlockFusedQuartz;
 import crazypants.enderio.material.FusedQuartzFrameRenderer;
 import crazypants.enderio.material.FusedQuartzRenderer;
 import crazypants.enderio.material.MachinePartRenderer;
-import crazypants.enderio.trigger.TriggerIconProvider;
+import crazypants.enderio.trigger.TriggerEnderIO;
 
 public class ClientProxy extends CommonProxy {
 
@@ -65,7 +65,7 @@ public class ClientProxy extends CommonProxy {
     RedstoneSwitch.initIcons();
     PowerConduit.initIcons();
     LiquidConduit.initIcons();
-    TriggerIconProvider.initIcons();
+    TriggerEnderIO.initIcons();
   }
 
   private List<ConduitRenderer> conduitRenderers = new ArrayList<ConduitRenderer>();

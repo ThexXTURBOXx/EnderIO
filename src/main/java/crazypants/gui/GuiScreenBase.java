@@ -198,6 +198,6 @@ public abstract class GuiScreenBase extends GuiScreen implements ToolTipRenderer
 
   @Override
   public void addButton(GuiButton button) {
-    buttonList.add(button);
+    controlList.add(button);
   }
 }

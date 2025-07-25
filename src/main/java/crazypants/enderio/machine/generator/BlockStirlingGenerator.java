@@ -36,7 +36,7 @@ public class BlockStirlingGenerator extends AbstractMachineBlock<TileEntityStirl
   @Override
   protected String getMachineFrontIconKey(boolean active) {
     if (active) {
-      return "enderio:stirlingGenFrontOn";
+      return "enderio:stirlingGenFrontOn0"; // TODO PORT ANIMATION
     }
     return "enderio:stirlingGenFrontOff";
   }

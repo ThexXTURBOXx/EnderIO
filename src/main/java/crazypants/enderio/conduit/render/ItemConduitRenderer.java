@@ -21,7 +21,7 @@ public class ItemConduitRenderer implements IItemRenderer {
 
   @Override
   public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-    return type == ItemRenderType.ENTITY || type == ItemRenderType.EQUIPPED || type == ItemRenderType.INVENTORY || type == ItemRenderType.EQUIPPED_FIRST_PERSON;
+    return type == ItemRenderType.ENTITY || type == ItemRenderType.EQUIPPED || type == ItemRenderType.INVENTORY;
   }
 
   @Override
@@ -37,8 +37,6 @@ public class ItemConduitRenderer implements IItemRenderer {
     } else if (type == ItemRenderType.EQUIPPED) {
       renderEquipped(item, renderBlocks);
     } else if (type == ItemRenderType.ENTITY) {
-      renderEntity(item, renderBlocks);
-    } else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
       renderEntity(item, renderBlocks);
     } else {
       System.out.println("FacadeRenderer.renderItem: Unsupported render type");
@@ -58,6 +56,7 @@ public class ItemConduitRenderer implements IItemRenderer {
 
   private void renderToInventory(ItemStack item, RenderBlocks renderBlocks) {
     Tessellator.instance.startDrawingQuads();
+    CubeRenderer.bind(item.getItem().getTextureFile());
     CubeRenderer.render(bb, item.getItem().getIconFromDamage(item.getItemDamage()));
     Tessellator.instance.draw();
   }

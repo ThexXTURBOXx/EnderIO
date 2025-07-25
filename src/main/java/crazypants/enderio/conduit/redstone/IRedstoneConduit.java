@@ -18,9 +18,9 @@ public interface IRedstoneConduit extends IConduit {
 
   // External redstone interface
 
-  int isProvidingStrongPower(ForgeDirection toDirection);
+  boolean isProvidingStrongPower(ForgeDirection toDirection);
 
-  int isProvidingWeakPower(ForgeDirection toDirection);
+  boolean isProvidingWeakPower(ForgeDirection toDirection);
 
   // signals
 

@@ -1,14 +1,13 @@
 package crazypants.enderio.conduit.power;
 
+import crazypants.enderio.EnderIO;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.api.power.IPowerProvider;
@@ -32,7 +31,8 @@ import crazypants.vecmath.Vector3d;
 
 public class PowerConduit extends AbstractConduit implements IPowerConduit {
 
-  static final Map<String, Icon> ICONS = new HashMap<String, Icon>();
+  static final Map<String, String> ICON_FILES = new HashMap<String, String>();
+  static final Map<String, Integer> ICONS = new HashMap<String, Integer>();
 
   static final ICapacitor[] CAPACITORS = new BasicCapacitor[] {
       new BasicCapacitor(250, 1500, 128),
@@ -49,25 +49,18 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
   }
 
   public static void initIcons() {
-    IconUtil.addIconProvider(new IconUtil.IIconProvider() {
-
-      @Override
-      public void registerIcons(IconRegister register) {
-        for (String pf : POSTFIX) {
-          ICONS.put(ICON_KEY + pf, register.registerIcon(ICON_KEY + pf));
-          ICONS.put(ICON_KEY_INPUT + pf, register.registerIcon(ICON_KEY_INPUT + pf));
-          ICONS.put(ICON_KEY_OUTPUT + pf, register.registerIcon(ICON_KEY_OUTPUT + pf));
-          ICONS.put(ICON_CORE_KEY + pf, register.registerIcon(ICON_CORE_KEY + pf));
-        }
-        ICONS.put(ICON_TRANSMISSION_KEY, register.registerIcon(ICON_TRANSMISSION_KEY));
-      }
-
-      @Override
-      public int getTextureType() {
-        return 0;
-      }
-
-    });
+    for (String pf : POSTFIX) {
+      ICON_FILES.put(ICON_KEY + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
+      ICON_FILES.put(ICON_KEY_INPUT + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
+      ICON_FILES.put(ICON_KEY_OUTPUT + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
+      ICON_FILES.put(ICON_CORE_KEY + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
+      ICONS.put(ICON_KEY + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY + pf));
+      ICONS.put(ICON_KEY_INPUT + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY_INPUT + pf));
+      ICONS.put(ICON_KEY_OUTPUT + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY_OUTPUT + pf));
+      ICONS.put(ICON_CORE_KEY + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_CORE_KEY + pf));
+    }
+    ICON_FILES.put(ICON_TRANSMISSION_KEY, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICONS.put(ICON_TRANSMISSION_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_TRANSMISSION_KEY));
   }
 
   public static final float WIDTH = 0.075f;
@@ -167,6 +160,11 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
   }
 
   @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
+  }
+
+  @Override
   public int powerRequest(ForgeDirection from) {
     if (getConectionMode(from) == ConnectionMode.OUTPUT) {
       return 0;
@@ -260,7 +258,15 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
 
   // Rendering
   @Override
-  public Icon getTextureForState(CollidableComponent component) {
+  public String getTextureFileForState(CollidableComponent component) {
+    if (component.dir == ForgeDirection.UNKNOWN) {
+      return ICON_FILES.get(ICON_CORE_KEY + POSTFIX[subtype]);
+    }
+    return ICON_FILES.get(ICON_KEY + POSTFIX[subtype]);
+  }
+
+  @Override
+  public int getTextureForState(CollidableComponent component) {
     if (component.dir == ForgeDirection.UNKNOWN) {
       return ICONS.get(ICON_CORE_KEY + POSTFIX[subtype]);
     }
@@ -268,18 +274,18 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
   }
 
   @Override
-  public Icon getTextureForInputMode() {
+  public int getTextureForInputMode() {
     return ICONS.get(ICON_KEY_INPUT + POSTFIX[subtype]);
   }
 
   @Override
-  public Icon getTextureForOutputMode() {
+  public int getTextureForOutputMode() {
     return ICONS.get(ICON_KEY_OUTPUT + POSTFIX[subtype]);
   }
 
   @Override
-  public Icon getTransmitionTextureForState(CollidableComponent component) {
-    return null;
+  public int getTransmitionTextureForState(CollidableComponent component) {
+    return 0;
   }
 
 }

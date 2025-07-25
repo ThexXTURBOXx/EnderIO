@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import thermalexpansion.api.item.IChargeableItem;
+import thermalexpansion.api.core.IChargeableItem;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import crazypants.enderio.ModObject;
@@ -227,7 +227,7 @@ public class TileCapacitorBank extends TileEntity implements IInternalPowerRecep
             }
           }
         } else {
-          used = Math.min(canTransmit, receptor.receptor.powerRequest(receptor.fromDir.getOpposite()));
+          used = Math.min(canTransmit, receptor.receptor.powerRequest());
           used = Math.min(used, pp.getMaxEnergyStored() - pp.getEnergyStored());
           pp.receiveEnergy(used, receptor.fromDir.getOpposite());
         }
@@ -330,10 +330,10 @@ public class TileCapacitorBank extends TileEntity implements IInternalPowerRecep
 
   private boolean isRecievingRedstoneSignal() {
     if(!isMultiblock()) {
-      return worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0;
+      return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
     }
     for (BlockCoord bc : multiblock) {
-      if(worldObj.getStrongestIndirectPower(bc.x, bc.y, bc.z) > 0) {
+      if(worldObj.isBlockIndirectlyGettingPowered(bc.x, bc.y, bc.z)) {
         return true;
       }
     }
@@ -377,6 +377,11 @@ public class TileCapacitorBank extends TileEntity implements IInternalPowerRecep
   @Override
   public IPowerProvider getPowerProvider() {
     return getController().doGetPowerHandler();
+  }
+
+  @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
   }
 
   @Override
@@ -611,7 +616,7 @@ public class TileCapacitorBank extends TileEntity implements IInternalPowerRecep
 
     // Forces an update
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, isMultiblock() ? 1 : 0, 2);
+    worldObj.setBlockMetadata(xCoord, yCoord, zCoord, isMultiblock() ? 1 : 0);
   }
 
   TileCapacitorBank getController() {
@@ -714,11 +719,6 @@ public class TileCapacitorBank extends TileEntity implements IInternalPowerRecep
   }
 
   @Override
-  public boolean isInvNameLocalized() {
-    return false;
-  }
-
-  @Override
   public int getInventoryStackLimit() {
     return 1;
   }
@@ -734,14 +734,6 @@ public class TileCapacitorBank extends TileEntity implements IInternalPowerRecep
 
   @Override
   public void closeChest() {
-  }
-
-  @Override
-  public boolean isStackValidForSlot(int i, ItemStack itemstack) {
-    if(itemstack == null) {
-      return false;
-    }
-    return itemstack.getItem() instanceof IChargeableItem;
   }
 
   @Override

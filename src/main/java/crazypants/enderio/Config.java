@@ -37,7 +37,7 @@ public final class Config {
 
   public static boolean useHardRecipes = false;
 
-  
+
   public static double maxPhotovoltaicOutput = 1.0;
 
   public static void load(FMLPreInitializationEvent event) {
@@ -54,7 +54,7 @@ public final class Config {
         IOUtils.moveFile(deprecatedFile, configFile);
       } catch (IOException e) {
         Log.error("Could not move old config file to new directory: " + e);
-        e.printStackTrace();        
+        e.printStackTrace();
       }
     }
 
@@ -65,9 +65,7 @@ public final class Config {
     } catch (Exception e) {
       Log.error("EnderIO has a problem loading it's configuration");
     } finally {
-      if(cfg.hasChanged()) {
-        cfg.save();
-      }
+      cfg.save();
     }
   }
 
@@ -89,7 +87,7 @@ public final class Config {
 
     maxPhotovoltaicOutput = config.get("Settings", "maxPhotovoltaicOutput", maxPhotovoltaicOutput,
         "Maximum output in MJ/t of the Photovoltaic Panels.").getDouble(maxPhotovoltaicOutput);
-    
+
     useAlternateBinderRecipe = config.get("Settings", "useAlternateBinderRecipe", false, "Create conduit binder in crafting table instead of furnace")
         .getBoolean(useAlternateBinderRecipe);
 

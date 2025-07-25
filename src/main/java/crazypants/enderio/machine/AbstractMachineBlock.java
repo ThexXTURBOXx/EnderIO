@@ -5,12 +5,10 @@ import java.util.Random;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -26,41 +24,27 @@ import crazypants.enderio.EnderIO;
 import crazypants.enderio.EnderIOTab;
 import crazypants.enderio.ModObject;
 import crazypants.enderio.conduit.ConduitUtil;
-import crazypants.render.IconUtil;
 import crazypants.util.Util;
 
 public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> extends BlockContainer implements IGuiHandler {
 
-  public static final Icon[] REDSTONE_CONTROL_ICONS = new Icon[RedstoneControlMode.values().length];
+  public static final int[] REDSTONE_CONTROL_ICONS = new int[RedstoneControlMode.values().length];
 
   @SideOnly(Side.CLIENT)
   public static void initIcon() {
-    IconUtil.addIconProvider(new IconUtil.IIconProvider() {
-
-      @Override
-      public void registerIcons(IconRegister iconRegister) {
-        REDSTONE_CONTROL_ICONS[RedstoneControlMode.IGNORE.ordinal()] = iconRegister.registerIcon("enderio:iconRedstoneIgnore");
-        REDSTONE_CONTROL_ICONS[RedstoneControlMode.ON.ordinal()] = iconRegister.registerIcon("enderio:iconRedstoneOn");
-        REDSTONE_CONTROL_ICONS[RedstoneControlMode.OFF.ordinal()] = iconRegister.registerIcon("enderio:iconRedstoneOff");
-        REDSTONE_CONTROL_ICONS[RedstoneControlMode.NEVER.ordinal()] = iconRegister.registerIcon("enderio:iconRedstoneNever");
-      }
-
-      @Override
-      public int getTextureType() {
-        return 0;
-      }
-
-    });
-
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.IGNORE.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneIgnore");
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.ON.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneOn");
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.OFF.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneOff");
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.NEVER.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneNever");
   }
 
   @SideOnly(Side.CLIENT)
-  public static Icon getRedstoneControlIcon(RedstoneControlMode mode) {
+  public static int getRedstoneControlIcon(RedstoneControlMode mode) {
     return REDSTONE_CONTROL_ICONS[mode.ordinal()];
   }
 
   @SideOnly(Side.CLIENT)
-  protected Icon[][] iconBuffer;
+  protected int[][] iconBuffer;
 
   protected final Random random;
 
@@ -74,7 +58,7 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
     this.teClass = teClass;
     setHardness(2.0F);
     setStepSound(soundMetalFootstep);
-    setUnlocalizedName(mo.unlocalisedName);
+    setBlockName(mo.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
     random = new Random();
 
@@ -85,6 +69,22 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
     GameRegistry.registerBlock(this, modObject.unlocalisedName);
     GameRegistry.registerTileEntity(teClass, modObject.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(getGuiId(), this);
+    iconBuffer = new int[1][12];
+    String side = getSideIconKey();
+    // first the 6 sides in OFF state
+    iconBuffer[0][0] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][1] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][2] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][3] = EnderIO.ATLAS_RESOLVER.getLocationIndex(getMachineFrontIconKey(false));
+    iconBuffer[0][4] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][5] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+
+    iconBuffer[0][6] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][7] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][8] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][9] = EnderIO.ATLAS_RESOLVER.getLocationIndex(getMachineFrontIconKey(true));
+    iconBuffer[0][10] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][11] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
   }
 
   @Override
@@ -126,29 +126,7 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
   }
 
   @Override
-  public void registerIcons(IconRegister iconRegister) {
-
-    iconBuffer = new Icon[1][12];
-    String side = getSideIconKey();
-    // first the 6 sides in OFF state
-    iconBuffer[0][0] = iconRegister.registerIcon(side);
-    iconBuffer[0][1] = iconRegister.registerIcon(side);
-    iconBuffer[0][2] = iconRegister.registerIcon(side);
-    iconBuffer[0][3] = iconRegister.registerIcon(getMachineFrontIconKey(false));
-    iconBuffer[0][4] = iconRegister.registerIcon(side);
-    iconBuffer[0][5] = iconRegister.registerIcon(side);
-
-    iconBuffer[0][6] = iconRegister.registerIcon(side);
-    iconBuffer[0][7] = iconRegister.registerIcon(side);
-    iconBuffer[0][8] = iconRegister.registerIcon(side);
-    iconBuffer[0][9] = iconRegister.registerIcon(getMachineFrontIconKey(true));
-    iconBuffer[0][10] = iconRegister.registerIcon(side);
-    iconBuffer[0][11] = iconRegister.registerIcon(side);
-
-  }
-
-  @Override
-  public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
+  public int getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
     // used to render the block in the world
     TileEntity te = world.getBlockTileEntity(x, y, z);
     int facing = 0;
@@ -164,7 +142,7 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
   }
 
   @Override
-  public Icon getIcon(int blockSide, int blockMeta) {
+  public int getBlockTextureFromSideAndMetadata(int blockSide, int blockMeta) {
     // This is used to render the block as an item
     return iconBuffer[0][blockSide];
   }
@@ -204,8 +182,8 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
   }
 
   @Override
-  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player, ItemStack stack) {
-    super.onBlockPlacedBy(world, x, y, z, player, stack);
+  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player) {
+    super.onBlockPlacedBy(world, x, y, z, player);
     int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
     AbstractMachineEntity te = (AbstractMachineEntity) world.getBlockTileEntity(x, y, z);
     switch (heading) {

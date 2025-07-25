@@ -20,6 +20,7 @@ public final class PainterUtil {
   }
 
   public static Block getSourceBlock(ItemStack item) {
+    if (item == null) return null;
     NBTTagCompound tag = item.getTagCompound();
     if (tag != null) {
       int blockId = tag.getInteger(BlockPainter.KEY_SOURCE_BLOCK_ID);
@@ -31,6 +32,7 @@ public final class PainterUtil {
   }
 
   public static int getSourceBlockId(ItemStack item) {
+    if (item == null) return -1;
     NBTTagCompound tag = item.getTagCompound();
     if (tag != null) {
       int blockId = tag.getInteger(BlockPainter.KEY_SOURCE_BLOCK_ID);
@@ -42,6 +44,7 @@ public final class PainterUtil {
   }
 
   public static int getSourceBlockMetadata(ItemStack item) {
+    if (item == null) return 0;
     NBTTagCompound tag = item.getTagCompound();
     if (tag != null) {
       return tag.getInteger(BlockPainter.KEY_SOURCE_BLOCK_META);
@@ -56,7 +59,7 @@ public final class PainterUtil {
     if (sourceId > 0) {
       Item i = Item.itemsList[sourceId];
       if (i != null) {
-        sourceName = i.getUnlocalizedName(new ItemStack(sourceId, 1, meta));
+        sourceName = i.getItemNameIS(new ItemStack(sourceId, 1, meta));
         sourceName = StatCollector.translateToLocal(sourceName + ".name");
       }
     }
@@ -64,6 +67,7 @@ public final class PainterUtil {
   }
 
   public static void setSourceBlock(ItemStack item, int sourceId, int meta) {
+    if (item == null) return;
     NBTTagCompound tag = item.getTagCompound();
     if (tag == null) {
       tag = new NBTTagCompound();

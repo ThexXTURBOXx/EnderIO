@@ -3,7 +3,6 @@ package crazypants.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.Icon;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,11 +18,10 @@ public class IconButton extends GuiButton {
   protected int hwidth;
   protected int hheight;
 
-  protected Icon icon;
-  // protected ResourceLocation texture;
+  protected int icon;
   protected String texture;
 
-  public IconButton(FontRenderer fr, int id, int x, int y, Icon icon, String texture) {
+  public IconButton(FontRenderer fr, int id, int x, int y, int icon, String texture) {
     super(id, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, "");
     hwidth = HWIDTH;
     hheight = HHEIGHT;
@@ -38,11 +36,11 @@ public class IconButton extends GuiButton {
     hheight = height / 2;
   }
 
-  public Icon getIcon() {
+  public int getIcon() {
     return icon;
   }
 
-  public void setIcon(Icon icon) {
+  public void setIcon(int icon) {
     this.icon = icon;
   }
 
@@ -87,7 +85,8 @@ public class IconButton extends GuiButton {
       RenderUtil.bindTexture(texture);
       int xLoc = xPosition + 2;
       int yLoc = yPosition + 2;
-      drawTexturedModelRectFromIcon(xLoc, yLoc, icon, width - 4, height - 4);
+      // TODO PORT TEST THIS!!!
+      drawTexturedModalRect(xLoc, yLoc, icon % 16, icon / 16, width - 4, height - 4);
 
       GL11.glPopAttrib();
 

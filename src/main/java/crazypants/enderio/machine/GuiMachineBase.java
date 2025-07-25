@@ -85,7 +85,7 @@ public abstract class GuiMachineBase extends GuiContainerBase {
         RenderUtil.BLOCK_TEX);
     redstoneButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
 
-    buttonList.add(redstoneButton);
+    controlList.add(redstoneButton);
   }
 
   @Override
@@ -97,8 +97,8 @@ public abstract class GuiMachineBase extends GuiContainerBase {
     // x, y, u, v, width, height
     drawTexturedModalRect(k + POWER_X, l + BOTTOM_POWER_Y - i1, 176, 31, POWER_WIDTH, i1);
 
-    for (int i = 0; i < buttonList.size(); ++i) {
-      GuiButton guibutton = (GuiButton) this.buttonList.get(i);
+    for (int i = 0; i < controlList.size(); ++i) {
+      GuiButton guibutton = (GuiButton) this.controlList.get(i);
       guibutton.drawButton(this.mc, 0, 0);
     }
 

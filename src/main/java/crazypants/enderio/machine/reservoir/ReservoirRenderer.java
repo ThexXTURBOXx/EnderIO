@@ -3,8 +3,8 @@ package crazypants.enderio.machine.reservoir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -18,7 +18,7 @@ import crazypants.vecmath.Vector3f;
 public class ReservoirRenderer extends TileEntitySpecialRenderer {
 
   private String texName = null;
-  private Icon tex = null;
+  private int tex = -1;
   private float switchSize = 0.25f;
   private float switchHSize = switchSize / 2f;
   private BoundingBox switchBB = new BoundingBox(0.5 - switchHSize, 0.5 - switchHSize, 0.5 - switchHSize, 0.5 + switchHSize, 0.5 + switchHSize,
@@ -78,14 +78,18 @@ public class ReservoirRenderer extends TileEntitySpecialRenderer {
 
       float margin = 0.01f;
 
-      Icon tex = getLiquidTexture();
-      float maxV = tex.getMinV() + ((tex.getMaxV() - tex.getMinV()) * fullness);
+      int index = getLiquidTexture();
+      float minU = (index % 16 * 16 + 0) / 256.0F;
+      float minV = (index % 16 * 16 + 16) / 256.0F;
+      float maxU = (index / 16 * 16 + 0) / 256.0F;
+      float maxV = (index / 16 * 16 + 16) / 256.0F;
+      float maxV2 = minV + ((maxV - minV) * fullness);
 
       Tessellator.instance.startDrawingQuads();
       Tessellator.instance.setColorRGBA_F(val, val, val, 1);
       CubeRenderer.render(
           new BoundingBox(bb.minX + margin, bb.minY + margin, bb.minZ + margin, bb.maxX - margin,
-              bb.minY + (fullness * (Math.abs(bb.maxY - bb.minY))) - margin, bb.maxZ - margin), tex.getMinU(), tex.getMaxU(), tex.getMinV(), maxV);
+              bb.minY + (fullness * (Math.abs(bb.maxY - bb.minY))) - margin, bb.maxZ - margin), minU, maxU, minV, maxV2);
       Tessellator.instance.draw();
     }
 
@@ -143,29 +147,35 @@ public class ReservoirRenderer extends TileEntitySpecialRenderer {
     left.scale(0.125);
     up.scale(0.125);
 
-    Icon icon = block.switchIcon;
+    int index = block.switchIcon;
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
 
     tes.addVertexWithUV(offset.x + left.x - up.x, offset.y + left.y - up.y,
-        offset.z + left.z - up.z, icon.getMinU(), icon.getMaxV());
+        offset.z + left.z - up.z, minU, maxV);
     tes.addVertexWithUV(offset.x - left.x - up.x, offset.y - left.y - up.y,
-        offset.z - left.z - up.z, icon.getMaxU(), icon.getMaxV());
+        offset.z - left.z - up.z, maxU, maxV);
     tes.addVertexWithUV(offset.x - left.x + up.x, offset.y - left.y + up.y,
-        offset.z - left.z + up.z, icon.getMaxU(), icon.getMinV());
+        offset.z - left.z + up.z, maxU, minV);
     tes.addVertexWithUV(offset.x + left.x + up.x, offset.y + left.y + up.y,
-        offset.z + left.z + up.z, icon.getMinU(), icon.getMinV());
+        offset.z + left.z + up.z, minU, minV);
 
   }
 
   private String getLiquidSheet() {
     if (texName == null) {
-      texName = ReservoirTank.WATER.canonical().getTextureSheet();
+      ItemStack stack = ReservoirTank.WATER.asItemStack();
+      texName = stack.getItem().getTextureFile();
     }
     return texName;
   }
 
-  private Icon getLiquidTexture() {
-    if (tex == null) {
-      tex = ReservoirTank.WATER.canonical().getRenderingIcon();
+  private int getLiquidTexture() {
+    if (tex < 0) {
+      ItemStack stack = ReservoirTank.WATER.asItemStack();
+      tex = stack.getItem().getIconIndex(stack);
     }
     return tex;
   }

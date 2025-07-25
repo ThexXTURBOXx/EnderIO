@@ -1,7 +1,6 @@
 package crazypants.enderio.conduit.redstone;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.conduit.IConduit;
@@ -51,20 +50,23 @@ public class RedstoneSwitchRenderer extends DefaultConduitRenderer {
     float selfIllum = Math.max(worldLight, conduit.getSelfIlluminationForState(null));
     tessellator.setColorOpaque_F(selfIllum, selfIllum, selfIllum);
 
-    Icon[] icons = new Icon[6];
+    String[] files = new String[6];
+    int[] icons = new int[6];
     for (int i = 0; i < icons.length; i++) {
+      files[i] = EnderIO.blockConduitBundle.getConnectorIconFile();
       icons[i] = EnderIO.blockConduitBundle.getConnectorIcon();
     }
+    files[1] = sw.getSwitchIconFile();
     icons[1] = sw.getSwitchIcon();
-    ;
 
     Vector3d trans = ConduitGeometryUtil.instance.getTranslation(ForgeDirection.UNKNOWN, bundle.getOffset(IRedstoneConduit.class, ForgeDirection.UNKNOWN));
     BoundingBox bb = switchBounds.translate(trans);
 
     for (VertexTransform tf : xForms) {
-      CubeRenderer.render(bb, icons, tf);
+      CubeRenderer.render(bb, files, icons, tf);
     }
     bb = connectorBounds.translate(trans);
+    CubeRenderer.bind(files[0]);
     for (VertexTransform tf : xForms) {
       CubeRenderer.render(bb, icons[0], tf);
     }

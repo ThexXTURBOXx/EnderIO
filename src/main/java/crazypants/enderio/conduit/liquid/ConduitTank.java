@@ -145,13 +145,8 @@ public class ConduitTank implements ILiquidTank {
     this.tankPressure = pressure;
   }
 
-  public String getLiquidName() {
-    return fluid != null ? LiquidDictionary.findLiquidName(fluid) : null;
-  }
-
   public boolean containsValidLiquid() {
-    String name = LiquidDictionary.findLiquidName(fluid);
-    return name != null && !name.isEmpty();
+    return getFluidAmount() > 0;
   }
 
   public NBTTagCompound writeToNBT(NBTTagCompound nbt) {

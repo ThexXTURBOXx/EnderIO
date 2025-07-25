@@ -43,11 +43,6 @@ public class ContainerWrapper extends net.minecraft.inventory.Container {
   }
 
   @Override
-  public boolean func_94530_a(net.minecraft.item.ItemStack arg0, net.minecraft.inventory.Slot arg1) {
-    return wrapped.func_94530_a(arg0, arg1);
-  }
-
-  @Override
   public void addCraftingToCrafters(net.minecraft.inventory.ICrafting arg0) {
     wrapped.addCraftingToCrafters(arg0);
   }

@@ -474,6 +474,11 @@ public class TileConduitBundle extends TileEntity implements IConduitBundle {
   }
 
   @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
+  }
+
+  @Override
   public int powerRequest(ForgeDirection from) {
     IPowerConduit pc = getConduit(IPowerConduit.class);
     if (pc != null) {

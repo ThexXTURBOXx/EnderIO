@@ -7,11 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-
-import org.lwjgl.opengl.GL11;
 
 import codechicken.nei.PositionedStack;
 import codechicken.nei.forge.GuiContainerManager;
@@ -21,7 +17,6 @@ import crazypants.enderio.crafting.IEnderIoRecipe;
 import crazypants.enderio.crafting.IRecipeOutput;
 import crazypants.enderio.crafting.RecipeReigistry;
 import crazypants.enderio.machine.crusher.GuiCrusher;
-import crazypants.render.RenderUtil;
 
 public class SagMillRecipeHandler extends TemplateRecipeHandler {
 
@@ -99,26 +94,6 @@ public class SagMillRecipeHandler extends TemplateRecipeHandler {
       }
     }
     return currenttip;
-  }
-
-  public void renderIcon(Icon icon, double x, double y, double width, double height, double zLevel) {
-
-    Tessellator tessellator = Tessellator.instance;
-
-    RenderUtil.bindItemTexture();
-    GL11.glColor3f(1, 1, 1);
-    tessellator.startDrawingQuads();
-
-    float minU = icon.getMinU();
-    float minV = icon.getMinV();
-    float maxU = icon.getMaxU();
-    float maxV = icon.getMaxV();
-    tessellator.addVertexWithUV(x, y + height, zLevel, minU, maxV);
-    tessellator.addVertexWithUV(x + width, y + height, zLevel, maxU, maxV);
-    tessellator.addVertexWithUV(x + width, y + 0, zLevel, maxU, minV);
-    tessellator.addVertexWithUV(x, y + 0, zLevel, minU, minV);
-
-    tessellator.draw();
   }
 
   @Override

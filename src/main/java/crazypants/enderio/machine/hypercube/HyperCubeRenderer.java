@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -72,7 +71,6 @@ public class HyperCubeRenderer extends TileEntitySpecialRenderer implements IIte
         renderItem(0f, 0f, 0f);
         return;
       case EQUIPPED:
-      case EQUIPPED_FIRST_PERSON:
         renderItem(0f, 1f, 1f);
         return;
       case INVENTORY:
@@ -99,7 +97,7 @@ public class HyperCubeRenderer extends TileEntitySpecialRenderer implements IIte
     // RenderHelper.enableGUIStandardItemLighting();
 
     RenderUtil.bindBlockTexture();
-    Icon icon = EnderIO.blockHyperCube.getPortalIcon();
+    int icon = EnderIO.blockHyperCube.getPortalIcon();
 
     Tessellator tessellator = Tessellator.instance;
     tessellator.startDrawingQuads();
@@ -111,6 +109,7 @@ public class HyperCubeRenderer extends TileEntitySpecialRenderer implements IIte
     } else {
       GL11.glColor4f(1, 1, 1, 1f);
     }
+    CubeRenderer.bind(EnderIO.blockHyperCube.getPortalIconFile());
     CubeRenderer.render(bb, icon);
     tessellator.draw();
 

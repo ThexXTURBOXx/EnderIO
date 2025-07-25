@@ -1,21 +1,18 @@
 package crazypants.enderio.machine.painter;
 
+import crazypants.enderio.EnderIO;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -35,7 +32,7 @@ import crazypants.enderio.machine.MachineRecipeInput;
 import crazypants.enderio.machine.MachineRecipeRegistry;
 import crazypants.util.Util;
 
-public class BlockCustomStair extends BlockStairs implements ITileEntityProvider {
+public class BlockCustomStair extends BlockStairs {
 
   public static BlockCustomStair create() {
     BlockCustomStair result = new BlockCustomStair();
@@ -43,15 +40,16 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
     return result;
   }
 
-  private Icon lastRemovedComponetIcon = null;
+  private int lastRemovedComponetIcon;
 
   private Random rand = new Random();
 
   protected BlockCustomStair() {
     super(ModObject.blockCustomStair.actualId, Block.brick, 0);
     setCreativeTab(null);
-    setUnlocalizedName(ModObject.blockCustomStair.unlocalisedName);
+    setBlockName(ModObject.blockCustomStair.unlocalisedName);
     setLightOpacity(0);
+    isBlockContainer = true;
   }
 
   private void init() {
@@ -59,6 +57,7 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
     GameRegistry.registerBlock(this, BlockItemCustomStair.class, ModObject.blockCustomStair.unlocalisedName);
     GameRegistry.registerTileEntity(TileEntityCustomBlock.class, ModObject.blockCustomStair.unlocalisedName + "TileEntity");
     MachineRecipeRegistry.instance.registerRecipe(ModObject.blockPainter.unlocalisedName, new PainterTemplate());
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitConnector");
   }
 
   public static ItemStack createItemStackForSourceBlock(int id, int damage) {
@@ -71,16 +70,16 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
   @Override
   public boolean addBlockHitEffects(World world, MovingObjectPosition target,
       EffectRenderer effectRenderer) {
-    Icon tex = null;
+    int tex = -1;
 
     TileEntityCustomBlock cb = (TileEntityCustomBlock)
         world.getBlockTileEntity(target.blockX, target.blockY, target.blockZ);
     Block b = cb.getSourceBlock();
     if (b != null) {
-      tex = b.getIcon(ForgeDirection.NORTH.ordinal(), cb.getSourceBlockMetadata());
+      tex = b.getBlockTextureFromSideAndMetadata(ForgeDirection.NORTH.ordinal(), cb.getSourceBlockMetadata());
     }
-    if (tex == null) {
-      tex = blockIcon;
+    if (tex == -1) {
+      tex = blockIndexInTexture;
     }
     lastRemovedComponetIcon = tex;
     addBlockHitEffects(world, effectRenderer, target.blockX, target.blockY,
@@ -92,7 +91,7 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
   @SideOnly(Side.CLIENT)
   public boolean addBlockDestroyEffects(World world, int x, int y, int z, int
       meta, EffectRenderer effectRenderer) {
-    Icon tex = lastRemovedComponetIcon;
+    int tex = lastRemovedComponetIcon;
     byte b0 = 4;
     for (int j1 = 0; j1 < b0; ++j1) {
       for (int k1 = 0; k1 < b0; ++k1) {
@@ -101,9 +100,9 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
           double d1 = y + (k1 + 0.5D) / b0;
           double d2 = z + (l1 + 0.5D) / b0;
           int i2 = this.rand.nextInt(6);
-          EntityDiggingFX fx = new EntityDiggingFX(world, d0, d1, d2, d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D, this, i2, 0,
-              Minecraft.getMinecraft().renderEngine).func_70596_a(x, y, z);
-          fx.setParticleIcon(Minecraft.getMinecraft().renderEngine, tex);
+          EntityDiggingFX fx = new EntityDiggingFX(world, d0, d1, d2, d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D, this, i2, 0)
+                  .func_70596_a(x, y, z);
+          fx.setParticleTextureIndex(tex);
           effectRenderer.addEffect(fx);
         }
       }
@@ -114,7 +113,7 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
 
   @SideOnly(Side.CLIENT)
   private void addBlockHitEffects(World world, EffectRenderer effectRenderer,
-      int x, int y, int z, int side, Icon tex) {
+      int x, int y, int z, int side, int tex) {
     float f = 0.1F;
     double d0 = x + rand.nextDouble() * (getBlockBoundsMaxX() -
         getBlockBoundsMinX() - f * 2.0F) + f + getBlockBoundsMinX();
@@ -135,9 +134,9 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
     } else if (side == 5) {
       d0 = x + getBlockBoundsMaxX() + f;
     }
-    EntityDiggingFX digFX = new EntityDiggingFX(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this, side, 0, Minecraft.getMinecraft().renderEngine);
+    EntityDiggingFX digFX = new EntityDiggingFX(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this, side, 0);
     digFX.func_70596_a(x, y, z).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
-    digFX.setParticleIcon(Minecraft.getMinecraft().renderEngine, tex);
+    digFX.setParticleTextureIndex(tex);
     effectRenderer.addEffect(digFX);
   }
 
@@ -149,26 +148,15 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
   }
 
   @Override
-  public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
+  public int getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileEntityCustomBlock) {
       TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
       if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length) {
-        return blocksList[tef.getSourceBlockId()].getIcon(blockSide, tef.getSourceBlockMetadata());
+        return blocksList[tef.getSourceBlockId()].getBlockTextureFromSideAndMetadata(blockSide, tef.getSourceBlockMetadata());
       }
     }
     return blocksList[Block.anvil.blockID].getBlockTexture(world, x, y, z, blockSide);
-  }
-
-  @SideOnly(Side.CLIENT)
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:conduitConnector");
-  }
-
-  @Override
-  public TileEntity createNewTileEntity(World world) {
-    return null;
   }
 
   @Override
@@ -190,7 +178,9 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
   }
 
   @Override
-  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player, ItemStack stack) {
+  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player) {
+    ItemStack stack = player.getHeldItem();
+
     int id = -1;
     Block b = PainterUtil.getSourceBlock(stack);
     if (b != null) {
@@ -204,7 +194,7 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
       tef.setSourceBlockMetadata(PainterUtil.getSourceBlockMetadata(stack));
     }
     world.markBlockForUpdate(x, y, z);
-    super.onBlockPlacedBy(world, x, y, z, player, stack);
+    super.onBlockPlacedBy(world, x, y, z, player);
   }
 
   /**
@@ -268,8 +258,8 @@ public class BlockCustomStair extends BlockStairs implements ITileEntityProvider
 
     @Override
     public List<IEnderIoRecipe> getAllRecipes() {
-      IRecipeInput input = new RecipeInputClass<BlockStairs>(new ItemStack(Block.stairsWoodOak), BlockStairs.class, new ItemStack(Block.stairsCobblestone),
-          new ItemStack(Block.stairsStoneBrick));
+      IRecipeInput input = new RecipeInputClass<BlockStairs>(new ItemStack(Block.stairCompactPlanks), BlockStairs.class, new ItemStack(Block.stairCompactCobblestone),
+          new ItemStack(Block.stairsStoneBrickSmooth));
       IRecipeOutput output = new RecipeOutput(new ItemStack(ModObject.blockCustomStair.actualId, 1, 0));
 
       IEnderIoRecipe recipe = new EnderIoRecipe(getMachineName(), DEFAULT_ENERGY_PER_TASK, input, output);

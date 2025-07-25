@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import crazypants.enderio.ModObject;
@@ -64,18 +64,13 @@ public class TileEntityStirlingGenerator extends AbstractMachineEntity implement
   }
 
   @Override
-  public int[] getAccessibleSlotsFromSide(int var1) {
-    return new int[] { 0 };
+  public int getStartInventorySide(ForgeDirection forgeDirection) {
+    return 0;
   }
 
   @Override
-  public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-    return isStackValidForSlot(i, itemstack);
-  }
-
-  @Override
-  public boolean canExtractItem(int i, ItemStack itemstack, int j) {
-    return false;
+  public int getSizeInventorySide(ForgeDirection forgeDirection) {
+    return 1;
   }
 
   @Override
@@ -177,7 +172,7 @@ public class TileEntityStirlingGenerator extends AbstractMachineEntity implement
         if (receptor.receptor instanceof IInternalPowerReceptor) {
           used = PowerHandlerUtil.transmitInternal((IInternalPowerReceptor) receptor.receptor, canTransmit, receptor.fromDir.getOpposite());
         } else {
-          used = Math.min(canTransmit, receptor.receptor.powerRequest(receptor.fromDir.getOpposite()));
+          used = Math.min(canTransmit, receptor.receptor.powerRequest());
           used = Math.min(used, pp.getMaxEnergyStored() - pp.getEnergyStored());
           pp.receiveEnergy(used, receptor.fromDir);
         }

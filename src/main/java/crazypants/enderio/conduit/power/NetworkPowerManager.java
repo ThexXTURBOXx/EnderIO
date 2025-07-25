@@ -83,7 +83,9 @@ public class NetworkPowerManager {
           available += reservedForEntry;
           float canOffer = Math.min(r.emmiter.getMaxEnergyExtracted(r.direction), available);
 
-          float requested = pp.powerRequest(r.direction);
+          float requested = pp instanceof IInternalPowerReceptor
+                  ? ((IInternalPowerReceptor) pp).powerRequest(r.direction)
+                  : pp.powerRequest();
           requested = Math.min(requested, pp.getPowerProvider().getMaxEnergyStored() - pp.getPowerProvider().getEnergyStored());
           requested = Math.min(requested, pp.getPowerProvider().getMaxEnergyReceived());
 

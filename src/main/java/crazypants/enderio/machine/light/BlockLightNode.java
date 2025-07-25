@@ -1,9 +1,9 @@
 package crazypants.enderio.machine.light;
 
+import crazypants.enderio.EnderIO;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -12,7 +12,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import crazypants.enderio.ModObject;
 
-public class BlockLightNode extends Block implements ITileEntityProvider {
+public class BlockLightNode extends BlockContainer {
 
   public static BlockLightNode create() {
     BlockLightNode result = new BlockLightNode();
@@ -24,7 +24,7 @@ public class BlockLightNode extends Block implements ITileEntityProvider {
     super(ModObject.blockLightNode.id, Material.rock);
     setHardness(2.0F);
     setStepSound(soundGlassFootstep);
-    setUnlocalizedName(ModObject.blockLightNode.unlocalisedName);
+    setBlockName(ModObject.blockLightNode.unlocalisedName);
     setLightOpacity(0);
     setLightValue(0);
     // setBlockBounds(0.45f, 0.45F, 0.45f, 0.55f, 0.55f, 0.55f);
@@ -98,11 +98,7 @@ public class BlockLightNode extends Block implements ITileEntityProvider {
     LanguageRegistry.addName(this, ModObject.blockLightNode.name);
     GameRegistry.registerBlock(this, ModObject.blockLightNode.unlocalisedName);
     GameRegistry.registerTileEntity(TileLightNode.class, ModObject.blockLightNode.unlocalisedName + "TileEntity");
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:blockElectricLightFace");
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:blockElectricLightFace");
   }
 
   @Override

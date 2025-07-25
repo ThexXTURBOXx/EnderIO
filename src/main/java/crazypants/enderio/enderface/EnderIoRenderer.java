@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
@@ -41,12 +40,12 @@ public class EnderIoRenderer extends TileEntitySpecialRenderer implements IItemR
     GL11.glPushMatrix();
     GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
-    Icon tex = Item.eyeOfEnder.getIconFromDamage(0);
+    int index = Item.eyeOfEnder.getIconFromDamage(0);
     RenderUtil.bindItemTexture();
-    float minU = tex.getMinU();
-    float maxU = tex.getMaxU();
-    float minV = tex.getMinV();
-    float maxV = tex.getMaxV();
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
 
     GL11.glDisable(GL11.GL_CULL_FACE);
     GL11.glColor3f(1, 1, 1);
@@ -101,6 +100,7 @@ public class EnderIoRenderer extends TileEntitySpecialRenderer implements IItemR
     GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
     GL11.glPolygonOffset(-1.0f, -1.0f);
 
+    CubeRenderer.bind(EnderIO.blockEnderIo.getTextureFile());
     CubeRenderer.render(BoundingBox.UNIT_CUBE, EnderIO.blockEnderIo.frameIcon);
     Tessellator.instance.draw();
     GL11.glPopMatrix();

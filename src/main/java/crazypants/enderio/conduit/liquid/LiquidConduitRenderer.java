@@ -5,7 +5,7 @@ import static crazypants.render.CubeRenderer.setupVertices;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 import crazypants.enderio.conduit.IConduit;
@@ -43,7 +43,11 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
   }
 
   @Override
-  protected void renderConduit(Icon tex, IConduit conduit, CollidableComponent component, float brightness) {
+  protected void renderConduit(int index, IConduit conduit, CollidableComponent component, float brightness) {
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
     if (isNSEWUP(component.dir)) {
       ILiquidConduit lc = (ILiquidConduit) conduit;
       LiquidStack fluid = lc.getFluidType();
@@ -52,20 +56,20 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
       }
       BoundingBox[] cubes = toCubes(component.bound);
       for (BoundingBox cube : cubes) {
-        drawSection(cube, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), component.dir, false);
+        drawSection(cube, minU, maxU, minV, maxV, component.dir, false);
       }
 
     } else {
-      drawSection(component.bound, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), component.dir, true);
+      drawSection(component.bound, minU, maxU, minV, maxV, component.dir, true);
     }
   }
 
   private void renderFluidOutline(IConduit conduit, CollidableComponent component, LiquidStack fluid, float selfIllum) {
     // TODO: Should cache these vertices as relatively heavy weight to calc each
     // frame
-    Icon texture = getTextureForLiquid(fluid);
+    int texture = getTextureForLiquid(fluid);
     String textureSheet = getTextureSheetForLiquid(fluid);
-    if (texture == null || textureSheet == null) {
+    if (texture < 0 || textureSheet == null) {
       return;
     }
     boolean changedTexture = false;
@@ -125,7 +129,11 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
   }
 
   @Override
-  protected void renderTransmission(Icon tex, CollidableComponent component, IConduit conduit, float selfIllum) {
+  protected void renderTransmission(int index, CollidableComponent component, IConduit conduit, float selfIllum) {
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
     String textureSheet = ((ILiquidConduit) conduit).getTextureSheetForLiquid();
     boolean changedTexture = false;
     if (!RenderUtil.BLOCK_TEX.equals(textureSheet)) {
@@ -140,7 +148,7 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
     }
     BoundingBox[] cubes = toCubes(component.bound);
     for (BoundingBox cube : cubes) {
-      drawSection(cube, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), component.dir, true);
+      drawSection(cube, minU, maxU, minV, maxV, component.dir, true);
     }
     if (changedTexture) {
       Tessellator tes = Tessellator.instance;
@@ -214,16 +222,19 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
     return flatRatio;
   }
 
-  public Icon getTextureForLiquid(LiquidStack liquid) {
-    if (liquid != null && liquid.canonical() != null) {
-      return liquid.canonical().getRenderingIcon();
+  public int getTextureForLiquid(LiquidStack liquid) {
+    if (liquid != null && liquid.asItemStack() != null &&
+        liquid.asItemStack().getItem() != null) {
+      ItemStack stack = liquid.asItemStack();
+      return stack.getItem().getIconIndex(stack);
     }
-    return null;
+    return 0;
   }
 
   public String getTextureSheetForLiquid(LiquidStack liquid) {
-    if (liquid != null && liquid.canonical() != null) {
-      return liquid.canonical().getTextureSheet();
+    if (liquid != null && liquid.asItemStack() != null &&
+        liquid.asItemStack().getItem() != null) {
+      return liquid.asItemStack().getItem().getTextureFile();
     }
     return null;
   }

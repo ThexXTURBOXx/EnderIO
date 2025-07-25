@@ -1,14 +1,13 @@
 package crazypants.enderio.conduit.redstone;
 
+import crazypants.enderio.EnderIO;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.enderio.ModObject;
 import crazypants.enderio.conduit.RaytraceResult;
@@ -29,20 +28,8 @@ public class RedstoneSwitch extends RedstoneConduit {
   private boolean isOn;
 
   public static void initIcons() {
-    IconUtil.addIconProvider(new IconUtil.IIconProvider() {
-
-      @Override
-      public void registerIcons(IconRegister register) {
-        ICONS.put(RedstoneSwitch.SWITHC_ICON_OFF_KEY, register.registerIcon(SWITHC_ICON_OFF_KEY));
-        ICONS.put(RedstoneSwitch.SWITCH_ICON_ON_KEY, register.registerIcon(SWITCH_ICON_ON_KEY));
-      }
-
-      @Override
-      public int getTextureType() {
-        return 0;
-      }
-
-    });
+    ICONS.put(RedstoneSwitch.SWITHC_ICON_OFF_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(SWITHC_ICON_OFF_KEY));
+    ICONS.put(RedstoneSwitch.SWITCH_ICON_ON_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(SWITCH_ICON_ON_KEY));
   }
 
   @Override
@@ -56,11 +43,11 @@ public class RedstoneSwitch extends RedstoneConduit {
   }
 
   @Override
-  public int isProvidingStrongPower(ForgeDirection toDirection) {
+  public boolean isProvidingStrongPower(ForgeDirection toDirection) {
     if (network == null || !network.isNetworkEnabled()) {
-      return 0;
+      return false;
     }
-    return isOn ? 15 : 0;
+    return isOn;
   }
 
   @Override
@@ -75,12 +62,16 @@ public class RedstoneSwitch extends RedstoneConduit {
     isOn = nbtRoot.getBoolean("switchOn");
   }
 
-  Icon getSwitchIcon() {
+  String getSwitchIconFile() {
+    return EnderIO.ATLAS_RESOLVER.getTextureFile();
+  }
+
+  int getSwitchIcon() {
     return isOn ? ICONS.get(SWITCH_ICON_ON_KEY) : ICONS.get(SWITHC_ICON_OFF_KEY);
   }
 
   @Override
-  public Icon getTextureForState(CollidableComponent component) {
+  public int getTextureForState(CollidableComponent component) {
     if (SWITCH_TAG.equals(component.data)) {
       return isOn ? ICONS.get(SWITCH_ICON_ON_KEY) : ICONS.get(SWITHC_ICON_OFF_KEY);
     }

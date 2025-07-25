@@ -1,9 +1,8 @@
 package crazypants.enderio.machine.alloy;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import crazypants.enderio.EnderIO;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import crazypants.enderio.GuiHandler;
 import crazypants.enderio.ModObject;
@@ -16,23 +15,22 @@ public class BlockAlloySmelter extends AbstractMachineBlock<TileAlloySmelter> {
     PacketHandler.instance.addPacketProcessor(new AlloySmelterPacketProcessor());
     BlockAlloySmelter ppainter = new BlockAlloySmelter();
     ppainter.init();
+    ppainter.initAS();
     return ppainter;
   }
 
-  Icon vanillaSmeltingOn;
-  Icon vanillaSmeltingOff;
-  Icon vanillaSmeltingOnly;
+  int vanillaSmeltingOn;
+  int vanillaSmeltingOff;
+  int vanillaSmeltingOnly;
 
   private BlockAlloySmelter() {
     super(ModObject.blockAlloySmelter, TileAlloySmelter.class);
   }
 
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    super.registerIcons(iconRegister);
-    vanillaSmeltingOn = iconRegister.registerIcon("enderio:furnaceSmeltingOn");
-    vanillaSmeltingOff = iconRegister.registerIcon("enderio:furnaceSmeltingOff");
-    vanillaSmeltingOnly = iconRegister.registerIcon("enderio:furnaceSmeltingOnly");
+  private void initAS() {
+    vanillaSmeltingOn = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:furnaceSmeltingOn");
+    vanillaSmeltingOff = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:furnaceSmeltingOff");
+    vanillaSmeltingOnly = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:furnaceSmeltingOnly");
   }
 
   @Override
@@ -60,7 +58,7 @@ public class BlockAlloySmelter extends AbstractMachineBlock<TileAlloySmelter> {
   @Override
   protected String getMachineFrontIconKey(boolean active) {
     if (active) {
-      return "enderio:alloySmelterFrontOn";
+      return "enderio:alloySmelterFrontOn0"; // TODO PORT ANIMATION
     }
     return "enderio:alloySmelterFront";
   }

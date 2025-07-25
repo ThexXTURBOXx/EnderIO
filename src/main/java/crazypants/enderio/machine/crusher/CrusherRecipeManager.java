@@ -177,7 +177,7 @@ public class CrusherRecipeManager {
     }
     CrusherRecipe rec = getRecipeForInput(recipe.getInput());
     if(rec != null) {
-      Log.warn("Not adding supplied recipe as a recipe already exists for the input: " + recipe.getInput());
+      Log.warn("Not adding supplied recipe as a recipe already exists for the input: " + recipe.getInput().itemID);
       return;
     }
     recipes.add(recipe);

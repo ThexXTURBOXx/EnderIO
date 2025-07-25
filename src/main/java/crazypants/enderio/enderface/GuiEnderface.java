@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -367,11 +366,11 @@ public class GuiEnderface extends GuiScreen {
     }
     GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
     RenderUtil.bindBlockTexture();
-    Icon icon = Block.portal.getBlockTextureFromSide(1);
-    float f1 = icon.getMinU();
-    float f2 = icon.getMinV();
-    float f3 = icon.getMaxU();
-    float f4 = icon.getMaxV();
+    int index = Block.portal.getBlockTextureFromSide(1);
+    float f1 = (index % 16 * 16 + 0) / 256.0F;
+    float f2 = (index % 16 * 16 + 16) / 256.0F;
+    float f3 = (index / 16 * 16 + 0) / 256.0F;
+    float f4 = (index / 16 * 16 + 16) / 256.0F;
     Tessellator tessellator = Tessellator.instance;
     tessellator.startDrawingQuads();
     tessellator.addVertexWithUV(0.0D, par3, -90.0D, f1, f4);

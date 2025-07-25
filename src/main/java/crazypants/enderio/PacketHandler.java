@@ -263,7 +263,7 @@ public class PacketHandler implements IPacketHandler {
         TileEntityBeacon par1TileEntityBeacon = (TileEntityBeacon) objects[0];
         realObj.incrementWindowID();
         realObj.playerNetServerHandler.sendPacketToPlayer(new Packet100OpenWindow(realObj.currentWindowId, 7, par1TileEntityBeacon.getInvName(),
-            par1TileEntityBeacon.getSizeInventory(), par1TileEntityBeacon.isInvNameLocalized()));
+            par1TileEntityBeacon.getSizeInventory()));
         realObj.openContainer = new ContainerBeacon(realObj.inventory, par1TileEntityBeacon) {
           @Override
           public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
@@ -277,7 +277,7 @@ public class PacketHandler implements IPacketHandler {
       } else if (anvilNames.contains(method.getName())) {
 
         realObj.incrementWindowID();
-        realObj.playerNetServerHandler.sendPacketToPlayer(new Packet100OpenWindow(realObj.currentWindowId, 8, "Repairing", 9, true));
+        realObj.playerNetServerHandler.sendPacketToPlayer(new Packet100OpenWindow(realObj.currentWindowId, 8, "Repairing", 9));
         realObj.openContainer = new ContainerRepair(realObj.inventory, realObj.worldObj, ((Integer) objects[0]).intValue(), ((Integer) objects[1]).intValue(),
             ((Integer) objects[2]).intValue(), realObj) {
           @Override

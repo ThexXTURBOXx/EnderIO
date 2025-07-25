@@ -1,13 +1,12 @@
 package crazypants.gui;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.Icon;
 
 public class ToggleButton extends IconButton {
 
   private boolean selected = false;
 
-  public ToggleButton(FontRenderer fr, int id, int x, int y, Icon icon, String texture) {
+  public ToggleButton(FontRenderer fr, int id, int x, int y, int icon, String texture) {
     super(fr, id, x, y, icon, texture);
   }
 

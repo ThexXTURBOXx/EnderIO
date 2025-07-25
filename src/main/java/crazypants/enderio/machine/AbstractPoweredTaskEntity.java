@@ -2,9 +2,10 @@ package crazypants.enderio.machine;
 
 import java.util.Random;
 
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 
 public abstract class AbstractPoweredTaskEntity extends AbstractMachineEntity implements ISidedInventory {
 
@@ -18,41 +19,13 @@ public abstract class AbstractPoweredTaskEntity extends AbstractMachineEntity im
   }
 
   @Override
-  public int[] getAccessibleSlotsFromSide(int var1) {
-    int[] res = new int[inventory.length];
-    for (int i = 0; i < res.length; i++) {
-      res[i] = i;
-    }
-    return res;
+  public int getStartInventorySide(ForgeDirection forgeDirection) {
+    return 0;
   }
 
   @Override
-  public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-
-    if (!slotDefinition.isInputSlot(i)) {
-      return false;
-    }
-    if (!isStackValidForSlot(i, itemstack)) {
-      return false;
-    }
-    if (inventory[i] == null) {
-      return true;
-    }
-    if (inventory[i].stackSize + itemstack.stackSize > inventory[i].getMaxStackSize()) {
-      return false;
-    }
-    return inventory[i].isItemEqual(itemstack);
-  }
-
-  @Override
-  public boolean canExtractItem(int i, ItemStack itemstack, int j) {
-    if (!slotDefinition.isOutputSlot(i)) {
-      return false;
-    }
-    if (inventory[i] == null || inventory[i].stackSize < itemstack.stackSize) {
-      return false;
-    }
-    return itemstack.itemID == inventory[i].itemID;
+  public int getSizeInventorySide(ForgeDirection forgeDirection) {
+    return getSizeInventory();
   }
 
   @Override

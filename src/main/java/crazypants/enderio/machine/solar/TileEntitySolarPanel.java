@@ -113,7 +113,7 @@ public class TileEntitySolarPanel extends TileEntity implements IInternalPowerRe
         if (receptor.receptor instanceof IInternalPowerReceptor) {
           used = PowerHandlerUtil.transmitInternal((IInternalPowerReceptor) receptor.receptor, canTransmit, receptor.fromDir.getOpposite());
         } else {
-          used = Math.min(canTransmit, receptor.receptor.powerRequest(receptor.fromDir.getOpposite()));
+          used = Math.min(canTransmit, receptor.receptor.powerRequest());
           pp.receiveEnergy(used, receptor.fromDir);
         }
         transmitted += used;
@@ -190,6 +190,11 @@ public class TileEntitySolarPanel extends TileEntity implements IInternalPowerRe
 
   @Override
   public void doWork() {
+  }
+
+  @Override
+  public int powerRequest() {
+    return powerRequest(ForgeDirection.UNKNOWN);
   }
 
   @Override

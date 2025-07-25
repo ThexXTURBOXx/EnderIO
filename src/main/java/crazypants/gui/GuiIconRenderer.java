@@ -1,7 +1,6 @@
 package crazypants.gui;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.util.Icon;
 
 import org.lwjgl.opengl.GL11;
 
@@ -20,7 +19,7 @@ public class GuiIconRenderer extends Gui {
   protected int width = DEFAULT_WIDTH;
   protected int height = DEFAULT_HEIGHT;
 
-  protected Icon icon;
+  protected int icon;
   protected String texture;
 
   private int yPosition;
@@ -35,7 +34,7 @@ public class GuiIconRenderer extends Gui {
     texture = RenderUtil.ITEM_TEX;
   }
 
-  public GuiIconRenderer(int x, int y, Icon icon, String texture) {
+  public GuiIconRenderer(int x, int y, int icon, String texture) {
     xPosition = x;
     yPosition = y;
     this.icon = icon;
@@ -57,7 +56,7 @@ public class GuiIconRenderer extends Gui {
     return height;
   }
 
-  public Icon getIcon() {
+  public int getIcon() {
     return icon;
   }
 
@@ -69,7 +68,7 @@ public class GuiIconRenderer extends Gui {
     this.alpha = alpha;
   }
 
-  public void setIcon(Icon icon) {
+  public void setIcon(int icon) {
     this.icon = icon;
   }
 
@@ -90,7 +89,8 @@ public class GuiIconRenderer extends Gui {
     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
     RenderUtil.bindTexture(texture);
-    drawTexturedModelRectFromIcon(xPosition, yPosition, icon, width, height);
+    // TODO PORT TEST THIS!!!
+    drawTexturedModalRect(xPosition, yPosition, icon % 16, icon / 16, width, height);
 
     GL11.glPopAttrib();
 

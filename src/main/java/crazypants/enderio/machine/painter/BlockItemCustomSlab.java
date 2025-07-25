@@ -21,7 +21,7 @@ public class BlockItemCustomSlab extends ItemSlab {
     super(par1, EnderIO.blockCustomSlab, EnderIO.blockCustomDoubleSlab, par1 - 256 == ModObject.blockCustomDoubleSlab.id);
     setHasSubtypes(true);
     isFullBlock = par1 - 256 == ModObject.blockCustomDoubleSlab.id;
-    setUnlocalizedName(ModObject.blockCustomSlab.unlocalisedName);
+    setItemName(ModObject.blockCustomSlab.unlocalisedName);
   }
 
   @Override
@@ -54,14 +54,14 @@ public class BlockItemCustomSlab extends ItemSlab {
 
       if ((side == 1 && !flag || side == 0 && flag) && i1 == EnderIO.blockCustomSlab.blockID && k1 == par1ItemStack.getItemDamage()) {
 
-        if (world.checkNoEntityCollision(EnderIO.blockCustomDoubleSlab.getCollisionBoundingBoxFromPool(world, x, y, z))) {
+        if (world.checkIfAABBIsClear(EnderIO.blockCustomDoubleSlab.getCollisionBoundingBoxFromPool(world, x, y, z))) {
 
           TileEntity te = world.getBlockTileEntity(x, y, z);
           if (te instanceof TileEntityCustomSlab) {
             ((TileEntityCustomSlab) te).isConvertingToFullBlock = true;
           }
 
-          if (world.setBlock(x, y, z, EnderIO.blockCustomDoubleSlab.blockID, k1, 3)) {
+          if (world.setBlockAndMetadataWithNotify(x, y, z, EnderIO.blockCustomDoubleSlab.blockID, k1)) {
 
             te = world.getBlockTileEntity(x, y, z);
             if (te instanceof TileEntityCustomBlock) {
@@ -124,8 +124,8 @@ public class BlockItemCustomSlab extends ItemSlab {
         ((TileEntityCustomSlab) te).isConvertingToFullBlock = true;
       }
 
-      if (world.checkNoEntityCollision(EnderIO.blockCustomDoubleSlab.getCollisionBoundingBoxFromPool(world, x, y, z))
-          && world.setBlock(x, y, z, EnderIO.blockCustomDoubleSlab.blockID, k1, 3)) {
+      if (world.checkIfAABBIsClear(EnderIO.blockCustomDoubleSlab.getCollisionBoundingBoxFromPool(world, x, y, z))
+          && world.setBlockAndMetadataWithNotify(x, y, z, EnderIO.blockCustomDoubleSlab.blockID, k1)) {
 
         te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityCustomBlock) {

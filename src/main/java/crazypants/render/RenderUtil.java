@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -74,24 +73,20 @@ public class RenderUtil {
     return Minecraft.getMinecraft().renderEngine;
   }
 
-  public static void bindItemTexture(ItemStack stack) {
-    engine().bindTexture(stack.getItemSpriteNumber() == 0 ? BLOCK_TEX : ITEM_TEX);
-  }
-
   public static void bindItemTexture() {
-    engine().bindTexture(ITEM_TEX);
+    engine().bindTexture(engine().getTexture(ITEM_TEX));
   }
 
   public static void bindBlockTexture() {
-    engine().bindTexture(BLOCK_TEX);
+    engine().bindTexture(engine().getTexture(BLOCK_TEX));
   }
 
   public static void bindGlintTexture() {
-    engine().bindTexture(BLOCK_TEX);
+    engine().bindTexture(engine().getTexture(BLOCK_TEX));
   }
 
   public static void bindTexture(String string) {
-    engine().bindTexture(string);
+    engine().bindTexture(engine().getTexture(string));
   }
 
   public static FontRenderer fontRenderer() {
@@ -173,14 +168,14 @@ public class RenderUtil {
     return result;
   }
 
-  public static void renderConnectedTextureFace(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection face, Icon texture, boolean forceAllEdges) {
-    renderConnectedTextureFace(blockAccess, x, y, z, face, texture, forceAllEdges, true, true);
+  public static void renderConnectedTextureFace(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection face, int index, boolean forceAllEdges) {
+    renderConnectedTextureFace(blockAccess, x, y, z, face, index, forceAllEdges, true, true);
   }
 
-  public static void renderConnectedTextureFace(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection face, Icon texture, boolean forceAllEdges,
+  public static void renderConnectedTextureFace(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection face, int index, boolean forceAllEdges,
       boolean translateToXYZ, boolean applyFaceShading) {
 
-    if ((blockAccess == null && !forceAllEdges) || face == null || texture == null) {
+    if ((blockAccess == null && !forceAllEdges) || face == null) {
       return;
     }
 
@@ -234,9 +229,9 @@ public class RenderUtil {
         corner.z += (float) (edge.offsetZ * 0.5) - Math.signum(edge.offsetZ) * zLen / 2f;
 
         if (translateToXYZ) {
-          RenderUtil.getUvForCorner(uv, corner, x, y, z, face, texture);
+          RenderUtil.getUvForCorner(uv, corner, x, y, z, face, index);
         } else {
-          RenderUtil.getUvForCorner(uv, corner, 0, 0, 0, face, texture);
+          RenderUtil.getUvForCorner(uv, corner, 0, 0, 0, face, index);
         }
         tes.addVertexWithUV(corner.x, corner.y, corner.z, uv.x, uv.y);
       }
@@ -272,24 +267,25 @@ public class RenderUtil {
     return result;
   }
 
-  public static void getUvForCorner(Vector2d uv, Vector3d corner, int x, int y, int z, ForgeDirection face, Icon icon) {
-    if (icon == null) {
-      return;
-    }
-
+  public static void getUvForCorner(Vector2d uv, Vector3d corner, int x, int y, int z, ForgeDirection face, int index) {
     Vector3d p = new Vector3d(corner);
     p.x -= x;
     p.y -= y;
     p.z -= z;
 
-    float uWidth = icon.getMaxU() - icon.getMinU();
-    float vWidth = icon.getMaxV() - icon.getMinV();
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
+
+    float uWidth = maxU - minU;
+    float vWidth = maxV - minV;
 
     uv.x = VecmathUtil.distanceFromPointToPlane(getUPlaneForFace(face), p);
     uv.y = VecmathUtil.distanceFromPointToPlane(getVPlaneForFace(face), p);
 
-    uv.x = icon.getMinU() + (uv.x * uWidth);
-    uv.y = icon.getMinV() + (uv.y * vWidth);
+    uv.x = minU + (uv.x * uWidth);
+    uv.y = minV + (uv.y * vWidth);
 
   }
 

@@ -1,41 +1,48 @@
 package crazypants.enderio.trigger;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraftforge.common.ForgeDirection;
-import thermalexpansion.api.item.IChargeableItem;
-import buildcraft.api.core.IIconProvider;
-import buildcraft.api.gates.ActionManager;
-import buildcraft.api.gates.ITrigger;
-import buildcraft.api.gates.ITriggerParameter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderio.EnderIO;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import thermalexpansion.api.core.IChargeableItem;
+import buildcraft.api.gates.ActionManager;
+import buildcraft.api.gates.ITriggerParameter;
+import buildcraft.api.gates.Trigger;
 import crazypants.enderio.machine.power.TileCapacitorBank;
 
-public class TriggerEnderIO implements ITrigger {
+public class TriggerEnderIO extends Trigger {
 
-  public static Icon[] triggerIcons = new Icon[5];
   public static String[] descriptions = new String[] { "Capacitor Bank has no energy stored", "Capacitor Bank has energy stored",
       "Capacitor Bank is full with energy", "Capacitor Bank is charging items", "Capacitor Bank finished charging items" };
+
+  public static int[] ICONS = new int[5];
 
   public String uniqueTag;
 
   public int triggerIndex;
-  private int id;
 
   public TriggerEnderIO(String uniqueTag, int triggerID) {
+    super(getNextFreeTriggerID());
+
     this.uniqueTag = uniqueTag;
     this.triggerIndex = triggerID;
+  }
 
-    for (int i = 0; i < ActionManager.triggers.length; i++) {
-      if(ActionManager.triggers[i] == null) {
-        ActionManager.triggers[i] = this;
-        this.id = i;
-        return;
-      }
-    }
+  private static int getNextFreeTriggerID() {
+    int i;
+    for (i = 0; i < ActionManager.triggers.length; i++)
+      if(ActionManager.triggers[i] == null) break;
+    return i;
+  }
 
+  @SideOnly(Side.CLIENT)
+  public static void initIcons() {
+    ICONS[0] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/noEnergy");
+    ICONS[1] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/hasEnergy");
+    ICONS[2] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/fullEnergy");
+    ICONS[3] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/charging");
+    ICONS[4] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/chargingDone");
   }
 
   @Override
@@ -44,7 +51,7 @@ public class TriggerEnderIO implements ITrigger {
   }
 
   @Override
-  public boolean isTriggerActive(ForgeDirection side, TileEntity tile, ITriggerParameter parameter) {
+  public boolean isTriggerActive(TileEntity tile, ITriggerParameter parameter) {
     if(tile instanceof TileCapacitorBank) {
       TileCapacitorBank capacitorBank = (TileCapacitorBank) tile;
 
@@ -92,29 +99,18 @@ public class TriggerEnderIO implements ITrigger {
   }
 
   @Override
-  public int getId() {
-    return id;
+  public int getIndexInTexture() {
+    return ICONS[triggerIndex];
   }
 
   @Override
-  public int getIconIndex() {
-    return triggerIndex;
-  }
-
-  @Override
-  @SideOnly(Side.CLIENT)
-  public IIconProvider getIconProvider() {
-    return TriggerIconProvider.instance;
+  public String getTextureFile() {
+    return EnderIO.ATLAS_RESOLVER.getTextureFile();
   }
 
   @Override
   public boolean hasParameter() {
     return false;
-  }
-
-  @Override
-  public ITriggerParameter createParameter() {
-    return null;
   }
 
 }

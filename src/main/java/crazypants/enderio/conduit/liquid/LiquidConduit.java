@@ -1,26 +1,25 @@
 package crazypants.enderio.conduit.liquid;
 
+import crazypants.render.RenderUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.ILiquidTank;
 import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderio.EnderIO;
 import crazypants.enderio.ModObject;
 import crazypants.enderio.conduit.AbstractConduit;
 import crazypants.enderio.conduit.AbstractConduitNetwork;
@@ -33,32 +32,19 @@ import crazypants.enderio.conduit.geom.CollidableComponent;
 import crazypants.enderio.conduit.redstone.IRedstoneConduit;
 import crazypants.enderio.conduit.redstone.RedstoneSwitch;
 import crazypants.enderio.machine.reservoir.TileReservoir;
-import crazypants.render.IconUtil;
 import crazypants.util.BlockCoord;
 
 public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
 
-  static final Map<String, Icon> ICONS = new HashMap<String, Icon>();
+  static final Map<String, Integer> ICONS = new HashMap<String, Integer>();
 
   @SideOnly(Side.CLIENT)
   public static void initIcons() {
-    IconUtil.addIconProvider(new IconUtil.IIconProvider() {
-
-      @Override
-      public void registerIcons(IconRegister register) {
-        ICONS.put(ICON_KEY, register.registerIcon(ICON_KEY));
-        ICONS.put(ICON_EMPTY_KEY, register.registerIcon(ICON_EMPTY_KEY));
-        ICONS.put(ICON_CORE_KEY, register.registerIcon(ICON_CORE_KEY));
-        ICONS.put(ICON_EXTRACT_KEY, register.registerIcon(ICON_EXTRACT_KEY));
-        ICONS.put(ICON_EMPTY_EXTRACT_KEY, register.registerIcon(ICON_EMPTY_EXTRACT_KEY));
-      }
-
-      @Override
-      public int getTextureType() {
-        return 0;
-      }
-
-    });
+    ICONS.put(ICON_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY));
+    ICONS.put(ICON_EMPTY_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_EMPTY_KEY));
+    ICONS.put(ICON_CORE_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_CORE_KEY));
+    ICONS.put(ICON_EXTRACT_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_EXTRACT_KEY));
+    ICONS.put(ICON_EMPTY_EXTRACT_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_EMPTY_EXTRACT_KEY));
   }
 
   private LiquidConduitNetwork network;
@@ -153,7 +139,8 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
             network.setFluidType(fluid);
             // ChatMessageComponent c = ChatMessageComponent.func_111066_d(+
             // FluidRegistry.getFluidName(fluid));
-            player.sendChatToPlayer("Fluid type set to " + LiquidDictionary.findLiquidName(fluid));
+            ItemStack stack = fluid.asItemStack();
+            player.sendChatToPlayer("Fluid type set to " + stack.getItem().getLocalItemName(stack));
           }
         }
         return true;
@@ -313,15 +300,15 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
     if(!canFill(from, resource)) {
       return 0;
     }
-    
+
     // Note: This is just a guard against mekansims pipes that will continuously
     // call
     // fill on us if we push liquid to them.
     if(filledFromThisTick.contains(getLocation().getLocation(from))) {
       return 0;
     }
-    
-    
+
+
     if(network.lockNetworkForFill()) {
       if(doFill) {
         filledFromThisTick.add(getLocation().getLocation(from));
@@ -339,7 +326,7 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
     } else {
       return 0;
     }
-       
+
   }
 
   @Override
@@ -566,7 +553,7 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
   }
 
   @Override
-  public Icon getTextureForState(CollidableComponent component) {
+  public int getTextureForState(CollidableComponent component) {
     if(component.dir == ForgeDirection.UNKNOWN) {
       return ICONS.get(ICON_CORE_KEY);
     }
@@ -580,17 +567,29 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
   }
 
   @Override
-  public Icon getTransmitionTextureForState(CollidableComponent component) {
-    if(active && tank.getLiquid() != null) {
-      return tank.getLiquid().canonical().getRenderingIcon();
+  public String getTextureFileForState(CollidableComponent component) {
+    if(active && tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
+       tank.getLiquid().asItemStack().getItem() != null) {
+      return tank.getLiquid().asItemStack().getItem().getTextureFile();
     }
-    return null;
+    return RenderUtil.BLOCK_TEX;
+  }
+
+  @Override
+  public int getTransmitionTextureForState(CollidableComponent component) {
+    if(active && tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
+       tank.getLiquid().asItemStack().getItem() != null) {
+      ItemStack stack = tank.getLiquid().asItemStack();
+      return stack.getItem().getIconIndex(stack);
+    }
+    return 0;
   }
 
   @Override
   public String getTextureSheetForLiquid() {
-    if(tank.getLiquid() != null && tank.getLiquid().canonical() != null) {
-      return tank.getLiquid().canonical().getTextureSheet();
+    if(tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
+       tank.getLiquid().asItemStack().getItem() != null) {
+      return tank.getLiquid().asItemStack().getItem().getTextureFile();
     }
     return null;
   }

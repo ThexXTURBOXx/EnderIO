@@ -13,7 +13,6 @@ import static net.minecraftforge.common.ForgeDirection.WEST;
 import java.util.Collection;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.enderio.conduit.IConduitBundle;
@@ -38,13 +37,13 @@ public class DefaultConduitRenderer implements ConduitRenderer {
 
     transmissionScaleFactor = conduit.getTransmitionGeometryScale();
 
-    Icon tex;
+    int tex;
     boolean active = conduit.isActive();
     for (CollidableComponent component : components) {
       if (renderComponent(component)) {
         float selfIllum = Math.max(worldLight, conduit.getSelfIlluminationForState(component));
         if (active && isNSEWUP(component.dir) &&
-            conduit.getTransmitionTextureForState(component) != null) {
+            conduit.getTransmitionTextureForState(component) >= 0) {
           tessellator.setColorRGBA_F(selfIllum + 0.1f, selfIllum + 0.1f,
               selfIllum + 0.1f, 0.75f);
           tex = conduit.getTransmitionTextureForState(component);
@@ -52,7 +51,7 @@ public class DefaultConduitRenderer implements ConduitRenderer {
         }
 
         tex = conduit.getTextureForState(component);
-        if (tex != null) {
+        if (tex >= 0) {
           tessellator.setColorOpaque_F(selfIllum, selfIllum, selfIllum);
           renderConduit(tex, conduit, component, selfIllum);
         }
@@ -62,16 +61,24 @@ public class DefaultConduitRenderer implements ConduitRenderer {
 
   }
 
-  protected void renderConduit(Icon tex, IConduit conduit, CollidableComponent component, float selfIllum) {
+  protected void renderConduit(int index, IConduit conduit, CollidableComponent component, float selfIllum) {
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
     if (isNSEWUP(component.dir)) {
-      RoundedSegmentRenderer.renderSegment(component.dir, component.bound, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV());
+      RoundedSegmentRenderer.renderSegment(component.dir, component.bound, minU, maxU, minV, maxV);
     } else {
-      drawSection(component.bound, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), component.dir, true);
+      drawSection(component.bound, minU, maxU, minV, maxV, component.dir, true);
     }
   }
 
-  protected void renderTransmission(Icon tex, CollidableComponent component, IConduit conduit, float selfIllum) {
-    RoundedSegmentRenderer.renderSegment(component.dir, component.bound, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV());
+  protected void renderTransmission(int index, CollidableComponent component, IConduit conduit, float selfIllum) {
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    RoundedSegmentRenderer.renderSegment(component.dir, component.bound, minU, maxU, minV, maxV);
   }
 
   protected boolean renderComponent(CollidableComponent component) {

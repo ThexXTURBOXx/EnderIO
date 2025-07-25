@@ -10,6 +10,7 @@ import static crazypants.enderio.ModObject.blockSolarPanel;
 import static crazypants.enderio.ModObject.blockStirlingGenerator;
 import static crazypants.enderio.ModObject.itemBasicCapacitor;
 
+import crazypants.enderio.compat.CompatItems;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
@@ -39,7 +40,7 @@ public class MachineRecipes {
 
     // stirling gen
     ItemStack stirlingGen = new ItemStack(blockStirlingGenerator.actualId, 1, 0);
-    GameRegistry.addShapedRecipe(stirlingGen, "bcb", "bfb", "gpg", 'b', Block.stoneBrick, 'f', Block.furnaceIdle, 'p', Block.pistonBase, 'g', basicGear, 'c',
+    GameRegistry.addShapedRecipe(stirlingGen, "bcb", "bfb", "gpg", 'b', Block.stoneBrick, 'f', Block.stoneOvenIdle, 'p', Block.pistonBase, 'g', basicGear, 'c',
         capacitor);
 
     // reservoir
@@ -84,10 +85,10 @@ public class MachineRecipes {
       ItemStack energeticAlloy = new ItemStack(ModObject.itemAlloy.actualId, 1, Alloy.ENERGETIC_ALLOY.ordinal());
       ItemStack solarPanel = new ItemStack(blockSolarPanel.actualId, 1, 0);
       if(Config.useHardRecipes) {
-        GameRegistry.addRecipe(new ShapedOreRecipe(solarPanel, "efe", "pfp", "cdc", 'd', Block.daylightSensor, 'f', fusedQuartz, 'c', capacitor, 'e',
+        GameRegistry.addRecipe(new ShapedOreRecipe(solarPanel, "efe", "pfp", "cdc", 'd', CompatItems.daylightSensor, 'f', fusedQuartz, 'c', capacitor, 'e',
             energeticAlloy, 'p', phasedGold));
       } else {
-        GameRegistry.addRecipe(new ShapedOreRecipe(solarPanel, "efe", "efe", "cdc", 'd', Block.daylightSensor, 'f', fusedQuartz, 'c', "dustCoal", 'e',
+        GameRegistry.addRecipe(new ShapedOreRecipe(solarPanel, "efe", "efe", "cdc", 'd', CompatItems.daylightSensor, 'f', fusedQuartz, 'c', "dustCoal", 'e',
             energeticAlloy));
       }
     }
@@ -100,16 +101,16 @@ public class MachineRecipes {
 
     // alloy smelter
     if(Config.useHardRecipes) {
-      GameRegistry.addShapedRecipe(alloySmelter, "nnn", "nfn", "CmC", 'o', Block.netherBrick, 'm', machineChassi, 'f', Block.furnaceIdle, 'C', capacitor, 'n',
+      GameRegistry.addShapedRecipe(alloySmelter, "nnn", "nfn", "CmC", 'o', Block.netherBrick, 'm', machineChassi, 'f', Block.stoneOvenIdle, 'C', capacitor, 'n',
           Block.netherBrick);
     } else {
       ArrayList<ItemStack> copperIngots = OreDictionary.getOres("ingotCopper");
       if(copperIngots != null && !copperIngots.isEmpty()) {
         GameRegistry.addRecipe(new ShapedOreRecipe(alloySmelter, "bfb", "cmc", "cCc", 'c', "ingotCopper", 'm', machineChassi, 'b', Block.stoneBrick, 'f',
-            Block.furnaceIdle, 'C', capacitor));
+            Block.stoneOvenIdle, 'C', capacitor));
       } else {
         GameRegistry.addShapedRecipe(alloySmelter, "bfb", "imi", "iCi", 'i', Item.ingotIron, 'm', machineChassi, 'b', Block.stoneBrick, 'f',
-            Block.furnaceIdle, 'C', capacitor);
+            Block.stoneOvenIdle, 'C', capacitor);
       }
     }
 
@@ -124,21 +125,21 @@ public class MachineRecipes {
     // painter
     ItemStack painter = new ItemStack(blockPainter.actualId, 1, 0);
     if(Config.useHardRecipes) {
-      GameRegistry.addRecipe(new ShapedOreRecipe(painter, "qqq", "mdm", "CMC", 'm', metal, 'M', machineChassi, 'q', Item.netherQuartz, 'd', Item.diamond,
-          'C', capacitor, 'q', Item.netherQuartz, 'd', Item.diamond));
+      GameRegistry.addRecipe(new ShapedOreRecipe(painter, "qqq", "mdm", "CMC", 'm', metal, 'M', machineChassi, 'q', CompatItems.netherQuartz, 'd', Item.diamond,
+          'C', capacitor, 'q', CompatItems.netherQuartz, 'd', Item.diamond));
     } else {
-      GameRegistry.addRecipe(new ShapedOreRecipe(painter, "qdq", "mMm", "mCm", 'm', metal, 'M', machineChassi, 'q', Item.netherQuartz, 'd', Item.diamond,
-          'C', capacitor, 'q', Item.netherQuartz, 'd', Item.diamond));
+      GameRegistry.addRecipe(new ShapedOreRecipe(painter, "qdq", "mMm", "mCm", 'm', metal, 'M', machineChassi, 'q', CompatItems.netherQuartz, 'd', Item.diamond,
+          'C', capacitor, 'q', CompatItems.netherQuartz, 'd', Item.diamond));
     }
 
     // capacitor bank
     ItemStack capacitorBank = new ItemStack(blockCapacitorBank.actualId, 1, 0);
     ItemStack activatedCapacitor = new ItemStack(itemBasicCapacitor.actualId, 1, 1);
     if(Config.useHardRecipes) {
-      GameRegistry.addRecipe(new ShapedOreRecipe(capacitorBank, "rcr", "ccc", "rMr", 'm', metal, 'c', activatedCapacitor, 'r', Block.blockRedstone, 'M',
+      GameRegistry.addRecipe(new ShapedOreRecipe(capacitorBank, "rcr", "ccc", "rMr", 'm', metal, 'c', activatedCapacitor, 'r', CompatItems.blockRedstone, 'M',
           machineChassi));
     } else {
-      GameRegistry.addRecipe(new ShapedOreRecipe(capacitorBank, "mcm", "crc", "mcm", 'm', metal, 'c', activatedCapacitor, 'r', Block.blockRedstone));
+      GameRegistry.addRecipe(new ShapedOreRecipe(capacitorBank, "mcm", "crc", "mcm", 'm', metal, 'c', activatedCapacitor, 'r', CompatItems.blockRedstone));
     }
 
   }

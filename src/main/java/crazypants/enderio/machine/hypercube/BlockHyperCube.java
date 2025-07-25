@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -32,7 +30,7 @@ import crazypants.enderio.PacketHandler;
 import crazypants.enderio.conduit.ConduitUtil;
 import crazypants.enderio.power.PowerHandlerUtil;
 
-public class BlockHyperCube extends Block implements ITileEntityProvider, IGuiHandler {
+public class BlockHyperCube extends BlockContainer implements IGuiHandler {
 
   static final NumberFormat NF = NumberFormat.getIntegerInstance();
 
@@ -50,7 +48,7 @@ public class BlockHyperCube extends Block implements ITileEntityProvider, IGuiHa
     super(ModObject.blockHyperCube.id, Material.ground);
     setHardness(0.5F);
     setStepSound(Block.soundMetalFootstep);
-    setUnlocalizedName(ModObject.blockHyperCube.unlocalisedName);
+    setBlockName(ModObject.blockHyperCube.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
@@ -60,20 +58,20 @@ public class BlockHyperCube extends Block implements ITileEntityProvider, IGuiHa
     GameRegistry.registerBlock(this, ModObject.blockHyperCube.unlocalisedName);
     GameRegistry.registerTileEntity(TileHyperCube.class, ModObject.blockHyperCube.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_HYPER_CUBE, this);
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:tesseractPortal0"); // TODO PORT ANIMATION
   }
 
-  public Icon getPortalIcon() {
-    return blockIcon;
+  public String getPortalIconFile() {
+    return EnderIO.ATLAS_RESOLVER.getTextureFile();
+  }
+
+  public int getPortalIcon() {
+    return blockIndexInTexture;
   }
 
   @Override
   public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side) {
     return true;
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:tesseractPortal");
   }
 
   @Override
@@ -153,27 +151,29 @@ public class BlockHyperCube extends Block implements ITileEntityProvider, IGuiHa
       tag.setBoolean("channelIsPublic", chan.isPublic());
       if(!chan.isPublic()) {
         tag.setString("channelUser", chan.user);
-      }                    
+      }
     }
   }
-  
+
   private Channel getChannelFromItem(ItemStack itemStack) {
+    if (itemStack == null) return null;
+
     NBTTagCompound tag = itemStack.getTagCompound();
     if(tag == null) {
-      return null;      
+      return null;
     }
-    
+
     String channelName = tag.getString("channelName");
     if(channelName == null || channelName.trim().isEmpty()) {
       return null;
     }
-    
+
     String user = null;
     if(!tag.getBoolean("channelIsPublic")) {
       user = tag.getString("channelUser");
     }
     return new Channel(channelName, user);
-    
+
   }
 
   @Override
@@ -199,10 +199,11 @@ public class BlockHyperCube extends Block implements ITileEntityProvider, IGuiHa
   }
 
   @Override
-  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player, ItemStack stack) {
+  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player) {
     if (world.isRemote) {
       return;
     }
+    ItemStack stack = player.getHeldItem();
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileHyperCube) {
       TileHyperCube cb = (TileHyperCube) te;

@@ -1,7 +1,7 @@
 package crazypants.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.vecmath.Vector3d;
 
@@ -14,28 +14,37 @@ public final class CubeRenderer {
     }
   }
 
-  public static void render(BoundingBox bb, Icon tex) {
-    render(bb, tex, null, false);
+  public static void bind(String textureFile) {
+    Minecraft.getMinecraft().renderEngine.bindTexture(
+            Minecraft.getMinecraft().renderEngine.getTexture(textureFile));
   }
 
-  public static void render(BoundingBox bb, Icon tex, boolean tintSides) {
-    render(bb, tex, null, tintSides);
+  public static void render(BoundingBox bb, int index) {
+    render(bb, index, null, false);
   }
 
-  public static void render(BoundingBox bb, Icon tex, VertexTransform xForm) {
-    render(bb, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), xForm, false);
+  public static void render(BoundingBox bb, int index, boolean tintSides) {
+    render(bb, index, null, tintSides);
   }
 
-  public static void render(BoundingBox bb, Icon tex, VertexTransform xForm, boolean tintSides) {
+  public static void render(BoundingBox bb, int index, VertexTransform xForm) {
+    float minU = (index % 16 * 16 + 0) / 256.0F;
+    float minV = (index % 16 * 16 + 16) / 256.0F;
+    float maxU = (index / 16 * 16 + 0) / 256.0F;
+    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    render(bb, minU, maxU, minV, maxV, xForm, false);
+  }
+
+  public static void render(BoundingBox bb, int index, VertexTransform xForm, boolean tintSides) {
     float minU = 0;
     float minV = 0;
     float maxU = 1;
     float maxV = 1;
-    if (tex != null) {
-      minU = tex.getMinU();
-      minV = tex.getMinV();
-      maxU = tex.getMaxU();
-      maxV = tex.getMaxV();
+    if (index > 0) {
+      minU = (index % 16 * 16 + 0) / 256.0F;
+      minV = (index % 16 * 16 + 16) / 256.0F;
+      maxU = (index / 16 * 16 + 0) / 256.0F;
+      maxV = (index / 16 * 16 + 16) / 256.0F;
     }
     render(bb, minU, maxU, minV, maxV, xForm, tintSides);
   }
@@ -122,77 +131,83 @@ public final class CubeRenderer {
     addVecWithUV(verts[3], minU, maxV);
   }
 
-  public static void render(BoundingBox bb, Icon[] faceTextures, VertexTransform xForm) {
+  public static void render(BoundingBox bb, String[] files, int[] indices, VertexTransform xForm) {
     setupVertices(bb, xForm);
     float minU;
     float maxU;
     float minV;
     float maxV;
-    Icon tex;
+    int index;
 
     Tessellator tessellator = Tessellator.instance;
 
     tessellator.setNormal(0, 0, -1);
-    tex = faceTextures[0];
-    minU = tex.getMinU();
-    maxU = tex.getMaxU();
-    minV = tex.getMinV();
-    maxV = tex.getMaxV();
+    index = indices[0];
+    minU = (index % 16 * 16 + 0) / 256.0F;
+    minV = (index % 16 * 16 + 16) / 256.0F;
+    maxU = (index / 16 * 16 + 0) / 256.0F;
+    maxV = (index / 16 * 16 + 16) / 256.0F;
+    bind(files[0]);
     addVecWithUV(verts[1], minU, minV);
     addVecWithUV(verts[0], maxU, minV);
     addVecWithUV(verts[3], maxU, maxV);
     addVecWithUV(verts[2], minU, maxV);
 
     tessellator.setNormal(0, 0, 1);
-    tex = faceTextures[1];
-    minU = tex.getMinU();
-    maxU = tex.getMaxU();
-    minV = tex.getMinV();
-    maxV = tex.getMaxV();
+    index = indices[1];
+    minU = (index % 16 * 16 + 0) / 256.0F;
+    minV = (index % 16 * 16 + 16) / 256.0F;
+    maxU = (index / 16 * 16 + 0) / 256.0F;
+    maxV = (index / 16 * 16 + 16) / 256.0F;
+    bind(files[1]);
     addVecWithUV(verts[4], minU, minV);
     addVecWithUV(verts[5], maxU, minV);
     addVecWithUV(verts[6], maxU, maxV);
     addVecWithUV(verts[7], minU, maxV);
 
     tessellator.setNormal(0, 1, 0);
-    tex = faceTextures[2];
-    minU = tex.getMinU();
-    maxU = tex.getMaxU();
-    minV = tex.getMinV();
-    maxV = tex.getMaxV();
+    index = indices[2];
+    minU = (index % 16 * 16 + 0) / 256.0F;
+    minV = (index % 16 * 16 + 16) / 256.0F;
+    maxU = (index / 16 * 16 + 0) / 256.0F;
+    maxV = (index / 16 * 16 + 16) / 256.0F;
+    bind(files[2]);
     addVecWithUV(verts[6], minU, minV);
     addVecWithUV(verts[2], minU, maxV);
     addVecWithUV(verts[3], maxU, maxV);
     addVecWithUV(verts[7], maxU, minV);
 
     tessellator.setNormal(0, -1, 0);
-    tex = faceTextures[3];
-    minU = tex.getMinU();
-    maxU = tex.getMaxU();
-    minV = tex.getMinV();
-    maxV = tex.getMaxV();
+    index = indices[3];
+    minU = (index % 16 * 16 + 0) / 256.0F;
+    minV = (index % 16 * 16 + 16) / 256.0F;
+    maxU = (index / 16 * 16 + 0) / 256.0F;
+    maxV = (index / 16 * 16 + 16) / 256.0F;
+    bind(files[3]);
     addVecWithUV(verts[0], maxU, maxV);
     addVecWithUV(verts[1], minU, maxV);
     addVecWithUV(verts[5], minU, minV);
     addVecWithUV(verts[4], maxU, minV);
 
     tessellator.setNormal(1, 0, 0);
-    tex = faceTextures[4];
-    minU = tex.getMinU();
-    maxU = tex.getMaxU();
-    minV = tex.getMinV();
-    maxV = tex.getMaxV();
+    index = indices[4];
+    minU = (index % 16 * 16 + 0) / 256.0F;
+    minV = (index % 16 * 16 + 16) / 256.0F;
+    maxU = (index / 16 * 16 + 0) / 256.0F;
+    maxV = (index / 16 * 16 + 16) / 256.0F;
+    bind(files[4]);
     addVecWithUV(verts[2], minU, maxV);
     addVecWithUV(verts[6], maxU, maxV);
     addVecWithUV(verts[5], maxU, minV);
     addVecWithUV(verts[1], minU, minV);
 
     tessellator.setNormal(-1, 0, 0);
-    tex = faceTextures[5];
-    minU = tex.getMinU();
-    maxU = tex.getMaxU();
-    minV = tex.getMinV();
-    maxV = tex.getMaxV();
+    index = indices[5];
+    minU = (index % 16 * 16 + 0) / 256.0F;
+    minV = (index % 16 * 16 + 16) / 256.0F;
+    maxU = (index / 16 * 16 + 0) / 256.0F;
+    maxV = (index / 16 * 16 + 16) / 256.0F;
+    bind(files[5]);
     addVecWithUV(verts[0], minU, minV);
     addVecWithUV(verts[4], maxU, minV);
     addVecWithUV(verts[7], maxU, maxV);

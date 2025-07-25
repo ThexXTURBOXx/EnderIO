@@ -1,14 +1,13 @@
 package crazypants.enderio.machine.reservoir;
 
+import crazypants.enderio.EnderIO;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -52,14 +51,14 @@ public class BlockReservoir extends BlockContainer {
 
   }
 
-  private Icon[] mbIcons = new Icon[8];
-  Icon switchIcon;
+  private int[] mbIcons = new int[8];
+  int switchIcon;
 
   private BlockReservoir() {
     super(ModObject.blockReservoir.id, Material.rock);
     setHardness(0.5F);
     setStepSound(Block.soundStoneFootstep);
-    setUnlocalizedName(ModObject.blockReservoir.unlocalisedName);
+    setBlockName(ModObject.blockReservoir.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
   }
 
@@ -67,6 +66,11 @@ public class BlockReservoir extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockReservoir.name);
     GameRegistry.registerBlock(this, ModObject.blockReservoir.unlocalisedName);
     GameRegistry.registerTileEntity(TileReservoir.class, ModObject.blockReservoir.unlocalisedName + "TileEntity");
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:reservoir");
+    for (MbFace face : MbFace.values()) {
+      mbIcons[face.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:" + face.iconName);
+    }
+    switchIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:reservoirSwitch");
   }
 
   @Override
@@ -153,7 +157,7 @@ public class BlockReservoir extends BlockContainer {
       min.z = Math.min(min.z, bc.z);
       max.z = Math.max(max.z, bc.z + 1);
     }
-    return AxisAlignedBB.getAABBPool().getAABB(min.x, min.y, min.z, max.x, max.y, max.z);
+    return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(min.x, min.y, min.z, max.x, max.y, max.z);
 
   }
 
@@ -197,15 +201,6 @@ public class BlockReservoir extends BlockContainer {
   }
 
   @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:reservoir");
-    for (MbFace face : MbFace.values()) {
-      mbIcons[face.ordinal()] = iconRegister.registerIcon("enderio:" + face.iconName);
-    }
-    switchIcon = iconRegister.registerIcon("enderio:reservoirSwitch");
-  }
-
-  @Override
   @SideOnly(Side.CLIENT)
   public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int blockSide) {
     TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -220,16 +215,16 @@ public class BlockReservoir extends BlockContainer {
   }
 
   @Override
-  public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
+  public int getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
     // used to render the block in the world
     TileEntity te = world.getBlockTileEntity(x, y, z);
 
     if (!(te instanceof TileReservoir)) {
-      return blockIcon;
+      return blockIndexInTexture;
     }
     TileReservoir tr = (TileReservoir) te;
     if (!tr.isMultiblock()) {
-      return blockIcon;
+      return blockIndexInTexture;
     }
 
     ForgeDirection side = ForgeDirection.getOrientation(blockSide);

@@ -44,8 +44,6 @@ public class RecipeConfigParser extends DefaultHandler {
   public static final String AT_ENERGY_COST = "energyCost";
   public static final String AT_ITEM_ID = "itemID";
   public static final String AT_ITEM_META = "itemMeta";
-  public static final String AT_ITEM_NAME = "itemName";
-  public static final String AT_MOD_ID = "modID";
   public static final String AT_NUMBER = "number";
   public static final String AT_CHANCE = "chance";
 
@@ -301,7 +299,7 @@ public class RecipeConfigParser extends DefaultHandler {
         if(st != null) {
           ItemStack stack = st.copy();
           stack.stackSize = stackSize;
-          if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+          if(stack.getItemDamage() == -1) {
             for (int i = 0; i < 16; i++) {
               stack = stack.copy();
               stack.setItemDamage(i);
@@ -333,31 +331,13 @@ public class RecipeConfigParser extends DefaultHandler {
       }
       ItemStack stack = ores.get(0).copy();
       stack.stackSize = getIntValue(AT_NUMBER, attributes, 1);
-      if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+      if(stack.getItemDamage() == -1) {
         stack.setItemDamage(0);
       }
       return stack;
     }
 
     int itemID = getIntValue(AT_ITEM_ID, attributes, -1);
-    if(itemID <= 0) {
-
-      String modId = getStringValue(AT_MOD_ID, attributes, null);
-      String name = getStringValue(AT_ITEM_NAME, attributes, null);
-
-      if(modId != null && name != null) {
-
-        Item i = GameRegistry.findItem(modId, name);
-        if(i != null) {
-          itemID = i.itemID;
-        } else {
-          Block b = GameRegistry.findBlock(modId, name);
-          if(b != null) {
-            itemID = b.blockID;
-          }
-        }
-      }
-    }
 
     if(itemID <= 0) {
       Log.debug("Could not create an item stack from the attributes " + toString(attributes));

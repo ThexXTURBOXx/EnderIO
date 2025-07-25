@@ -1,6 +1,6 @@
 package crazypants.enderio.enderface;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,7 +32,7 @@ public class ItemEnderface extends Item implements IGuiHandler {
   protected ItemEnderface() {
     super(ModObject.itemEnderface.id);
     setCreativeTab(EnderIOTab.tabEnderIO);
-    setUnlocalizedName(ModObject.itemEnderface.unlocalisedName);
+    setItemName(ModObject.itemEnderface.unlocalisedName);
     setMaxStackSize(1);
   }
 
@@ -40,11 +40,7 @@ public class ItemEnderface extends Item implements IGuiHandler {
     LanguageRegistry.addName(this, ModObject.itemEnderface.name);
     GameRegistry.registerItem(this, ModObject.itemEnderface.unlocalisedName);
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_ENDERFACE, this);
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    itemIcon = iconRegister.registerIcon("enderio:enderface");
+    setIconIndex(EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:enderface"));
   }
 
   @Override

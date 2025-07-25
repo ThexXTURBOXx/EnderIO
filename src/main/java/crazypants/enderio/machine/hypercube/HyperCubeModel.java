@@ -1,11 +1,12 @@
 package crazypants.enderio.machine.hypercube;
 
+import java.net.URL;
 import net.minecraft.client.model.ModelBase;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
+import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.obj.WavefrontObject;
 import crazypants.render.RenderUtil;
 
 public class HyperCubeModel extends ModelBase implements IModel {
@@ -15,10 +16,11 @@ public class HyperCubeModel extends ModelBase implements IModel {
   private static final String TEXTURE = "/mods/enderio/models/hyperCube.png";
   private static final String MODEL = "/mods/enderio/models/hyperCube.obj";
 
-  private IModelCustom model;
+  private WavefrontObject model;
 
   public HyperCubeModel() {
-    model = AdvancedModelLoader.loadModel(MODEL);
+    URL resource = EnderIO.class.getResource(MODEL);
+    model = new WavefrontObject(MODEL, resource);
   }
 
   @Override

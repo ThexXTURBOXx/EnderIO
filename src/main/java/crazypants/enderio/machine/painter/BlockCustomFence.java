@@ -1,22 +1,19 @@
 package crazypants.enderio.machine.painter;
 
+import crazypants.enderio.EnderIO;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,7 +28,7 @@ import crazypants.enderio.crafting.impl.EnderIoRecipe;
 import crazypants.enderio.machine.MachineRecipeInput;
 import crazypants.enderio.machine.MachineRecipeRegistry;
 
-public class BlockCustomFence extends BlockFence implements ITileEntityProvider {
+public class BlockCustomFence extends BlockFence {
 
   public static BlockCustomFence create() {
     BlockCustomFence result = new BlockCustomFence();
@@ -39,17 +36,18 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
     return result;
   }
 
-  private Icon lastRemovedComponetIcon = null;
+  private int lastRemovedComponetIcon;
 
   private Random rand = new Random();
 
   public BlockCustomFence() {
-    super(ModObject.blockCustomFence.id, ModObject.blockCustomFence.unlocalisedName, Material.wood);
-    setUnlocalizedName(ModObject.blockCustomFence.unlocalisedName);
+    super(ModObject.blockCustomFence.id, EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitConnector"), Material.wood);
+    setBlockName(ModObject.blockCustomFence.unlocalisedName);
     setHardness(2.0F);
     setResistance(5.0F);
     setStepSound(soundWoodFootstep);
     setCreativeTab(null);
+    isBlockContainer = true;
   }
 
   private void init() {
@@ -69,16 +67,16 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
   @Override
   public boolean addBlockHitEffects(World world, MovingObjectPosition target,
       EffectRenderer effectRenderer) {
-    Icon tex = null;
+    int tex = -1;
 
     TileEntityCustomBlock cb = (TileEntityCustomBlock)
         world.getBlockTileEntity(target.blockX, target.blockY, target.blockZ);
     Block b = cb.getSourceBlock();
     if (b != null) {
-      tex = b.getIcon(ForgeDirection.NORTH.ordinal(), cb.getSourceBlockMetadata());
+      tex = b.getBlockTextureFromSideAndMetadata(ForgeDirection.NORTH.ordinal(), cb.getSourceBlockMetadata());
     }
-    if (tex == null) {
-      tex = blockIcon;
+    if (tex == -1) {
+      tex = blockIndexInTexture;
     }
     lastRemovedComponetIcon = tex;
     addBlockHitEffects(world, effectRenderer, target.blockX, target.blockY,
@@ -90,7 +88,7 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
   @SideOnly(Side.CLIENT)
   public boolean addBlockDestroyEffects(World world, int x, int y, int z, int
       meta, EffectRenderer effectRenderer) {
-    Icon tex = lastRemovedComponetIcon;
+    int tex = lastRemovedComponetIcon;
     byte b0 = 4;
     for (int j1 = 0; j1 < b0; ++j1) {
       for (int k1 = 0; k1 < b0; ++k1) {
@@ -99,9 +97,9 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
           double d1 = y + (k1 + 0.5D) / b0;
           double d2 = z + (l1 + 0.5D) / b0;
           int i2 = this.rand.nextInt(6);
-          EntityDiggingFX fx = new EntityDiggingFX(world, d0, d1, d2, d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D, this, i2, 0,
-              Minecraft.getMinecraft().renderEngine).func_70596_a(x, y, z);
-          fx.setParticleIcon(Minecraft.getMinecraft().renderEngine, tex);
+          EntityDiggingFX fx = new EntityDiggingFX(world, d0, d1, d2, d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D, this, i2, 0)
+                  .func_70596_a(x, y, z);
+          fx.setParticleTextureIndex(tex);
           effectRenderer.addEffect(fx);
         }
       }
@@ -112,7 +110,7 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
 
   @SideOnly(Side.CLIENT)
   private void addBlockHitEffects(World world, EffectRenderer effectRenderer,
-      int x, int y, int z, int side, Icon tex) {
+      int x, int y, int z, int side, int tex) {
     float f = 0.1F;
     double d0 = x + rand.nextDouble() * (getBlockBoundsMaxX() -
         getBlockBoundsMinX() - f * 2.0F) + f + getBlockBoundsMinX();
@@ -133,9 +131,9 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
     } else if (side == 5) {
       d0 = x + getBlockBoundsMaxX() + f;
     }
-    EntityDiggingFX digFX = new EntityDiggingFX(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this, side, 0, Minecraft.getMinecraft().renderEngine);
+    EntityDiggingFX digFX = new EntityDiggingFX(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this, side, 0);
     digFX.func_70596_a(x, y, z).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
-    digFX.setParticleIcon(Minecraft.getMinecraft().renderEngine, tex);
+    digFX.setParticleTextureIndex(tex);
     effectRenderer.addEffect(digFX);
   }
 
@@ -170,12 +168,12 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
   }
 
   @Override
-  public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
+  public int getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileEntityCustomBlock) {
       TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
       if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length) {
-        return blocksList[tef.getSourceBlockId()].getIcon(blockSide, tef.getSourceBlockMetadata());
+        return blocksList[tef.getSourceBlockId()].getBlockTextureFromSideAndMetadata(blockSide, tef.getSourceBlockMetadata());
       }
     } else {
       System.out.println("BlockCustFence: No tile entity.");
@@ -184,23 +182,14 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
   }
 
   @Override
-  @SideOnly(Side.CLIENT)
-  public void registerIcons(IconRegister par1IconRegister) {
-    this.blockIcon = par1IconRegister.registerIcon("enderio:conduitConnector");
-  }
-
-  @Override
-  public TileEntity createNewTileEntity(World world) {
-    return null;
-  }
-
-  @Override
   public TileEntity createTileEntity(World world, int metadata) {
     return new TileEntityCustomBlock();
   }
 
   @Override
-  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player, ItemStack stack) {
+  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player) {
+    ItemStack stack = player.getHeldItem();
+
     int id = -1;
     Block b = PainterUtil.getSourceBlock(stack);
     if (b != null) {
@@ -258,10 +247,10 @@ public class BlockCustomFence extends BlockFence implements ITileEntityProvider 
    * y, z, blockID, EventID, event parameter
    */
   @Override
-  public boolean onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6) {
+  public void onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6) {
     super.onBlockEventReceived(par1World, par2, par3, par4, par5, par6);
     TileEntity tileentity = par1World.getBlockTileEntity(par2, par3, par4);
-    return tileentity != null ? tileentity.receiveClientEvent(par5, par6) : false;
+    if (tileentity != null) tileentity.receiveClientEvent(par5, par6);
   }
 
   public static final class PainterTemplate extends BasicPainterTemplate {

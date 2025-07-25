@@ -1,7 +1,7 @@
 package crazypants.enderio.machine.painter;
 
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ISidedInventory;
 import crazypants.enderio.ModObject;
 import crazypants.enderio.machine.AbstractPoweredTaskEntity;
 import crazypants.enderio.machine.MachineRecipeInput;
@@ -15,11 +15,6 @@ public class TileEntityPainter extends AbstractPoweredTaskEntity implements ISid
   public TileEntityPainter() {
     // 0 = input slot, 1 = paint source, 2 = output slot
     super(new SlotDefinition(2, 1));
-  }
-
-  @Override
-  public boolean canExtractItem(int i, ItemStack itemstack, int j) {
-    return super.canExtractItem(i, itemstack, j) && PainterUtil.isMetadataEquivelent(itemstack, inventory[2]);
   }
 
   @Override

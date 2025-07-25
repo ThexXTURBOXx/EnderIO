@@ -4,18 +4,15 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -36,7 +33,7 @@ import crazypants.util.BlockCoord;
 import crazypants.util.Util;
 import crazypants.vecmath.Vector3d;
 
-public class BlockCapacitorBank extends Block implements ITileEntityProvider, IGuiHandler {
+public class BlockCapacitorBank extends BlockContainer implements IGuiHandler {
 
   static final NumberFormat NF = NumberFormat.getIntegerInstance();
 
@@ -50,14 +47,14 @@ public class BlockCapacitorBank extends Block implements ITileEntityProvider, IG
     return res;
   }
 
-  Icon overlayIcon;
-  Icon fillBarIcon;
+  int overlayIcon;
+  int fillBarIcon;
 
   protected BlockCapacitorBank() {
     super(ModObject.blockCapacitorBank.actualId, new Material(MapColor.ironColor));
     setHardness(2.0F);
     setStepSound(soundMetalFootstep);
-    setUnlocalizedName(ModObject.blockCapacitorBank.unlocalisedName);
+    setBlockName(ModObject.blockCapacitorBank.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
   }
 
@@ -66,6 +63,9 @@ public class BlockCapacitorBank extends Block implements ITileEntityProvider, IG
     GameRegistry.registerBlock(this, BlockItemCapacitorBank.class, ModObject.blockCapacitorBank.unlocalisedName);
     GameRegistry.registerTileEntity(TileCapacitorBank.class, ModObject.blockCapacitorBank.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_CAPACITOR_BANK, this);
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:capacitorBank");
+    overlayIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:capacitorBankOverlays");
+    fillBarIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:capacitorBankFillBar");
   }
 
   @Override
@@ -111,14 +111,6 @@ public class BlockCapacitorBank extends Block implements ITileEntityProvider, IG
       return new GuiCapacitorBank(player.inventory, ((TileCapacitorBank) te).getController());
     }
     return null;
-  }
-
-  @SideOnly(Side.CLIENT)
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:capacitorBank");
-    overlayIcon = iconRegister.registerIcon("enderio:capacitorBankOverlays");
-    fillBarIcon = iconRegister.registerIcon("enderio:capacitorBankFillBar");
   }
 
   @Override
@@ -215,13 +207,14 @@ public class BlockCapacitorBank extends Block implements ITileEntityProvider, IG
   }
 
   @Override
-  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player, ItemStack stack) {
+  public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player) {
     if (world.isRemote) {
       return;
     }
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileCapacitorBank) {
       TileCapacitorBank cb = (TileCapacitorBank) te;
+      ItemStack stack = player.getHeldItem();
       cb.addEnergy(PowerHandlerUtil.getStoredEnergyForItem(stack));
     }
     world.markBlockForUpdate(x, y, z);
@@ -273,7 +266,7 @@ public class BlockCapacitorBank extends Block implements ITileEntityProvider, IG
       min.z = Math.min(min.z, bc.z);
       max.z = Math.max(max.z, bc.z + 1);
     }
-    return AxisAlignedBB.getAABBPool().getAABB(min.x, min.y, min.z, max.x, max.y, max.z);
+    return AxisAlignedBB.getAABBPool().addOrModifyAABBInPool(min.x, min.y, min.z, max.x, max.y, max.z);
   }
 
 }

@@ -3,7 +3,6 @@ package crazypants.enderio.material;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,7 +31,7 @@ public class ItemFusedQuartzFrame extends Item {
   protected ItemFusedQuartzFrame() {
     super(ModObject.itemFusedQuartzFrame.id);
     setCreativeTab(EnderIOTab.tabEnderIO);
-    setUnlocalizedName(ModObject.itemFusedQuartzFrame.unlocalisedName);
+    setItemName(ModObject.itemFusedQuartzFrame.unlocalisedName);
     setMaxStackSize(64);
   }
 
@@ -40,11 +39,6 @@ public class ItemFusedQuartzFrame extends Item {
     LanguageRegistry.addName(this, ModObject.itemFusedQuartzFrame.name);
     GameRegistry.registerItem(this, ModObject.itemFusedQuartzFrame.unlocalisedName);
     MachineRecipeRegistry.instance.registerRecipe(ModObject.blockPainter.unlocalisedName, new FramePainterRecipe());
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    // itemIcon = iconRegister.registerIcon("enderio:fusedQuartzFrame");
   }
 
   @Override

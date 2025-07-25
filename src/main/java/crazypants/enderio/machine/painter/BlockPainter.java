@@ -48,7 +48,7 @@ public class BlockPainter extends AbstractMachineBlock<TileEntityPainter> {
   @Override
   protected String getMachineFrontIconKey(boolean active) {
     if (active) {
-      return "enderio:painterFrontOn";
+      return "enderio:painterFrontOn0"; // TODO PORT ANIMATION
     }
     return "enderio:painterFrontOff";
   }

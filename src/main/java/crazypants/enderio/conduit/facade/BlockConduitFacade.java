@@ -1,10 +1,9 @@
 package crazypants.enderio.conduit.facade;
 
+import crazypants.enderio.EnderIO;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -28,7 +27,7 @@ public class BlockConduitFacade extends Block {
     super(ModObject.blockConduitFacade.id, Material.grass);
     setHardness(0.5F);
     setStepSound(Block.soundStoneFootstep);
-    setUnlocalizedName(ModObject.blockConduitFacade.unlocalisedName);
+    setBlockName(ModObject.blockConduitFacade.unlocalisedName);
     setCreativeTab(null);
 
   }
@@ -36,40 +35,36 @@ public class BlockConduitFacade extends Block {
   private void init() {
     LanguageRegistry.addName(this, "Utility for Rendering DO NOT USE");
     GameRegistry.registerBlock(this, ModObject.blockConduitFacade.unlocalisedName);
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:conduitFacade");
+    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitFacadeBlock");
   }
 
   @Override
   @SideOnly(Side.CLIENT)
-  public Icon getBlockTexture(IBlockAccess ba, int x, int y, int z, int side) {
+  public int getBlockTexture(IBlockAccess ba, int x, int y, int z, int side) {
     TileEntity te = ba.getBlockTileEntity(x, y, z);
     if (!(te instanceof IConduitBundle)) {
-      return blockIcon;
+      return blockIndexInTexture;
     }
     IConduitBundle cb = (IConduitBundle) te;
     int id = cb.getFacadeId();
     int meta = cb.getFacadeMetadata();
     if (id <= 0 || id == blockID) {
-      return blockIcon;
+      return blockIndexInTexture;
     }
     Block block = Block.blocksList[id];
     if (block != null) {
-      return block.getIcon(side, meta);
+      return block.getBlockTextureFromSideAndMetadata(side, meta);
     }
-    return blockIcon;
+    return blockIndexInTexture;
   }
 
   @Override
   @SideOnly(Side.CLIENT)
-  public Icon getIcon(int par1, int par2) {
+  public int getBlockTextureFromSideAndMetadata(int par1, int par2) {
     if (blockOverride != null) {
-      return blockOverride.getIcon(par1, par2);
+      return blockOverride.getBlockTextureFromSideAndMetadata(par1, par2);
     }
-    return blockIcon;
+    return blockIndexInTexture;
   }
 
   @Override

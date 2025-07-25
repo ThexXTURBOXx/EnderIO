@@ -1,13 +1,12 @@
 package crazypants.enderio.material;
 
+import crazypants.enderio.EnderIO;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -19,7 +18,7 @@ import crazypants.enderio.ModObject;
 import crazypants.enderio.machine.painter.PainterUtil;
 import crazypants.enderio.machine.painter.TileEntityCustomBlock;
 
-public class BlockFusedQuartz extends Block implements ITileEntityProvider {
+public class BlockFusedQuartz extends BlockContainer {
 
   public static int renderId;
 
@@ -30,14 +29,15 @@ public class BlockFusedQuartz extends Block implements ITileEntityProvider {
   }
 
   // Icon itemIcon;
-  Icon realBlockIcon;
+  int realBlockIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:fusedQuartz");
 
   private BlockFusedQuartz() {
-    super(ModObject.blockFusedQuartz.id, Material.glass);
+    super(ModObject.blockFusedQuartz.id, EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:fusedQuartzItem"), Material.glass);
     setHardness(0.5F);
     setStepSound(Block.soundGlassFootstep);
-    setUnlocalizedName(ModObject.blockFusedQuartz.unlocalisedName);
+    setBlockName(ModObject.blockFusedQuartz.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
   }
 
   private void init() {
@@ -81,19 +81,6 @@ public class BlockFusedQuartz extends Block implements ITileEntityProvider {
   public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
     int i1 = par1IBlockAccess.getBlockId(par2, par3, par4);
     return i1 == this.blockID ? false : super.shouldSideBeRendered(par1IBlockAccess, par2, par3, par4, par5);
-  }
-
-  @Override
-  public void registerIcons(IconRegister iconRegister) {
-    // blockIcon = iconRegister.registerIcon("enderio:fusedQuartz");
-    // itemIcon = iconRegister.registerIcon("enderio:fusedQuartzItem");
-
-    // This little oddity is so the standard rendering used for items and
-    // breaking effects
-    // uses the item texture, while the custom renderer uses 'realBlockIcon' to
-    // render the 'non-frame' part of the block.
-    realBlockIcon = iconRegister.registerIcon("enderio:fusedQuartz");
-    blockIcon = iconRegister.registerIcon("enderio:fusedQuartzItem");
   }
 
   @Override

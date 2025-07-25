@@ -468,7 +468,7 @@ public class TileReservoir extends TileEntity implements ITankContainer {
     liquidRenderBounds = null;
 
     // Forces an update
-    worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, isMultiblock() ? 1 : 0, 2);
+    worldObj.setBlockMetadata(xCoord, yCoord, zCoord, isMultiblock() ? 1 : 0);
   }
 
   TileReservoir getController() {

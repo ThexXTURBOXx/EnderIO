@@ -139,14 +139,14 @@ public class GuiCapacitorBank extends GuiContainerBase {
     inputRedstoneButton = new IconButton(fontRenderer, INPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(capBank.getInputControlMode()),
         RenderUtil.BLOCK_TEX);
     inputRedstoneButton.setSize(GuiMachineBase.BUTTON_SIZE, GuiMachineBase.BUTTON_SIZE);
-    buttonList.add(inputRedstoneButton);
+    controlList.add(inputRedstoneButton);
 
     //y = y + 5 + GuiMachineBase.BUTTON_SIZE;
     y = guiTop + outputY;
     outputRedstoneButton = new IconButton(fontRenderer, OUTPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(capBank.getOutputControlMode()),
         RenderUtil.BLOCK_TEX);
     outputRedstoneButton.setSize(GuiMachineBase.BUTTON_SIZE, GuiMachineBase.BUTTON_SIZE);
-    buttonList.add(outputRedstoneButton);
+    controlList.add(outputRedstoneButton);
 
     x = guiLeft + inputX;
     y = guiTop + inputY;
@@ -240,8 +240,8 @@ public class GuiCapacitorBank extends GuiContainerBase {
     int i1 = capBank.getEnergyStoredScaled(POWER_HEIGHT);
     drawTexturedModalRect(sx + POWER_X, sy + BOTTOM_POWER_Y - i1, 176, 0, POWER_WIDTH, i1);
 
-    for (int i = 0; i < buttonList.size(); ++i) {
-      GuiButton guibutton = (GuiButton) this.buttonList.get(i);
+    for (int i = 0; i < controlList.size(); ++i) {
+      GuiButton guibutton = (GuiButton) this.controlList.get(i);
       guibutton.drawButton(this.mc, 0, 0);
     }
 

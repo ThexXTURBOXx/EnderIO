@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit.redstone;
 
+import crazypants.enderio.compat.RedstoneCompat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,10 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
@@ -26,26 +25,19 @@ import crazypants.util.BlockCoord;
 
 public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit {
 
-  static final Map<String, Icon> ICONS = new HashMap<String, Icon>();
+  static final Map<String, String> ICON_FILES = new HashMap<String, String>();
+  static final Map<String, Integer> ICONS = new HashMap<String, Integer>();
 
   @SideOnly(Side.CLIENT)
   public static void initIcons() {
-    IconUtil.addIconProvider(new IconUtil.IIconProvider() {
-
-      @Override
-      public void registerIcons(IconRegister register) {
-        ICONS.put(KEY_CORE_OFF_ICON, register.registerIcon(KEY_CORE_OFF_ICON));
-        ICONS.put(KEY_CORE_ON_ICON, register.registerIcon(KEY_CORE_ON_ICON));
-        ICONS.put(KEY_CONDUIT_ICON, register.registerIcon(KEY_CONDUIT_ICON));
-        ICONS.put(KEY_TRANSMISSION_ICON, register.registerIcon(KEY_TRANSMISSION_ICON));
-      }
-
-      @Override
-      public int getTextureType() {
-        return 0;
-      }
-
-    });
+    ICON_FILES.put(KEY_CORE_OFF_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICON_FILES.put(KEY_CORE_ON_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICON_FILES.put(KEY_CONDUIT_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICON_FILES.put(KEY_TRANSMISSION_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICONS.put(KEY_CORE_OFF_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CORE_OFF_ICON));
+    ICONS.put(KEY_CORE_ON_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CORE_ON_ICON));
+    ICONS.put(KEY_CONDUIT_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CONDUIT_ICON));
+    ICONS.put(KEY_TRANSMISSION_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_TRANSMISSION_ICON));
   }
 
   protected RedstoneConduitNetwork network;
@@ -100,7 +92,7 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
       if (toggleNetwork) {
         network.setNetworkEnabled(false);
       }
-      boolean gettingStrongPower = world.getBlockPowerInput(loc.x, loc.y, loc.z) == 15;
+      boolean gettingStrongPower = RedstoneCompat.getBlockPowerInput(world, loc.x, loc.y, loc.z) == 15;
       if (toggleNetwork) {
         network.setNetworkEnabled(true);
       }
@@ -170,7 +162,7 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
     }
     World world = getBundle().getEntity().worldObj;
     BlockCoord loc = getLocation();
-    int result = world.getStrongestIndirectPower(loc.x, loc.y, loc.z);
+    int result = RedstoneCompat.getStrongestIndirectPower(world, loc.x, loc.y, loc.z);
 
     if (network != null) {
       network.setNetworkEnabled(true);
@@ -180,24 +172,33 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
   }
 
   @Override
-  public int isProvidingStrongPower(ForgeDirection toDirection) {
-    return 0;
+  public boolean isProvidingStrongPower(ForgeDirection toDirection) {
+    return false;
   }
 
   @Override
-  public int isProvidingWeakPower(ForgeDirection toDirection) {
+  public boolean isProvidingWeakPower(ForgeDirection toDirection) {
     if (network == null || !network.isNetworkEnabled()) {
-      return 0;
+      return false;
     }
     int result = 0;
     for (Signal signal : network.getSignals()) {
       result = Math.max(result, signal.strength);
     }
-    return result;
+    return result > 0;
   }
 
   @Override
-  public Icon getTextureForState(CollidableComponent component) {
+  public String getTextureFileForState(CollidableComponent component) {
+    if (component.dir == ForgeDirection.UNKNOWN) {
+      return isActive() ? ICON_FILES.get(KEY_CORE_ON_ICON) : ICON_FILES.get(KEY_CORE_OFF_ICON);
+    }
+    // return ICON_FILES.get(KEY_CONDUIT_ICON);
+    return isActive() ? ICON_FILES.get(KEY_TRANSMISSION_ICON) : ICON_FILES.get(KEY_CONDUIT_ICON);
+  }
+
+  @Override
+  public int getTextureForState(CollidableComponent component) {
     if (component.dir == ForgeDirection.UNKNOWN) {
       return isActive() ? ICONS.get(KEY_CORE_ON_ICON) : ICONS.get(KEY_CORE_OFF_ICON);
     }
@@ -206,12 +207,12 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
   }
 
   @Override
-  public Icon getTransmitionTextureForState(CollidableComponent component) {
+  public int getTransmitionTextureForState(CollidableComponent component) {
     // if (component.id == ForgeDirection.UNKNOWN) {
     // return null;
     // }
     // return isActive() ? ICONS.get(KEY_TRANSMISSION_ICON) : null;
-    return null;
+    return 0;
 
   }
 

@@ -1,16 +1,15 @@
 package crazypants.enderio.machine.solar;
 
+import crazypants.enderio.EnderIO;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -22,7 +21,7 @@ import crazypants.enderio.EnderIOTab;
 import crazypants.enderio.ModObject;
 import crazypants.enderio.conduit.ConduitUtil;
 
-public class BlockSolarPanel extends Block implements ITileEntityProvider {
+public class BlockSolarPanel extends BlockContainer {
 
   public static BlockSolarPanel create() {
     BlockSolarPanel result = new BlockSolarPanel();
@@ -32,13 +31,13 @@ public class BlockSolarPanel extends Block implements ITileEntityProvider {
 
   private static final float BLOCK_HEIGHT = 0.15f;
 
-  Icon sideIcon;
+  int sideIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:solarPanelSide");
 
   private BlockSolarPanel() {
-    super(ModObject.blockSolarPanel.id, Material.ground);
+    super(ModObject.blockSolarPanel.id, EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:solarPanelTop"), Material.ground);
     setHardness(0.5F);
     setStepSound(Block.soundStoneFootstep);
-    setUnlocalizedName(ModObject.blockSolarPanel.unlocalisedName);
+    setBlockName(ModObject.blockSolarPanel.unlocalisedName);
     if (Config.photovoltaicCellEnabled) {
       setCreativeTab(EnderIOTab.tabEnderIO);
     } else {
@@ -89,9 +88,9 @@ public class BlockSolarPanel extends Block implements ITileEntityProvider {
   }
 
   @Override
-  public Icon getIcon(int side, int meta) {
+  public int getBlockTextureFromSideAndMetadata(int side, int meta) {
     if (side == ForgeDirection.UP.ordinal()) {
-      return blockIcon;
+      return blockIndexInTexture;
     }
     return sideIcon;
   }
@@ -105,12 +104,6 @@ public class BlockSolarPanel extends Block implements ITileEntityProvider {
   }
 
   @Override
-  public void registerIcons(IconRegister iconRegister) {
-    blockIcon = iconRegister.registerIcon("enderio:solarPanelTop");
-    sideIcon = iconRegister.registerIcon("enderio:solarPanelSide");
-  }
-
-  @Override
   public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, BLOCK_HEIGHT, 1.0F);
   }
@@ -120,11 +113,10 @@ public class BlockSolarPanel extends Block implements ITileEntityProvider {
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, BLOCK_HEIGHT, 1.0F);
   }
 
-  @SuppressWarnings("rawtypes")
   @Override
-  public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
+  public void addCollidingBlockToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
     setBlockBoundsBasedOnState(par1World, par2, par3, par4);
-    super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
+    super.addCollidingBlockToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
   }
 
 }

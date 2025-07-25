@@ -68,7 +68,7 @@ public abstract class GuiContainerBase extends GuiContainer implements ToolTipRe
 
   @Override
   public void addButton(GuiButton button) {
-    buttonList.add(button);
+    controlList.add(button);
   }
 
   // This is a copy of the super class method due to 'Method not found' errors

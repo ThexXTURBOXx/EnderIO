@@ -1,0 +1,43 @@
+package crazypants.enderio.compat.obj;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import net.minecraft.client.renderer.Tessellator;
+
+@SideOnly(Side.CLIENT)
+public class GroupObject {
+    public String name;
+    public ArrayList<Face> faces = new ArrayList<Face>();
+    public int glDrawingMode;
+
+    public GroupObject() {
+        this("");
+    }
+
+    public GroupObject(String name) {
+        this(name, -1);
+    }
+
+    public GroupObject(String name, int glDrawingMode) {
+        this.name = name;
+        this.glDrawingMode = glDrawingMode;
+    }
+
+    public void render() {
+        if (this.faces.size() > 0) {
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawing(this.glDrawingMode);
+            this.render(tessellator);
+            tessellator.draw();
+        }
+    }
+
+    public void render(Tessellator tessellator) {
+        if (this.faces.size() > 0) {
+            for (Face face : this.faces) {
+                face.addFaceForRender(tessellator);
+            }
+        }
+    }
+}

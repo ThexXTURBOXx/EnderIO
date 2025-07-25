@@ -37,7 +37,7 @@ public class BlockItemCapacitorBank extends ItemBlock {
   }
 
   @Override
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings("unchecked")
   public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) {
     ItemStack stack = createItemStackWithPower(0);
     stack.setItemDamage(0);

@@ -1,6 +1,5 @@
 package crazypants.enderio.conduit.power;
 
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.api.power.IPowerReceptor;
 import crazypants.enderio.conduit.IConduit;
@@ -23,8 +22,8 @@ public interface IPowerConduit extends IConduit, IInternalPowerReceptor {
 
   float getMaxEnergyRecieved(ForgeDirection dir);
 
-  Icon getTextureForInputMode();
+  int getTextureForInputMode();
 
-  Icon getTextureForOutputMode();
+  int getTextureForOutputMode();
 
 }

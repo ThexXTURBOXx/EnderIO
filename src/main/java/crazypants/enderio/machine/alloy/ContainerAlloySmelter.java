@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.alloy;
 
+import crazypants.enderio.machine.MachineSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -21,31 +22,10 @@ public class ContainerAlloySmelter extends AbstractMachineContainer {
 
   @Override
   protected void addMachineSlots(InventoryPlayer playerInv) {
-    addSlotToContainer(new Slot(tileEntity, 0, 54, 17) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(0, itemStack);
-      }
-    });
-    addSlotToContainer(new Slot(tileEntity, 1, 78, 7) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(1, itemStack);
-      }
-    });
-    addSlotToContainer(new Slot(tileEntity, 2, 103, 17) {
-      @Override
-      public boolean isItemValid(ItemStack itemStack) {
-        return tileEntity.isStackValidForSlot(2, itemStack);
-      }
-    });
-    addSlotToContainer(new SlotSmelter(tileEntity, 3, 79, 57) {
-      @Override
-      public boolean isItemValid(ItemStack par1ItemStack) {
-        return false;
-      }
-
-    });
+    addSlotToContainer(new MachineSlot(tileEntity, 0, 54, 17));
+    addSlotToContainer(new MachineSlot(tileEntity, 1, 78, 7));
+    addSlotToContainer(new MachineSlot(tileEntity, 2, 103, 17));
+    addSlotToContainer(new SlotSmelter(tileEntity, 3, 79, 57));
 
   }
 
