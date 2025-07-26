@@ -2,6 +2,8 @@ package crazypants.enderio.machine.alloy;
 
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
+import crazypants.enderio.compat.TextureAnimatedAtlasFX;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -34,6 +36,12 @@ public class BlockAlloySmelter extends AbstractMachineBlock<TileAlloySmelter> {
     vanillaSmeltingOn = AtlasResolver.getLocationIndex("enderio:furnaceSmeltingOn");
     vanillaSmeltingOff = AtlasResolver.getLocationIndex("enderio:furnaceSmeltingOff");
     vanillaSmeltingOnly = AtlasResolver.getLocationIndex("enderio:furnaceSmeltingOnly");
+
+    int[] anim = new int[]{0, 1, 2, 3, 2, 1};
+    for (int i = 0; i < anim.length; i++)
+      anim[i] = AtlasResolver.getLocationIndex("enderio:alloySmelterFrontOn" + anim[i]);
+    Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
+            2, anim[0], EnderIO.ATLAS_RESOLVER.getTextureFile(), anim));
   }
 
   @Override
@@ -61,7 +69,7 @@ public class BlockAlloySmelter extends AbstractMachineBlock<TileAlloySmelter> {
   @Override
   protected String getMachineFrontIconKey(boolean active) {
     if (active) {
-      return "enderio:alloySmelterFrontOn0"; // TODO PORT ANIMATION
+      return "enderio:alloySmelterFrontOn0";
     }
     return "enderio:alloySmelterFront";
   }

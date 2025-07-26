@@ -1,5 +1,9 @@
 package crazypants.enderio.machine.painter;
 
+import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
+import crazypants.enderio.compat.TextureAnimatedAtlasFX;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -16,11 +20,20 @@ public class BlockPainter extends AbstractMachineBlock<TileEntityPainter> {
   public static BlockPainter create() {
     BlockPainter ppainter = new BlockPainter();
     ppainter.init();
+    ppainter.initP();
     return ppainter;
   }
 
   private BlockPainter() {
     super(ModObject.blockPainter, TileEntityPainter.class);
+  }
+
+  private void initP() {
+    int[] anim = new int[]{0, 1, 2, 3, 4, 5};
+    for (int i = 0; i < anim.length; i++)
+      anim[i] = AtlasResolver.getLocationIndex("enderio:painterFrontOn" + anim[i]);
+    Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
+            7, anim[0], EnderIO.ATLAS_RESOLVER.getTextureFile(), anim));
   }
 
   @Override
@@ -48,7 +61,7 @@ public class BlockPainter extends AbstractMachineBlock<TileEntityPainter> {
   @Override
   protected String getMachineFrontIconKey(boolean active) {
     if (active) {
-      return "enderio:painterFrontOn0"; // TODO PORT ANIMATION
+      return "enderio:painterFrontOn0";
     }
     return "enderio:painterFrontOff";
   }
