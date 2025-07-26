@@ -1,6 +1,5 @@
 package crazypants.enderio.machine.solar;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class BlockSolarPanel extends BlockContainer {
       setCreativeTab(null);
     }
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, BLOCK_HEIGHT, 1.0F);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
   }
 
   private void init() {

@@ -84,4 +84,30 @@ public class TextureAnimatedAtlasFX extends FMLTextureFX {
         }
     }
 
+    public static void init() {
+        int[] anim = new int[32];
+        for (int i = 0; i < anim.length; i++)
+            anim[i] = AtlasResolver.getLocationIndex("enderio:tesseractPortal" + i);
+        Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
+                1, anim[0], AtlasResolver.getTextureFile("enderio"), anim));
+
+        anim = new int[]{0, 1, 2, 3, 2, 1};
+        for (int i = 0; i < anim.length; i++)
+            anim[i] = AtlasResolver.getLocationIndex("enderio:alloySmelterFrontOn" + anim[i]);
+        Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
+                2, anim[0], AtlasResolver.getTextureFile("enderio"), anim));
+
+        anim = new int[]{0, 1, 1, 1, 1, 1};
+        for (int i = 0; i < anim.length; i++)
+            anim[i] = AtlasResolver.getLocationIndex("enderio:stirlingGenFrontOn" + anim[i]);
+        Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
+                2, anim[0], AtlasResolver.getTextureFile("enderio"), anim));
+
+        anim = new int[]{0, 1, 2, 3, 4, 5};
+        for (int i = 0; i < anim.length; i++)
+            anim[i] = AtlasResolver.getLocationIndex("enderio:painterFrontOn" + anim[i]);
+        Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
+                7, anim[0], AtlasResolver.getTextureFile("enderio"), anim));
+    }
+
 }

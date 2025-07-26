@@ -1,6 +1,5 @@
 package crazypants.enderio.conduit.redstone;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +62,7 @@ public class RedstoneSwitch extends RedstoneConduit {
   }
 
   String getSwitchIconFile() {
-    return EnderIO.ATLAS_RESOLVER.getTextureFile();
+    return AtlasResolver.getTextureFile("enderio");
   }
 
   int getSwitchIcon() {

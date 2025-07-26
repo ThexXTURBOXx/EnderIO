@@ -35,7 +35,7 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
 
   @SideOnly(Side.CLIENT)
   public static void initIcon() {
-    Arrays.fill(REDSTONE_CONTROL_ICON_FILES, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    Arrays.fill(REDSTONE_CONTROL_ICON_FILES, AtlasResolver.getTextureFile("enderio"));
     REDSTONE_CONTROL_ICONS[RedstoneControlMode.IGNORE.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneIgnore");
     REDSTONE_CONTROL_ICONS[RedstoneControlMode.ON.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneOn");
     REDSTONE_CONTROL_ICONS[RedstoneControlMode.OFF.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneOff");
@@ -52,7 +52,6 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
     return REDSTONE_CONTROL_ICONS[mode.ordinal()];
   }
 
-  @SideOnly(Side.CLIENT)
   protected int[][] iconBuffer;
 
   protected final Random random;
@@ -78,7 +77,7 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
     GameRegistry.registerBlock(this, modObject.unlocalisedName);
     GameRegistry.registerTileEntity(teClass, modObject.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(getGuiId(), this);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     iconBuffer = new int[1][12];
     String side = getSideIconKey();
     // first the 6 sides in OFF state

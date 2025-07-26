@@ -1,7 +1,6 @@
 package crazypants.enderio.machine.hypercube;
 
 import crazypants.enderio.compat.AtlasResolver;
-import crazypants.enderio.compat.TextureAnimatedAtlasFX;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -9,7 +8,6 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,17 +59,12 @@ public class BlockHyperCube extends BlockContainer implements IGuiHandler {
     GameRegistry.registerBlock(this, ModObject.blockHyperCube.unlocalisedName);
     GameRegistry.registerTileEntity(TileHyperCube.class, ModObject.blockHyperCube.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_HYPER_CUBE, this);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:tesseractPortal0");
-    int[] anim = new int[32];
-    for (int i = 0; i < anim.length; i++)
-      anim[i] = AtlasResolver.getLocationIndex("enderio:tesseractPortal" + i);
-    Minecraft.getMinecraft().renderEngine.registerTextureFX(new TextureAnimatedAtlasFX(
-            1, anim[0], EnderIO.ATLAS_RESOLVER.getTextureFile(), anim));
   }
 
   public String getPortalIconFile() {
-    return EnderIO.ATLAS_RESOLVER.getTextureFile();
+    return AtlasResolver.getTextureFile("enderio");
   }
 
   public int getPortalIcon() {

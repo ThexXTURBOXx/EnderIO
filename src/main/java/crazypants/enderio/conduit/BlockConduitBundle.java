@@ -152,9 +152,9 @@ public class BlockConduitBundle extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockConduitBundle.name);
     GameRegistry.registerBlock(this, ModObject.blockConduitBundle.unlocalisedName);
     GameRegistry.registerTileEntity(TileConduitBundle.class, ModObject.blockConduitBundle.unlocalisedName + "TileEntity");
-    connectorIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    connectorIconFile = AtlasResolver.getTextureFile("enderio");
     connectorIcon = AtlasResolver.getLocationIndex(KEY_CONNECTOR_ICON);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = connectorIcon;
   }
 

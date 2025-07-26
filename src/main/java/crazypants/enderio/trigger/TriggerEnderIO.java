@@ -2,7 +2,6 @@ package crazypants.enderio.trigger;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -106,7 +105,7 @@ public class TriggerEnderIO extends Trigger {
 
   @Override
   public String getTextureFile() {
-    return EnderIO.ATLAS_RESOLVER.getTextureFile();
+    return AtlasResolver.getTextureFile("enderio");
   }
 
   @Override

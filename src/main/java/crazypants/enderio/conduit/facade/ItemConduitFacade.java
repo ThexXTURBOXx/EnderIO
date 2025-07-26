@@ -43,9 +43,9 @@ public class ItemConduitFacade extends Item {
   protected void init() {
     LanguageRegistry.addName(this, ModObject.itemConduitFacade.name);
     GameRegistry.registerItem(this, ModObject.itemConduitFacade.unlocalisedName);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     setIconIndex(AtlasResolver.getLocationIndex("enderio:conduitFacadeItem"));
-    overlayIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    overlayIconFile = AtlasResolver.getTextureFile("enderio");
     overlayIcon = AtlasResolver.getLocationIndex("enderio:conduitFacadeOverlay");
   }
 

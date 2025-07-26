@@ -1,6 +1,5 @@
 package crazypants.enderio.material;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -26,7 +25,7 @@ public class ItemMJReader extends Item {
   protected void init() {
     LanguageRegistry.addName(this, ModObject.itemMJReader.name);
     GameRegistry.registerItem(this, ModObject.itemMJReader.unlocalisedName);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     setIconIndex(AtlasResolver.getLocationIndex("enderio:mJReader"));
   }
 

@@ -1,6 +1,5 @@
 package crazypants.enderio.material;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class ItemMachinePart extends Item {
     for (int i = 0; i < numParts; i++) {
       icons[i] = AtlasResolver.getLocationIndex(MachinePart.values()[i].iconKey);
     }
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
   }
 
   @Override

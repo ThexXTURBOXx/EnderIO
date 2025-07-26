@@ -1,6 +1,5 @@
 package crazypants.enderio.machine.reservoir;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -70,13 +69,13 @@ public class BlockReservoir extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockReservoir.name);
     GameRegistry.registerBlock(this, ModObject.blockReservoir.unlocalisedName);
     GameRegistry.registerTileEntity(TileReservoir.class, ModObject.blockReservoir.unlocalisedName + "TileEntity");
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:reservoir");
     for (MbFace face : MbFace.values()) {
-      mbIconFiles[face.ordinal()] = EnderIO.ATLAS_RESOLVER.getTextureFile();
+      mbIconFiles[face.ordinal()] = AtlasResolver.getTextureFile("enderio");
       mbIcons[face.ordinal()] = AtlasResolver.getLocationIndex("enderio:" + face.iconName);
     }
-    switchIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    switchIconFile = AtlasResolver.getTextureFile("enderio");
     switchIcon = AtlasResolver.getLocationIndex("enderio:reservoirSwitch");
   }
 

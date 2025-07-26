@@ -1,6 +1,5 @@
 package crazypants.enderio.material;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class ItemAlloy extends Item {
         icons[i + numAlloys] = AtlasResolver.getLocationIndex(Alloy.values()[i].iconKey + "Nugget");
       }
     }
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
   }
 
   @Override

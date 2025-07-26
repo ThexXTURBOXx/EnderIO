@@ -1,5 +1,6 @@
 package crazypants.enderio;
 
+import crazypants.enderio.compat.TextureAnimatedAtlasFX;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +88,8 @@ public class ClientProxy extends CommonProxy {
     super.load();
 
     // Renderers
+
+    TextureAnimatedAtlasFX.init();
 
     ConduitBundleRenderer cbr = new ConduitBundleRenderer((float) Config.conduitScale);
     BlockConduitBundle.rendererId = RenderingRegistry.getNextAvailableRenderId();

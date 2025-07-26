@@ -1,6 +1,5 @@
 package crazypants.enderio.material;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import crazypants.enderio.compat.RotationHelper;
 import net.minecraft.block.Block;
@@ -33,7 +32,7 @@ public class ItemYetaWrench extends Item implements IToolWrench {
   protected void init() {
     LanguageRegistry.addName(this, ModObject.itemYetaWrench.name);
     GameRegistry.registerItem(this, ModObject.itemYetaWrench.unlocalisedName);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     setIconIndex(AtlasResolver.getLocationIndex("enderio:yetaWrench"));
   }
 

@@ -67,7 +67,7 @@ public class TileEntitySolarPanel extends TileEntity implements IInternalPowerRe
 
   private float calculateLightRatio() {
     int lightValue = worldObj.getSavedLightValue(EnumSkyBlock.Sky, xCoord, yCoord, zCoord) - worldObj.skylightSubtracted;
-    float sunAngle = worldObj.getCelestialAngleRadians(1.0F);
+    float sunAngle = worldObj.getCelestialAngle(1.0F) * (float) Math.PI * 2.0F;
 
     if (sunAngle < (float) Math.PI) {
       sunAngle += (0.0F - sunAngle) * 0.2F;

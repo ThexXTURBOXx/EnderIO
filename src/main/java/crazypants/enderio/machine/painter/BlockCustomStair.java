@@ -1,6 +1,5 @@
 package crazypants.enderio.machine.painter;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +57,7 @@ public class BlockCustomStair extends BlockStairs {
     GameRegistry.registerBlock(this, BlockItemCustomStair.class, ModObject.blockCustomStair.unlocalisedName);
     GameRegistry.registerTileEntity(TileEntityCustomBlock.class, ModObject.blockCustomStair.unlocalisedName + "TileEntity");
     MachineRecipeRegistry.instance.registerRecipe(ModObject.blockPainter.unlocalisedName, new PainterTemplate());
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:conduitConnector");
   }
 

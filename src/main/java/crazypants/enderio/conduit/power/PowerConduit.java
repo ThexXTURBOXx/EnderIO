@@ -1,6 +1,5 @@
 package crazypants.enderio.conduit.power;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,16 +49,16 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
 
   public static void initIcons() {
     for (String pf : POSTFIX) {
-      ICON_FILES.put(ICON_KEY + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
-      ICON_FILES.put(ICON_KEY_INPUT + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
-      ICON_FILES.put(ICON_KEY_OUTPUT + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
-      ICON_FILES.put(ICON_CORE_KEY + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
+      ICON_FILES.put(ICON_KEY + pf, AtlasResolver.getTextureFile("enderio"));
+      ICON_FILES.put(ICON_KEY_INPUT + pf, AtlasResolver.getTextureFile("enderio"));
+      ICON_FILES.put(ICON_KEY_OUTPUT + pf, AtlasResolver.getTextureFile("enderio"));
+      ICON_FILES.put(ICON_CORE_KEY + pf, AtlasResolver.getTextureFile("enderio"));
       ICONS.put(ICON_KEY + pf, AtlasResolver.getLocationIndex(ICON_KEY + pf));
       ICONS.put(ICON_KEY_INPUT + pf, AtlasResolver.getLocationIndex(ICON_KEY_INPUT + pf));
       ICONS.put(ICON_KEY_OUTPUT + pf, AtlasResolver.getLocationIndex(ICON_KEY_OUTPUT + pf));
       ICONS.put(ICON_CORE_KEY + pf, AtlasResolver.getLocationIndex(ICON_CORE_KEY + pf));
     }
-    ICON_FILES.put(ICON_TRANSMISSION_KEY, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICON_FILES.put(ICON_TRANSMISSION_KEY, AtlasResolver.getTextureFile("enderio"));
     ICONS.put(ICON_TRANSMISSION_KEY, AtlasResolver.getLocationIndex(ICON_TRANSMISSION_KEY));
   }
 

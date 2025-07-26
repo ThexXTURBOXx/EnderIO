@@ -1,6 +1,5 @@
 package crazypants.enderio.conduit.facade;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -36,7 +35,7 @@ public class BlockConduitFacade extends Block {
   private void init() {
     LanguageRegistry.addName(this, "Utility for Rendering DO NOT USE");
     GameRegistry.registerBlock(this, ModObject.blockConduitFacade.unlocalisedName);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:conduitFacadeBlock");
   }
 

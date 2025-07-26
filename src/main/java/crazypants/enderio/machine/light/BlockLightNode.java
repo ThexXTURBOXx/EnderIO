@@ -1,6 +1,5 @@
 package crazypants.enderio.machine.light;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -99,7 +98,7 @@ public class BlockLightNode extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockLightNode.name);
     GameRegistry.registerBlock(this, ModObject.blockLightNode.unlocalisedName);
     GameRegistry.registerTileEntity(TileLightNode.class, ModObject.blockLightNode.unlocalisedName + "TileEntity");
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:blockElectricLightFace");
   }
 

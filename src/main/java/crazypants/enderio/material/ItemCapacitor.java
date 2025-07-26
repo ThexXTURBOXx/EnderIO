@@ -1,6 +1,5 @@
 package crazypants.enderio.material;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class ItemCapacitor extends Item implements ICapacitorItem {
     for (int i = 0; i < Capacitors.values().length; i++) {
       icons[i] = AtlasResolver.getLocationIndex(Capacitors.values()[i].iconKey);
     }
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
   }
 
   @Override

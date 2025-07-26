@@ -1,5 +1,6 @@
 package crazypants.enderio.compat;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,27 +21,32 @@ public class AtlasResolver {
     public AtlasResolver(String domain, String atlasFile, Class<?> resourceClass) {
         this.domain = domain;
         textureFile = atlasFile + ".png";
-        atlasId = Minecraft.getMinecraft().renderEngine.getTexture(atlasFile);
 
-        MinecraftForgeClient.preloadTexture(textureFile);
+        if (FMLCommonHandler.instance().getSide().isClient()) {
+            atlasId = Minecraft.getMinecraft().renderEngine.getTexture(atlasFile);
 
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(
-                    new BufferedInputStream(resourceClass.getResourceAsStream(atlasFile + ".txt"))));
+            MinecraftForgeClient.preloadTexture(textureFile);
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] split = line.split(":\\s*");
-                img2Idx.put(split[1], Integer.parseInt(split[0]));
-            }
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        } finally {
+            BufferedReader reader = null;
             try {
-                if (reader != null) reader.close();
-            } catch (Throwable ignored) {
+                reader = new BufferedReader(new InputStreamReader(
+                        new BufferedInputStream(resourceClass.getResourceAsStream(atlasFile + ".txt"))));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] split = line.split(":\\s*");
+                    img2Idx.put(split[1], Integer.parseInt(split[0]));
+                }
+            } catch (Throwable t) {
+                throw new RuntimeException(t);
+            } finally {
+                try {
+                    if (reader != null) reader.close();
+                } catch (Throwable ignored) {
+                }
             }
+        } else {
+            atlasId = -1;
         }
 
         domain2Resolver.put(domain, this);
@@ -52,7 +58,12 @@ public class AtlasResolver {
 
     public static int getLocationIndex(String location) {
         String[] split = location.split(":", 2);
-        return get(split[0]).img2Idx.get((split.length < 2 ? location : split[1]));
+        return get(split[0]).getIndexInAtlas((split.length < 2 ? location : split[1]));
+    }
+
+    public static String getTextureFile(String location) {
+        String[] split = location.split(":", 2);
+        return get(split[0]).getTextureFile();
     }
 
     public String getDomain() {
@@ -65,6 +76,11 @@ public class AtlasResolver {
 
     public int getAtlasId() {
         return atlasId;
+    }
+
+    public int getIndexInAtlas(String path) {
+        Integer index = img2Idx.get(path);
+        return index != null ? index : -1;
     }
 
 }

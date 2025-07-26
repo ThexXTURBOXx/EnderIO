@@ -4,7 +4,6 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import crazypants.enderio.Config;
 import crazypants.enderio.EnderIO;
-import crazypants.enderio.machine.alloy.GuiAlloySmelter;
 
 public class NEIEnderIOConfig implements IConfigureNEI {
 

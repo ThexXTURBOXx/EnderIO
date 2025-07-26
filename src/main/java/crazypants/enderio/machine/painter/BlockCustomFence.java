@@ -1,6 +1,5 @@
 package crazypants.enderio.machine.painter;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import java.util.Collections;
 import java.util.List;

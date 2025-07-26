@@ -30,10 +30,10 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
 
   @SideOnly(Side.CLIENT)
   public static void initIcons() {
-    ICON_FILES.put(KEY_CORE_OFF_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
-    ICON_FILES.put(KEY_CORE_ON_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
-    ICON_FILES.put(KEY_CONDUIT_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
-    ICON_FILES.put(KEY_TRANSMISSION_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    ICON_FILES.put(KEY_CORE_OFF_ICON, AtlasResolver.getTextureFile("enderio"));
+    ICON_FILES.put(KEY_CORE_ON_ICON, AtlasResolver.getTextureFile("enderio"));
+    ICON_FILES.put(KEY_CONDUIT_ICON, AtlasResolver.getTextureFile("enderio"));
+    ICON_FILES.put(KEY_TRANSMISSION_ICON, AtlasResolver.getTextureFile("enderio"));
     ICONS.put(KEY_CORE_OFF_ICON, AtlasResolver.getLocationIndex(KEY_CORE_OFF_ICON));
     ICONS.put(KEY_CORE_ON_ICON, AtlasResolver.getLocationIndex(KEY_CORE_ON_ICON));
     ICONS.put(KEY_CONDUIT_ICON, AtlasResolver.getLocationIndex(KEY_CONDUIT_ICON));

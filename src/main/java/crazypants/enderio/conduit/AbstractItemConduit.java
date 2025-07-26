@@ -51,7 +51,7 @@ public abstract class AbstractItemConduit extends Item implements IConduitItem {
       icons[index] = AtlasResolver.getLocationIndex(subtype.iconKey);
       index++;
     }
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
   }
 
   @Override

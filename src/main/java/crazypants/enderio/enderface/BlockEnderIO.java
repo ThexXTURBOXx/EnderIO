@@ -39,9 +39,9 @@ public class BlockEnderIO extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockEnderIo.name);
     GameRegistry.registerBlock(this, ModObject.blockEnderIo.unlocalisedName);
     GameRegistry.registerTileEntity(TileEnderIO.class, ModObject.blockEnderIo.unlocalisedName + "TileEntity");
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:enderIO");
-    frameIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    frameIconFile = AtlasResolver.getTextureFile("enderio");
     frameIcon = AtlasResolver.getLocationIndex("enderio:enderIOFrame");
   }
 

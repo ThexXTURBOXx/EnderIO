@@ -67,11 +67,11 @@ public class BlockCapacitorBank extends BlockContainer implements IGuiHandler {
     GameRegistry.registerBlock(this, BlockItemCapacitorBank.class, ModObject.blockCapacitorBank.unlocalisedName);
     GameRegistry.registerTileEntity(TileCapacitorBank.class, ModObject.blockCapacitorBank.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_CAPACITOR_BANK, this);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:capacitorBank");
-    overlayIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    overlayIconFile = AtlasResolver.getTextureFile("enderio");
     overlayIcon = AtlasResolver.getLocationIndex("enderio:capacitorBankOverlays");
-    fillBarIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    fillBarIconFile = AtlasResolver.getTextureFile("enderio");
     fillBarIcon = AtlasResolver.getLocationIndex("enderio:capacitorBankFillBar");
   }
 

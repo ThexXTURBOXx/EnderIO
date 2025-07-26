@@ -40,7 +40,7 @@ public class ItemEnderface extends Item implements IGuiHandler {
     LanguageRegistry.addName(this, ModObject.itemEnderface.name);
     GameRegistry.registerItem(this, ModObject.itemEnderface.unlocalisedName);
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_ENDERFACE, this);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
     setIconIndex(AtlasResolver.getLocationIndex("enderio:enderface"));
   }
 

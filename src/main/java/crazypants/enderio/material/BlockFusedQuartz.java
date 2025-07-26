@@ -1,6 +1,5 @@
 package crazypants.enderio.material;
 
-import crazypants.enderio.EnderIO;
 import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -38,7 +37,7 @@ public class BlockFusedQuartz extends BlockContainer {
     setStepSound(Block.soundGlassFootstep);
     setBlockName(ModObject.blockFusedQuartz.unlocalisedName);
     setCreativeTab(EnderIOTab.tabEnderIO);
-    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setTextureFile(AtlasResolver.getTextureFile("enderio"));
   }
 
   private void init() {
