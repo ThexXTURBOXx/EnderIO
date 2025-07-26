@@ -92,4 +92,12 @@ public enum ModObject {
     }
   }
 
+  public static ModObject byName(String name) {
+    try {
+      return valueOf(name);
+    } catch (Throwable ignored) {
+    }
+    return null;
+  }
+
 }

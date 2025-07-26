@@ -1,6 +1,9 @@
 package crazypants.enderio;
 
 import crazypants.enderio.compat.AtlasResolver;
+import crazypants.enderio.compat.ModRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import buildcraft.api.gates.ActionManager;
 import buildcraft.api.gates.ITrigger;
@@ -127,8 +130,34 @@ public class EnderIO {
   public static ITrigger triggerIsCharging;
   public static ITrigger triggerFinishedCharging;
 
-  public static AtlasResolver ATLAS_RESOLVER = new AtlasResolver(
+  public static final AtlasResolver ATLAS_RESOLVER = new AtlasResolver(
           "enderio", "/mods/enderio/textures/atlas", EnderIO.class);
+
+  static {
+    ModRegistry.poke();
+  }
+
+  public static final ModRegistry ENDERIO_REGISTRY = new EnderIORegistry();
+
+  public static class EnderIORegistry extends ModRegistry {
+    public EnderIORegistry() {
+      super("enderio");
+    }
+
+    @Override
+    public Item resolveItem(String path) {
+      path = path.replaceFirst("enderIO:", "");
+      ModObject obj = ModObject.byName(path);
+      return obj == null ? null : Item.itemsList[obj.actualId];
+    }
+
+    @Override
+    public Block resolveBlock(String path) {
+      path = path.replaceFirst("enderIO:", "");
+      ModObject obj = ModObject.byName(path);
+      return obj == null ? null : Block.blocksList[obj.id];
+    }
+  }
 
   @PreInit
   public void preInit(FMLPreInitializationEvent event) {

@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.crusher;
 
+import crazypants.enderio.compat.ModRegistry;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,6 +45,8 @@ public class RecipeConfigParser extends DefaultHandler {
   public static final String AT_ENERGY_COST = "energyCost";
   public static final String AT_ITEM_ID = "itemID";
   public static final String AT_ITEM_META = "itemMeta";
+  public static final String AT_ITEM_NAME = "itemName";
+  public static final String AT_MOD_ID = "modID";
   public static final String AT_NUMBER = "number";
   public static final String AT_CHANCE = "chance";
 
@@ -280,7 +283,7 @@ public class RecipeConfigParser extends DefaultHandler {
 
   private void addOutputStack(Attributes attributes) {
     ItemStack stack = getItemStack(attributes);
-    if(stack == null) {
+    if(stack == null || stack.getItemDamage() < 0) {
       return;
     }
     recipe.addOutput(new CrusherOutput(stack, getFloatValue(AT_CHANCE, attributes, 1f)));
@@ -338,13 +341,31 @@ public class RecipeConfigParser extends DefaultHandler {
     }
 
     int itemID = getIntValue(AT_ITEM_ID, attributes, -1);
+    if(itemID <= 0) {
+
+      String modId = getStringValue(AT_MOD_ID, attributes, null);
+      String name = getStringValue(AT_ITEM_NAME, attributes, null);
+
+      if(modId != null && name != null) {
+
+        Item i = ModRegistry.findItem(modId, name);
+        if(i != null) {
+          itemID = i.itemID;
+        } else {
+          Block b = ModRegistry.findBlock(modId, name);
+          if(b != null) {
+            itemID = b.blockID;
+          }
+        }
+      }
+    }
 
     if(itemID <= 0) {
       Log.debug("Could not create an item stack from the attributes " + toString(attributes));
       return null;
     }
 
-    int itemMeta = getIntValue(AT_ITEM_META, attributes, 0);
+    int itemMeta = getIntOrWildcardValue(AT_ITEM_META, attributes, "*", -1, 0);
     int stackSize = getIntValue(AT_NUMBER, attributes, 1);
 
     return new ItemStack(itemID, stackSize, itemMeta);
@@ -364,6 +385,17 @@ public class RecipeConfigParser extends DefaultHandler {
       return Integer.parseInt(getStringValue(qName, attributes, def + ""));
     } catch (Exception e) {
       Log.warn(LP + "Could not parse a valid int for attribute " + qName + " with value " + getStringValue(qName, attributes, null));
+      return def;
+    }
+  }
+
+  private int getIntOrWildcardValue(String qName, Attributes attributes, String wildcard, int wildcardRet, int def) {
+    try {
+      String value = getStringValue(qName, attributes, def + "");
+      if (value == null ? wildcard == null : value.equals(wildcard)) return wildcardRet;
+      return Integer.parseInt(value);
+    } catch (Exception e) {
+      Log.warn(LP + "Could not parse a valid int/wildcard for attribute " + qName + " with value " + getStringValue(qName, attributes, null));
       return def;
     }
   }
