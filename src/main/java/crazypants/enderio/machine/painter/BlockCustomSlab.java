@@ -1,6 +1,7 @@
 package crazypants.enderio.machine.painter;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -66,7 +67,8 @@ public class BlockCustomSlab extends BlockHalfSlab {
       GameRegistry.registerTileEntity(TileEntityCustomBlock.class, ModObject.blockCustomSlab.unlocalisedName + "TileEntity");
       MachineRecipeRegistry.instance.registerRecipe(ModObject.blockPainter.unlocalisedName, new PainterTemplate());
     }
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitConnector");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:conduitConnector");
   }
 
   public static ItemStack createItemStackForSourceBlock(int id, int damage) {

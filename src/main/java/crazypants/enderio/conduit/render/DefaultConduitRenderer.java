@@ -10,6 +10,8 @@ import static net.minecraftforge.common.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.ForgeDirection.UP;
 import static net.minecraftforge.common.ForgeDirection.WEST;
 
+import crazypants.enderio.compat.TextureUtil;
+import crazypants.render.CubeRenderer;
 import java.util.Collection;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -46,10 +48,12 @@ public class DefaultConduitRenderer implements ConduitRenderer {
             conduit.getTransmitionTextureForState(component) >= 0) {
           tessellator.setColorRGBA_F(selfIllum + 0.1f, selfIllum + 0.1f,
               selfIllum + 0.1f, 0.75f);
+          CubeRenderer.bind(conduit.getTransmitionTextureFileForState(component));
           tex = conduit.getTransmitionTextureForState(component);
           renderTransmission(tex, component, conduit, selfIllum);
         }
 
+        CubeRenderer.bind(conduit.getTextureFileForState(component));
         tex = conduit.getTextureForState(component);
         if (tex >= 0) {
           tessellator.setColorOpaque_F(selfIllum, selfIllum, selfIllum);
@@ -62,10 +66,10 @@ public class DefaultConduitRenderer implements ConduitRenderer {
   }
 
   protected void renderConduit(int index, IConduit conduit, CollidableComponent component, float selfIllum) {
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
     if (isNSEWUP(component.dir)) {
       RoundedSegmentRenderer.renderSegment(component.dir, component.bound, minU, maxU, minV, maxV);
     } else {
@@ -74,10 +78,10 @@ public class DefaultConduitRenderer implements ConduitRenderer {
   }
 
   protected void renderTransmission(int index, CollidableComponent component, IConduit conduit, float selfIllum) {
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
     RoundedSegmentRenderer.renderSegment(component.dir, component.bound, minU, maxU, minV, maxV);
   }
 

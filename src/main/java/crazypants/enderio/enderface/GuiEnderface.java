@@ -1,5 +1,6 @@
 package crazypants.enderio.enderface;
 
+import crazypants.enderio.compat.TextureUtil;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -367,10 +368,10 @@ public class GuiEnderface extends GuiScreen {
     GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
     RenderUtil.bindBlockTexture();
     int index = Block.portal.getBlockTextureFromSide(1);
-    float f1 = (index % 16 * 16 + 0) / 256.0F;
-    float f2 = (index % 16 * 16 + 16) / 256.0F;
-    float f3 = (index / 16 * 16 + 0) / 256.0F;
-    float f4 = (index / 16 * 16 + 16) / 256.0F;
+    float f1 = TextureUtil.getMinU(index);
+    float f2 = TextureUtil.getMinV(index);
+    float f3 = TextureUtil.getMaxU(index);
+    float f4 = TextureUtil.getMaxV(index);
     Tessellator tessellator = Tessellator.instance;
     tessellator.startDrawingQuads();
     tessellator.addVertexWithUV(0.0D, par3, -90.0D, f1, f4);

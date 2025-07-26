@@ -1,6 +1,7 @@
 package crazypants.enderio.material;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -41,8 +42,9 @@ public class ItemPowderIngot extends Item {
     }
     int numParts = PowderIngot.values().length;
     for (int i = 0; i < numParts; i++) {
-      icons[i] = EnderIO.ATLAS_RESOLVER.getLocationIndex(PowderIngot.values()[i].iconKey);
+      icons[i] = AtlasResolver.getLocationIndex(PowderIngot.values()[i].iconKey);
     }
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
   }
 
   @Override

@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit;
 
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -47,9 +48,10 @@ public abstract class AbstractItemConduit extends Item implements IConduitItem {
 
     int index = 0;
     for (ItemConduitSubtype subtype : subtypes) {
-      icons[index] = EnderIO.ATLAS_RESOLVER.getLocationIndex(subtype.iconKey);
+      icons[index] = AtlasResolver.getLocationIndex(subtype.iconKey);
       index++;
     }
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
   }
 
   @Override

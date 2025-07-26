@@ -1,6 +1,7 @@
 package crazypants.enderio.machine.painter;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -41,7 +42,7 @@ public class BlockCustomFence extends BlockFence {
   private Random rand = new Random();
 
   public BlockCustomFence() {
-    super(ModObject.blockCustomFence.id, EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitConnector"), Material.wood);
+    super(ModObject.blockCustomFence.id, AtlasResolver.getLocationIndex("enderio:conduitConnector"), Material.wood);
     setBlockName(ModObject.blockCustomFence.unlocalisedName);
     setHardness(2.0F);
     setResistance(5.0F);

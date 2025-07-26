@@ -1,6 +1,7 @@
 package crazypants.enderio.material;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -47,8 +48,9 @@ public class ItemCapacitor extends Item implements ICapacitorItem {
           Capacitors.values()[i].uiName);
     }
     for (int i = 0; i < Capacitors.values().length; i++) {
-      icons[i] = EnderIO.ATLAS_RESOLVER.getLocationIndex(Capacitors.values()[i].iconKey);
+      icons[i] = AtlasResolver.getLocationIndex(Capacitors.values()[i].iconKey);
     }
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
   }
 
   @Override

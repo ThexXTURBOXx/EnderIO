@@ -1,5 +1,6 @@
 package crazypants.enderio.machine;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.BlockContainer;
@@ -23,19 +24,27 @@ import crazypants.enderio.ClientProxy;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.EnderIOTab;
 import crazypants.enderio.ModObject;
+import crazypants.enderio.compat.AtlasResolver;
 import crazypants.enderio.conduit.ConduitUtil;
 import crazypants.util.Util;
 
 public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> extends BlockContainer implements IGuiHandler {
 
+  public static final String[] REDSTONE_CONTROL_ICON_FILES = new String[RedstoneControlMode.values().length];
   public static final int[] REDSTONE_CONTROL_ICONS = new int[RedstoneControlMode.values().length];
 
   @SideOnly(Side.CLIENT)
   public static void initIcon() {
-    REDSTONE_CONTROL_ICONS[RedstoneControlMode.IGNORE.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneIgnore");
-    REDSTONE_CONTROL_ICONS[RedstoneControlMode.ON.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneOn");
-    REDSTONE_CONTROL_ICONS[RedstoneControlMode.OFF.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneOff");
-    REDSTONE_CONTROL_ICONS[RedstoneControlMode.NEVER.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:iconRedstoneNever");
+    Arrays.fill(REDSTONE_CONTROL_ICON_FILES, EnderIO.ATLAS_RESOLVER.getTextureFile());
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.IGNORE.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneIgnore");
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.ON.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneOn");
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.OFF.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneOff");
+    REDSTONE_CONTROL_ICONS[RedstoneControlMode.NEVER.ordinal()] = AtlasResolver.getLocationIndex("enderio:iconRedstoneNever");
+  }
+
+  @SideOnly(Side.CLIENT)
+  public static String getRedstoneControlIconFile(RedstoneControlMode mode) {
+    return REDSTONE_CONTROL_ICON_FILES[mode.ordinal()];
   }
 
   @SideOnly(Side.CLIENT)
@@ -69,22 +78,23 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
     GameRegistry.registerBlock(this, modObject.unlocalisedName);
     GameRegistry.registerTileEntity(teClass, modObject.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(getGuiId(), this);
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
     iconBuffer = new int[1][12];
     String side = getSideIconKey();
     // first the 6 sides in OFF state
-    iconBuffer[0][0] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][1] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][2] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][3] = EnderIO.ATLAS_RESOLVER.getLocationIndex(getMachineFrontIconKey(false));
-    iconBuffer[0][4] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][5] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][0] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][1] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][2] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][3] = AtlasResolver.getLocationIndex(getMachineFrontIconKey(false));
+    iconBuffer[0][4] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][5] = AtlasResolver.getLocationIndex(side);
 
-    iconBuffer[0][6] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][7] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][8] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][9] = EnderIO.ATLAS_RESOLVER.getLocationIndex(getMachineFrontIconKey(true));
-    iconBuffer[0][10] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
-    iconBuffer[0][11] = EnderIO.ATLAS_RESOLVER.getLocationIndex(side);
+    iconBuffer[0][6] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][7] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][8] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][9] = AtlasResolver.getLocationIndex(getMachineFrontIconKey(true));
+    iconBuffer[0][10] = AtlasResolver.getLocationIndex(side);
+    iconBuffer[0][11] = AtlasResolver.getLocationIndex(side);
   }
 
   @Override

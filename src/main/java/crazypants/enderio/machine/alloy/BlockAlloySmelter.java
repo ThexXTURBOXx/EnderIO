@@ -1,6 +1,7 @@
 package crazypants.enderio.machine.alloy;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -19,6 +20,7 @@ public class BlockAlloySmelter extends AbstractMachineBlock<TileAlloySmelter> {
     return ppainter;
   }
 
+  String vanillaSmeltingFile;
   int vanillaSmeltingOn;
   int vanillaSmeltingOff;
   int vanillaSmeltingOnly;
@@ -28,9 +30,10 @@ public class BlockAlloySmelter extends AbstractMachineBlock<TileAlloySmelter> {
   }
 
   private void initAS() {
-    vanillaSmeltingOn = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:furnaceSmeltingOn");
-    vanillaSmeltingOff = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:furnaceSmeltingOff");
-    vanillaSmeltingOnly = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:furnaceSmeltingOnly");
+    vanillaSmeltingFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    vanillaSmeltingOn = AtlasResolver.getLocationIndex("enderio:furnaceSmeltingOn");
+    vanillaSmeltingOff = AtlasResolver.getLocationIndex("enderio:furnaceSmeltingOff");
+    vanillaSmeltingOnly = AtlasResolver.getLocationIndex("enderio:furnaceSmeltingOnly");
   }
 
   @Override

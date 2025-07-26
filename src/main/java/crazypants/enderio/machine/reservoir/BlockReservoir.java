@@ -1,6 +1,7 @@
 package crazypants.enderio.machine.reservoir;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -51,7 +52,10 @@ public class BlockReservoir extends BlockContainer {
 
   }
 
+  private String[] mbIconFiles = new String[8];
   private int[] mbIcons = new int[8];
+
+  String switchIconFile;
   int switchIcon;
 
   private BlockReservoir() {
@@ -66,11 +70,14 @@ public class BlockReservoir extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockReservoir.name);
     GameRegistry.registerBlock(this, ModObject.blockReservoir.unlocalisedName);
     GameRegistry.registerTileEntity(TileReservoir.class, ModObject.blockReservoir.unlocalisedName + "TileEntity");
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:reservoir");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:reservoir");
     for (MbFace face : MbFace.values()) {
-      mbIcons[face.ordinal()] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:" + face.iconName);
+      mbIconFiles[face.ordinal()] = EnderIO.ATLAS_RESOLVER.getTextureFile();
+      mbIcons[face.ordinal()] = AtlasResolver.getLocationIndex("enderio:" + face.iconName);
     }
-    switchIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:reservoirSwitch");
+    switchIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    switchIcon = AtlasResolver.getLocationIndex("enderio:reservoirSwitch");
   }
 
   @Override

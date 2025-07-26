@@ -3,6 +3,7 @@ package crazypants.enderio.trigger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import thermalexpansion.api.core.IChargeableItem;
@@ -38,11 +39,11 @@ public class TriggerEnderIO extends Trigger {
 
   @SideOnly(Side.CLIENT)
   public static void initIcons() {
-    ICONS[0] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/noEnergy");
-    ICONS[1] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/hasEnergy");
-    ICONS[2] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/fullEnergy");
-    ICONS[3] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/charging");
-    ICONS[4] = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:triggers/chargingDone");
+    ICONS[0] = AtlasResolver.getLocationIndex("enderio:triggers/noEnergy");
+    ICONS[1] = AtlasResolver.getLocationIndex("enderio:triggers/hasEnergy");
+    ICONS[2] = AtlasResolver.getLocationIndex("enderio:triggers/fullEnergy");
+    ICONS[3] = AtlasResolver.getLocationIndex("enderio:triggers/charging");
+    ICONS[4] = AtlasResolver.getLocationIndex("enderio:triggers/chargingDone");
   }
 
   @Override

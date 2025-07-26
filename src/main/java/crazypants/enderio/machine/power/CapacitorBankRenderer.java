@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.power;
 
+import crazypants.enderio.compat.TextureUtil;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +117,7 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
       renderBorder(null, 0, 0, 0);
     }
     for (GaugeBounds gb : gaugeBounds) {
+      CubeRenderer.bind(EnderIO.blockCapacitorBank.overlayIconFile);
       renderGaugeOnFace(gb, EnderIO.blockCapacitorBank.overlayIcon);
     }
     tes.draw();
@@ -129,6 +131,7 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     // te.zCoord);
     // }
     for (GaugeBounds gb : gaugeBounds) {
+      CubeRenderer.bind(EnderIO.blockCapacitorBank.fillBarIconFile);
       renderFillBarOnFace(gb, EnderIO.blockCapacitorBank.fillBarIcon, filledRatio);
     }
     tes.draw();
@@ -161,8 +164,8 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     Tessellator tes = Tessellator.instance;
     tes.setNormal(gb.face.offsetX, gb.face.offsetY, gb.face.offsetZ);
     Vector2f u = gb.getMinMaxU(index);
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minV = TextureUtil.getMinV(index);
+    float maxV = TextureUtil.getMaxV(index);
     List<Vertex> corners = gb.bb.getCornersWithUvForFace(gb.face, u.x, u.y, minV, maxV);
     for (Vertex coord : corners) {
       tes.setNormal(coord.nx(), coord.ny(), coord.nz());
@@ -196,8 +199,8 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     int numPixelsLeft = targetPixelCount - pixelsBellowFace;
     int fillPixels = Math.min(numPixelsLeft, yPos.numFillPixels);
 
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minV = TextureUtil.getMinV(index);
+    float maxV = TextureUtil.getMaxV(index);
 
     double maxY = (yPos.fillOffset * PIXEL_SIZE) + (fillPixels * PIXEL_SIZE);
     float vWidth = maxV - minV;
@@ -278,8 +281,8 @@ public class CapacitorBankRenderer extends TileEntitySpecialRenderer implements 
     }
 
     Vector2f getMinMaxU(int index) {
-      float minU = (index % 16 * 16 + 0) / 256.0F;
-      float maxU = (index / 16 * 16 + 0) / 256.0F;
+      float minU = TextureUtil.getMinU(index);
+      float maxU = TextureUtil.getMaxU(index);
 
       VPos yPos = vInfo.pos;
       float uWidth = maxU - minU;

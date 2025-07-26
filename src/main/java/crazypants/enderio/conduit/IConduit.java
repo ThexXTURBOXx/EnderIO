@@ -81,6 +81,8 @@ public interface IConduit {
 
   int getTextureForState(CollidableComponent component);
 
+  String getTransmitionTextureFileForState(CollidableComponent component);
+
   int getTransmitionTextureForState(CollidableComponent component);
 
   float getTransmitionGeometryScale();

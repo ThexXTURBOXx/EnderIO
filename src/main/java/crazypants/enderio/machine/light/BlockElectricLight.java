@@ -1,6 +1,7 @@
 package crazypants.enderio.machine.light;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -51,9 +52,10 @@ public class BlockElectricLight extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockElectricLight.name);
     GameRegistry.registerBlock(this, ModObject.blockElectricLight.unlocalisedName);
     GameRegistry.registerTileEntity(TileElectricLight.class, ModObject.blockElectricLight.unlocalisedName + "TileEntity");
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:blockElectricLightFace");
-    blockIconOff = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:blockElectricLightFaceOff");
-    blockIconSide = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitConnector");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:blockElectricLightFace");
+    blockIconOff = AtlasResolver.getLocationIndex("enderio:blockElectricLightFaceOff");
+    blockIconSide = AtlasResolver.getLocationIndex("enderio:conduitConnector");
   }
 
   @Override

@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit.liquid;
 
+import crazypants.enderio.compat.AtlasResolver;
 import crazypants.render.RenderUtil;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,11 +41,11 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
 
   @SideOnly(Side.CLIENT)
   public static void initIcons() {
-    ICONS.put(ICON_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY));
-    ICONS.put(ICON_EMPTY_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_EMPTY_KEY));
-    ICONS.put(ICON_CORE_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_CORE_KEY));
-    ICONS.put(ICON_EXTRACT_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_EXTRACT_KEY));
-    ICONS.put(ICON_EMPTY_EXTRACT_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_EMPTY_EXTRACT_KEY));
+    ICONS.put(ICON_KEY, AtlasResolver.getLocationIndex(ICON_KEY));
+    ICONS.put(ICON_EMPTY_KEY, AtlasResolver.getLocationIndex(ICON_EMPTY_KEY));
+    ICONS.put(ICON_CORE_KEY, AtlasResolver.getLocationIndex(ICON_CORE_KEY));
+    ICONS.put(ICON_EXTRACT_KEY, AtlasResolver.getLocationIndex(ICON_EXTRACT_KEY));
+    ICONS.put(ICON_EMPTY_EXTRACT_KEY, AtlasResolver.getLocationIndex(ICON_EMPTY_EXTRACT_KEY));
   }
 
   private LiquidConduitNetwork network;
@@ -583,6 +584,15 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
       return stack.getItem().getIconIndex(stack);
     }
     return 0;
+  }
+
+  @Override
+  public String getTransmitionTextureFileForState(CollidableComponent component) {
+    if(active && tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
+       tank.getLiquid().asItemStack().getItem() != null) {
+      return tank.getLiquid().asItemStack().getItem().getTextureFile();
+    }
+    return null;
   }
 
   @Override

@@ -1,6 +1,7 @@
 package crazypants.enderio.material;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -53,13 +54,14 @@ public class ItemAlloy extends Item {
     }
     int numAlloys = Alloy.values().length;
     for (int i = 0; i < numAlloys; i++) {
-      icons[i] = EnderIO.ATLAS_RESOLVER.getLocationIndex(Alloy.values()[i].iconKey);
+      icons[i] = AtlasResolver.getLocationIndex(Alloy.values()[i].iconKey);
     }
     if (useNuggets) {
       for (int i = 0; i < numAlloys; i++) {
-        icons[i + numAlloys] = EnderIO.ATLAS_RESOLVER.getLocationIndex(Alloy.values()[i].iconKey + "Nugget");
+        icons[i + numAlloys] = AtlasResolver.getLocationIndex(Alloy.values()[i].iconKey + "Nugget");
       }
     }
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
   }
 
   @Override

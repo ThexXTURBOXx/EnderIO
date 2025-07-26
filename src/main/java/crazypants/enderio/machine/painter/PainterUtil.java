@@ -19,6 +19,11 @@ public final class PainterUtil {
         && PainterUtil.getSourceBlockMetadata(one) == PainterUtil.getSourceBlockMetadata(two);
   }
 
+  public static ItemStack getSourceStack(ItemStack item) {
+    int id = getSourceBlockId(item);
+    return id >= 0 ? new ItemStack(id, 1, getSourceBlockMetadata(item)) : null;
+  }
+
   public static Block getSourceBlock(ItemStack item) {
     if (item == null) return null;
     NBTTagCompound tag = item.getTagCompound();

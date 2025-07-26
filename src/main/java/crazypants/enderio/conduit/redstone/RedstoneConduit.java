@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit.redstone;
 
+import crazypants.enderio.compat.AtlasResolver;
 import crazypants.enderio.compat.RedstoneCompat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import crazypants.enderio.conduit.AbstractConduit;
 import crazypants.enderio.conduit.AbstractConduitNetwork;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.enderio.conduit.geom.CollidableComponent;
-import crazypants.render.IconUtil;
 import crazypants.util.BlockCoord;
 
 public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit {
@@ -34,10 +34,10 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
     ICON_FILES.put(KEY_CORE_ON_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
     ICON_FILES.put(KEY_CONDUIT_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
     ICON_FILES.put(KEY_TRANSMISSION_ICON, EnderIO.ATLAS_RESOLVER.getTextureFile());
-    ICONS.put(KEY_CORE_OFF_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CORE_OFF_ICON));
-    ICONS.put(KEY_CORE_ON_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CORE_ON_ICON));
-    ICONS.put(KEY_CONDUIT_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CONDUIT_ICON));
-    ICONS.put(KEY_TRANSMISSION_ICON, EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_TRANSMISSION_ICON));
+    ICONS.put(KEY_CORE_OFF_ICON, AtlasResolver.getLocationIndex(KEY_CORE_OFF_ICON));
+    ICONS.put(KEY_CORE_ON_ICON, AtlasResolver.getLocationIndex(KEY_CORE_ON_ICON));
+    ICONS.put(KEY_CONDUIT_ICON, AtlasResolver.getLocationIndex(KEY_CONDUIT_ICON));
+    ICONS.put(KEY_TRANSMISSION_ICON, AtlasResolver.getLocationIndex(KEY_TRANSMISSION_ICON));
   }
 
   protected RedstoneConduitNetwork network;
@@ -204,6 +204,11 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
     }
     // return ICONS.get(KEY_CONDUIT_ICON);
     return isActive() ? ICONS.get(KEY_TRANSMISSION_ICON) : ICONS.get(KEY_CONDUIT_ICON);
+  }
+
+  @Override
+  public String getTransmitionTextureFileForState(CollidableComponent component) {
+    return null;
   }
 
   @Override

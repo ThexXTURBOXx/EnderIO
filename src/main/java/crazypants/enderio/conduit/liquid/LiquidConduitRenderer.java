@@ -2,6 +2,7 @@ package crazypants.enderio.conduit.liquid;
 
 import static crazypants.render.CubeRenderer.setupVertices;
 
+import crazypants.enderio.compat.TextureUtil;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -44,10 +45,10 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
 
   @Override
   protected void renderConduit(int index, IConduit conduit, CollidableComponent component, float brightness) {
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
     if (isNSEWUP(component.dir)) {
       ILiquidConduit lc = (ILiquidConduit) conduit;
       LiquidStack fluid = lc.getFluidType();
@@ -74,10 +75,10 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
     }
     boolean changedTexture = false;
     if (!RenderUtil.BLOCK_TEX.equals(textureSheet)) {
+      RenderUtil.bindTexture(textureSheet);
       Tessellator tes = Tessellator.instance;
       tes.draw();
 
-      RenderUtil.bindTexture(textureSheet);
       tes.startDrawingQuads();
       tes.setColorRGBA_F(selfIllum, selfIllum,
           selfIllum, 1f);
@@ -130,17 +131,17 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
 
   @Override
   protected void renderTransmission(int index, CollidableComponent component, IConduit conduit, float selfIllum) {
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
     String textureSheet = ((ILiquidConduit) conduit).getTextureSheetForLiquid();
     boolean changedTexture = false;
     if (!RenderUtil.BLOCK_TEX.equals(textureSheet)) {
+      RenderUtil.bindTexture(textureSheet);
       Tessellator tes = Tessellator.instance;
       tes.draw();
 
-      RenderUtil.bindTexture(textureSheet);
       tes.startDrawingQuads();
       tes.setColorRGBA_F(selfIllum, selfIllum,
           selfIllum, 0.75f);
@@ -151,9 +152,9 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
       drawSection(cube, minU, maxU, minV, maxV, component.dir, true);
     }
     if (changedTexture) {
+      RenderUtil.bindBlockTexture();
       Tessellator tes = Tessellator.instance;
       tes.draw();
-      RenderUtil.bindBlockTexture();
       tes.startDrawingQuads();
     }
   }

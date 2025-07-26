@@ -82,7 +82,7 @@ public abstract class GuiMachineBase extends GuiContainerBase {
     int y = guiTop + 5;
 
     redstoneButton = new IconButton(fontRenderer, REDSTONE_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(tileEntity.getRedstoneControlMode()),
-        RenderUtil.BLOCK_TEX);
+        AbstractMachineBlock.getRedstoneControlIconFile(tileEntity.getRedstoneControlMode()));
     redstoneButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
 
     controlList.add(redstoneButton);

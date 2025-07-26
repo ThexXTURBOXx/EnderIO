@@ -59,7 +59,7 @@ public class GuiAlloySmelter extends GuiMachineBase {
     int x = guiLeft + xSize - 5 - BUTTON_SIZE;
     int y = guiTop + 60;
 
-    vanillaFurnaceButton = new IconButton(fontRenderer, SMELT_MODE_BUTTON_ID, x, y, getIconForMode(), RenderUtil.BLOCK_TEX);
+    vanillaFurnaceButton = new IconButton(fontRenderer, SMELT_MODE_BUTTON_ID, x, y, getIconForMode(), getIconFileForMode());
     vanillaFurnaceButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
 
     controlList.add(vanillaFurnaceButton);
@@ -75,6 +75,10 @@ public class GuiAlloySmelter extends GuiMachineBase {
     } else {
       super.actionPerformed(par1GuiButton);
     }
+  }
+
+  private String getIconFileForMode() {
+    return EnderIO.blockAlloySmelter.vanillaSmeltingFile;
   }
 
   private int getIconForMode() {

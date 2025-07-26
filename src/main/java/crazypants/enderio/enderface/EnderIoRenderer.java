@@ -1,5 +1,6 @@
 package crazypants.enderio.enderface;
 
+import crazypants.enderio.compat.TextureUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -42,10 +43,10 @@ public class EnderIoRenderer extends TileEntitySpecialRenderer implements IItemR
 
     int index = Item.eyeOfEnder.getIconFromDamage(0);
     RenderUtil.bindItemTexture();
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
 
     GL11.glDisable(GL11.GL_CULL_FACE);
     GL11.glColor3f(1, 1, 1);
@@ -100,7 +101,7 @@ public class EnderIoRenderer extends TileEntitySpecialRenderer implements IItemR
     GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
     GL11.glPolygonOffset(-1.0f, -1.0f);
 
-    CubeRenderer.bind(EnderIO.blockEnderIo.getTextureFile());
+    CubeRenderer.bind(EnderIO.blockEnderIo.frameIconFile);
     CubeRenderer.render(BoundingBox.UNIT_CUBE, EnderIO.blockEnderIo.frameIcon);
     Tessellator.instance.draw();
     GL11.glPopMatrix();

@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 
+import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 import crazypants.render.RenderUtil;
@@ -85,11 +86,22 @@ public class IconButton extends GuiButton {
       RenderUtil.bindTexture(texture);
       int xLoc = xPosition + 2;
       int yLoc = yPosition + 2;
-      // TODO PORT TEST THIS!!!
-      drawTexturedModalRect(xLoc, yLoc, icon % 16, icon / 16, width - 4, height - 4);
+      drawStretchedTexturedModalRect(xLoc, yLoc, width - 4, height - 4, (icon % 16) * 16, (icon / 16) * 16, 16, 16);
 
       GL11.glPopAttrib();
 
     }
+  }
+
+  public void drawStretchedTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6, int par7, int par8) {
+    float var7 = 0.00390625F;
+    float var8 = 0.00390625F;
+    Tessellator var9 = Tessellator.instance;
+    var9.startDrawingQuads();
+    var9.addVertexWithUV(par1 + 0, par2 + par4, this.zLevel, (par5 + 0) * var7, (par6 + par8) * var8);
+    var9.addVertexWithUV(par1 + par3, par2 + par4, this.zLevel, (par5 + par7) * var7, (par6 + par8) * var8);
+    var9.addVertexWithUV(par1 + par3, par2 + 0, this.zLevel, (par5 + par7) * var7, (par6 + 0) * var8);
+    var9.addVertexWithUV(par1 + 0, par2 + 0, this.zLevel, (par5 + 0) * var7, (par6 + 0) * var8);
+    var9.draw();
   }
 }

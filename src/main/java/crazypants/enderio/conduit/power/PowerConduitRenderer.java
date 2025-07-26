@@ -2,6 +2,7 @@ package crazypants.enderio.conduit.power;
 
 import static crazypants.util.ForgeDirectionOffsets.offsetScaled;
 
+import crazypants.enderio.compat.TextureUtil;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -135,10 +136,10 @@ public class PowerConduitRenderer extends DefaultConduitRenderer {
       return;
     }
 
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
 
     float uWidth = maxU - minU;
     float uScale = uWidth * 0.64f;

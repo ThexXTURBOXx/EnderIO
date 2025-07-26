@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit.facade;
 
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ItemConduitFacade extends Item {
     return result;
   }
 
+  protected String overlayIconFile;
   protected int overlayIcon;
 
   protected ItemConduitFacade() {
@@ -41,8 +43,14 @@ public class ItemConduitFacade extends Item {
   protected void init() {
     LanguageRegistry.addName(this, ModObject.itemConduitFacade.name);
     GameRegistry.registerItem(this, ModObject.itemConduitFacade.unlocalisedName);
-    setIconIndex(EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitFacadeItem"));
-    overlayIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitFacadeOverlay");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    setIconIndex(AtlasResolver.getLocationIndex("enderio:conduitFacadeItem"));
+    overlayIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    overlayIcon = AtlasResolver.getLocationIndex("enderio:conduitFacadeOverlay");
+  }
+
+  public String getOverlayIconFile() {
+    return overlayIconFile;
   }
 
   public int getOverlayIcon() {

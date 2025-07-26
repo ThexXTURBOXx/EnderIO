@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.power;
 
+import crazypants.enderio.compat.AtlasResolver;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -47,7 +48,10 @@ public class BlockCapacitorBank extends BlockContainer implements IGuiHandler {
     return res;
   }
 
+  String overlayIconFile;
   int overlayIcon;
+
+  String fillBarIconFile;
   int fillBarIcon;
 
   protected BlockCapacitorBank() {
@@ -63,9 +67,12 @@ public class BlockCapacitorBank extends BlockContainer implements IGuiHandler {
     GameRegistry.registerBlock(this, BlockItemCapacitorBank.class, ModObject.blockCapacitorBank.unlocalisedName);
     GameRegistry.registerTileEntity(TileCapacitorBank.class, ModObject.blockCapacitorBank.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_CAPACITOR_BANK, this);
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:capacitorBank");
-    overlayIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:capacitorBankOverlays");
-    fillBarIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:capacitorBankFillBar");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:capacitorBank");
+    overlayIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    overlayIcon = AtlasResolver.getLocationIndex("enderio:capacitorBankOverlays");
+    fillBarIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    fillBarIcon = AtlasResolver.getLocationIndex("enderio:capacitorBankFillBar");
   }
 
   @Override

@@ -183,14 +183,14 @@ public class GuiHyperCube extends GuiScreenBase {
 
     powerInputRedstoneButton = new IconButton(fontRenderer, POWER_INPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(cube
         .getInputControlMode()),
-        RenderUtil.BLOCK_TEX);
+        AbstractMachineBlock.getRedstoneControlIconFile(cube.getInputControlMode()));
     powerInputRedstoneButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
     controlList.add(powerInputRedstoneButton);
 
     x = x + 5 + BUTTON_SIZE;
     powerOutputRedstoneButton = new IconButton(fontRenderer, POWER_OUTPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(cube
         .getOutputControlMode()),
-        RenderUtil.BLOCK_TEX);
+        AbstractMachineBlock.getRedstoneControlIconFile(cube.getOutputControlMode()));
     powerOutputRedstoneButton.setSize(GuiMachineBase.BUTTON_SIZE, GuiMachineBase.BUTTON_SIZE);
     controlList.add(powerOutputRedstoneButton);
 

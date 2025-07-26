@@ -2,6 +2,7 @@ package crazypants.enderio.conduit;
 
 import static net.minecraftforge.common.ForgeDirection.getOrientation;
 
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,6 +50,7 @@ public class BlockConduitBundle extends BlockContainer {
 
   public static int rendererId = -1;
 
+  private String connectorIconFile;
   private int connectorIcon;
 
   private int lastRemovedComponetIcon;
@@ -150,7 +152,9 @@ public class BlockConduitBundle extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockConduitBundle.name);
     GameRegistry.registerBlock(this, ModObject.blockConduitBundle.unlocalisedName);
     GameRegistry.registerTileEntity(TileConduitBundle.class, ModObject.blockConduitBundle.unlocalisedName + "TileEntity");
-    connectorIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex(KEY_CONNECTOR_ICON);
+    connectorIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    connectorIcon = AtlasResolver.getLocationIndex(KEY_CONNECTOR_ICON);
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
     blockIndexInTexture = connectorIcon;
   }
 
@@ -196,7 +200,7 @@ public class BlockConduitBundle extends BlockContainer {
   }
 
   public String getConnectorIconFile() {
-    return EnderIO.ATLAS_RESOLVER.getTextureFile();
+    return connectorIconFile;
   }
 
   public int getConnectorIcon() {

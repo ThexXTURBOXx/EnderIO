@@ -1,6 +1,7 @@
 package crazypants.enderio.conduit.facade;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -35,7 +36,8 @@ public class BlockConduitFacade extends Block {
   private void init() {
     LanguageRegistry.addName(this, "Utility for Rendering DO NOT USE");
     GameRegistry.registerBlock(this, ModObject.blockConduitFacade.unlocalisedName);
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:conduitFacadeBlock");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:conduitFacadeBlock");
   }
 
   @Override
@@ -141,7 +143,7 @@ public class BlockConduitFacade extends Block {
     return new Mimic(id, meta);
   }
 
-  class Mimic {
+  static class Mimic {
     int id;
     int meta;
     Block block;

@@ -137,14 +137,14 @@ public class GuiCapacitorBank extends GuiContainerBase {
     int y = guiTop + inputY;
 
     inputRedstoneButton = new IconButton(fontRenderer, INPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(capBank.getInputControlMode()),
-        RenderUtil.BLOCK_TEX);
+        AbstractMachineBlock.getRedstoneControlIconFile(capBank.getInputControlMode()));
     inputRedstoneButton.setSize(GuiMachineBase.BUTTON_SIZE, GuiMachineBase.BUTTON_SIZE);
     controlList.add(inputRedstoneButton);
 
     //y = y + 5 + GuiMachineBase.BUTTON_SIZE;
     y = guiTop + outputY;
     outputRedstoneButton = new IconButton(fontRenderer, OUTPUT_BUTTON_ID, x, y, AbstractMachineBlock.getRedstoneControlIcon(capBank.getOutputControlMode()),
-        RenderUtil.BLOCK_TEX);
+        AbstractMachineBlock.getRedstoneControlIconFile(capBank.getOutputControlMode()));
     outputRedstoneButton.setSize(GuiMachineBase.BUTTON_SIZE, GuiMachineBase.BUTTON_SIZE);
     controlList.add(outputRedstoneButton);
 

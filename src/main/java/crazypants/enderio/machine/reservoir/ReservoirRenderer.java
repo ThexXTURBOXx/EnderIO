@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.reservoir;
 
+import crazypants.enderio.compat.TextureUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -79,10 +80,10 @@ public class ReservoirRenderer extends TileEntitySpecialRenderer {
       float margin = 0.01f;
 
       int index = getLiquidTexture();
-      float minU = (index % 16 * 16 + 0) / 256.0F;
-      float minV = (index % 16 * 16 + 16) / 256.0F;
-      float maxU = (index / 16 * 16 + 0) / 256.0F;
-      float maxV = (index / 16 * 16 + 16) / 256.0F;
+      float minU = TextureUtil.getMinU(index);
+      float minV = TextureUtil.getMinV(index);
+      float maxU = TextureUtil.getMaxU(index);
+      float maxV = TextureUtil.getMaxV(index);
       float maxV2 = minV + ((maxV - minV) * fullness);
 
       Tessellator.instance.startDrawingQuads();
@@ -148,11 +149,12 @@ public class ReservoirRenderer extends TileEntitySpecialRenderer {
     up.scale(0.125);
 
     int index = block.switchIcon;
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
 
+    CubeRenderer.bind(block.switchIconFile);
     tes.addVertexWithUV(offset.x + left.x - up.x, offset.y + left.y - up.y,
         offset.z + left.z - up.z, minU, maxV);
     tes.addVertexWithUV(offset.x - left.x - up.x, offset.y - left.y - up.y,

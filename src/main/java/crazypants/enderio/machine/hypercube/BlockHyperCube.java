@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.hypercube;
 
+import crazypants.enderio.compat.AtlasResolver;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -58,7 +59,8 @@ public class BlockHyperCube extends BlockContainer implements IGuiHandler {
     GameRegistry.registerBlock(this, ModObject.blockHyperCube.unlocalisedName);
     GameRegistry.registerTileEntity(TileHyperCube.class, ModObject.blockHyperCube.unlocalisedName + "TileEntity");
     EnderIO.guiHandler.registerGuiHandler(GuiHandler.GUI_ID_HYPER_CUBE, this);
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:tesseractPortal0"); // TODO PORT ANIMATION
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:tesseractPortal0"); // TODO PORT ANIMATION
   }
 
   public String getPortalIconFile() {

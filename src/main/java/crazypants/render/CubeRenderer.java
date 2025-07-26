@@ -1,6 +1,6 @@
 package crazypants.render;
 
-import net.minecraft.client.Minecraft;
+import crazypants.enderio.compat.TextureUtil;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.vecmath.Vector3d;
@@ -15,8 +15,7 @@ public final class CubeRenderer {
   }
 
   public static void bind(String textureFile) {
-    Minecraft.getMinecraft().renderEngine.bindTexture(
-            Minecraft.getMinecraft().renderEngine.getTexture(textureFile));
+    RenderUtil.bindTexture(textureFile);
   }
 
   public static void render(BoundingBox bb, int index) {
@@ -28,10 +27,10 @@ public final class CubeRenderer {
   }
 
   public static void render(BoundingBox bb, int index, VertexTransform xForm) {
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
     render(bb, minU, maxU, minV, maxV, xForm, false);
   }
 
@@ -41,10 +40,10 @@ public final class CubeRenderer {
     float maxU = 1;
     float maxV = 1;
     if (index > 0) {
-      minU = (index % 16 * 16 + 0) / 256.0F;
-      minV = (index % 16 * 16 + 16) / 256.0F;
-      maxU = (index / 16 * 16 + 0) / 256.0F;
-      maxV = (index / 16 * 16 + 16) / 256.0F;
+      minU = TextureUtil.getMinU(index);
+      minV = TextureUtil.getMinV(index);
+      maxU = TextureUtil.getMaxU(index);
+      maxV = TextureUtil.getMaxV(index);
     }
     render(bb, minU, maxU, minV, maxV, xForm, tintSides);
   }
@@ -143,10 +142,10 @@ public final class CubeRenderer {
 
     tessellator.setNormal(0, 0, -1);
     index = indices[0];
-    minU = (index % 16 * 16 + 0) / 256.0F;
-    minV = (index % 16 * 16 + 16) / 256.0F;
-    maxU = (index / 16 * 16 + 0) / 256.0F;
-    maxV = (index / 16 * 16 + 16) / 256.0F;
+    minU = TextureUtil.getMinU(index);
+    minV = TextureUtil.getMinV(index);
+    maxU = TextureUtil.getMaxU(index);
+    maxV = TextureUtil.getMaxV(index);
     bind(files[0]);
     addVecWithUV(verts[1], minU, minV);
     addVecWithUV(verts[0], maxU, minV);
@@ -155,10 +154,10 @@ public final class CubeRenderer {
 
     tessellator.setNormal(0, 0, 1);
     index = indices[1];
-    minU = (index % 16 * 16 + 0) / 256.0F;
-    minV = (index % 16 * 16 + 16) / 256.0F;
-    maxU = (index / 16 * 16 + 0) / 256.0F;
-    maxV = (index / 16 * 16 + 16) / 256.0F;
+    minU = TextureUtil.getMinU(index);
+    minV = TextureUtil.getMinV(index);
+    maxU = TextureUtil.getMaxU(index);
+    maxV = TextureUtil.getMaxV(index);
     bind(files[1]);
     addVecWithUV(verts[4], minU, minV);
     addVecWithUV(verts[5], maxU, minV);
@@ -167,10 +166,10 @@ public final class CubeRenderer {
 
     tessellator.setNormal(0, 1, 0);
     index = indices[2];
-    minU = (index % 16 * 16 + 0) / 256.0F;
-    minV = (index % 16 * 16 + 16) / 256.0F;
-    maxU = (index / 16 * 16 + 0) / 256.0F;
-    maxV = (index / 16 * 16 + 16) / 256.0F;
+    minU = TextureUtil.getMinU(index);
+    minV = TextureUtil.getMinV(index);
+    maxU = TextureUtil.getMaxU(index);
+    maxV = TextureUtil.getMaxV(index);
     bind(files[2]);
     addVecWithUV(verts[6], minU, minV);
     addVecWithUV(verts[2], minU, maxV);
@@ -179,10 +178,10 @@ public final class CubeRenderer {
 
     tessellator.setNormal(0, -1, 0);
     index = indices[3];
-    minU = (index % 16 * 16 + 0) / 256.0F;
-    minV = (index % 16 * 16 + 16) / 256.0F;
-    maxU = (index / 16 * 16 + 0) / 256.0F;
-    maxV = (index / 16 * 16 + 16) / 256.0F;
+    minU = TextureUtil.getMinU(index);
+    minV = TextureUtil.getMinV(index);
+    maxU = TextureUtil.getMaxU(index);
+    maxV = TextureUtil.getMaxV(index);
     bind(files[3]);
     addVecWithUV(verts[0], maxU, maxV);
     addVecWithUV(verts[1], minU, maxV);
@@ -191,10 +190,10 @@ public final class CubeRenderer {
 
     tessellator.setNormal(1, 0, 0);
     index = indices[4];
-    minU = (index % 16 * 16 + 0) / 256.0F;
-    minV = (index % 16 * 16 + 16) / 256.0F;
-    maxU = (index / 16 * 16 + 0) / 256.0F;
-    maxV = (index / 16 * 16 + 16) / 256.0F;
+    minU = TextureUtil.getMinU(index);
+    minV = TextureUtil.getMinV(index);
+    maxU = TextureUtil.getMaxU(index);
+    maxV = TextureUtil.getMaxV(index);
     bind(files[4]);
     addVecWithUV(verts[2], minU, maxV);
     addVecWithUV(verts[6], maxU, maxV);
@@ -203,10 +202,10 @@ public final class CubeRenderer {
 
     tessellator.setNormal(-1, 0, 0);
     index = indices[5];
-    minU = (index % 16 * 16 + 0) / 256.0F;
-    minV = (index % 16 * 16 + 16) / 256.0F;
-    maxU = (index / 16 * 16 + 0) / 256.0F;
-    maxV = (index / 16 * 16 + 16) / 256.0F;
+    minU = TextureUtil.getMinU(index);
+    minV = TextureUtil.getMinV(index);
+    maxU = TextureUtil.getMaxU(index);
+    maxV = TextureUtil.getMaxV(index);
     bind(files[5]);
     addVecWithUV(verts[0], minU, minV);
     addVecWithUV(verts[4], maxU, minV);

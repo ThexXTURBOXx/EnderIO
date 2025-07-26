@@ -1,6 +1,7 @@
 package crazypants.enderio.material;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -29,10 +30,10 @@ public class BlockFusedQuartz extends BlockContainer {
   }
 
   // Icon itemIcon;
-  int realBlockIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:fusedQuartz");
+  int realBlockIcon = AtlasResolver.getLocationIndex("enderio:fusedQuartz");
 
   private BlockFusedQuartz() {
-    super(ModObject.blockFusedQuartz.id, EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:fusedQuartzItem"), Material.glass);
+    super(ModObject.blockFusedQuartz.id, AtlasResolver.getLocationIndex("enderio:fusedQuartzItem"), Material.glass);
     setHardness(0.5F);
     setStepSound(Block.soundGlassFootstep);
     setBlockName(ModObject.blockFusedQuartz.unlocalisedName);

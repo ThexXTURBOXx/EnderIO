@@ -1,5 +1,6 @@
 package crazypants.enderio.enderface;
 
+import crazypants.enderio.compat.AtlasResolver;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -23,6 +24,7 @@ public class BlockEnderIO extends BlockContainer {
     return result;
   }
 
+  String frameIconFile;
   int frameIcon;
 
   private BlockEnderIO() {
@@ -37,8 +39,10 @@ public class BlockEnderIO extends BlockContainer {
     LanguageRegistry.addName(this, ModObject.blockEnderIo.name);
     GameRegistry.registerBlock(this, ModObject.blockEnderIo.unlocalisedName);
     GameRegistry.registerTileEntity(TileEnderIO.class, ModObject.blockEnderIo.unlocalisedName + "TileEntity");
-    blockIndexInTexture = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:enderIO");
-    frameIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:enderIOFrame");
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
+    blockIndexInTexture = AtlasResolver.getLocationIndex("enderio:enderIO");
+    frameIconFile = EnderIO.ATLAS_RESOLVER.getTextureFile();
+    frameIcon = AtlasResolver.getLocationIndex("enderio:enderIOFrame");
   }
 
   @Override

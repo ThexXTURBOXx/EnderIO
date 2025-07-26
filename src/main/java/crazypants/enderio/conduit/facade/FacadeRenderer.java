@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit.facade;
 
+import crazypants.render.CubeRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,8 @@ public class FacadeRenderer implements IItemRenderer {
     if (block != null) {
       // Render the facade block
 
-      RenderUtil.bindBlockTexture();
+      ItemStack sourceStack = PainterUtil.getSourceStack(item);
+      CubeRenderer.bind(sourceStack != null && sourceStack.getItem() != null ? sourceStack.getItem().getTextureFile() : block.getTextureFile());
       renderBlocks.renderBlockAsItem(block, PainterUtil.getSourceBlockMetadata(item), 1.0F);
 
       // then the 'overlay' that marks it as a facade
@@ -68,7 +70,7 @@ public class FacadeRenderer implements IItemRenderer {
       GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
       GL11.glPolygonOffset(-1.0f, -1.0f);
 
-      RenderUtil.bindItemTexture();
+      RenderUtil.bindTexture(EnderIO.itemConduitFacade.getOverlayIconFile());
       renderBlocks.setOverrideBlockTexture(EnderIO.itemConduitFacade.getOverlayIcon());
       renderBlocks.renderBlockAsItem(block, item.getItemDamage(), 1.0F);
 

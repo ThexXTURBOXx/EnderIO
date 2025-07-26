@@ -18,13 +18,13 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import crazypants.enderio.compat.TextureUtil;
 import crazypants.util.BlockCoord;
 import crazypants.vecmath.Matrix4d;
 import crazypants.vecmath.VecmathUtil;
@@ -74,18 +74,19 @@ public class RenderUtil {
   }
 
   public static void bindItemTexture() {
-    engine().bindTexture(engine().getTexture(ITEM_TEX));
+    bindTexture(ITEM_TEX);
   }
 
   public static void bindBlockTexture() {
-    engine().bindTexture(engine().getTexture(BLOCK_TEX));
+    bindTexture(BLOCK_TEX);
   }
 
   public static void bindGlintTexture() {
-    engine().bindTexture(engine().getTexture(BLOCK_TEX));
+    bindTexture(GLINT_TEX);
   }
 
   public static void bindTexture(String string) {
+    if (string == null) return;
     engine().bindTexture(engine().getTexture(string));
   }
 
@@ -273,10 +274,10 @@ public class RenderUtil {
     p.y -= y;
     p.z -= z;
 
-    float minU = (index % 16 * 16 + 0) / 256.0F;
-    float minV = (index % 16 * 16 + 16) / 256.0F;
-    float maxU = (index / 16 * 16 + 0) / 256.0F;
-    float maxV = (index / 16 * 16 + 16) / 256.0F;
+    float minU = TextureUtil.getMinU(index);
+    float minV = TextureUtil.getMinV(index);
+    float maxU = TextureUtil.getMaxU(index);
+    float maxV = TextureUtil.getMaxV(index);
 
     float uWidth = maxU - minU;
     float vWidth = maxV - minV;

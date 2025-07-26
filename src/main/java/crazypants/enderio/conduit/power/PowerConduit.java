@@ -1,6 +1,7 @@
 package crazypants.enderio.conduit.power;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,6 @@ import crazypants.enderio.power.BasicCapacitor;
 import crazypants.enderio.power.ICapacitor;
 import crazypants.enderio.power.MutablePowerProvider;
 import crazypants.render.BoundingBox;
-import crazypants.render.IconUtil;
 import crazypants.util.BlockCoord;
 import crazypants.vecmath.Vector3d;
 
@@ -54,13 +54,13 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
       ICON_FILES.put(ICON_KEY_INPUT + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
       ICON_FILES.put(ICON_KEY_OUTPUT + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
       ICON_FILES.put(ICON_CORE_KEY + pf, EnderIO.ATLAS_RESOLVER.getTextureFile());
-      ICONS.put(ICON_KEY + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY + pf));
-      ICONS.put(ICON_KEY_INPUT + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY_INPUT + pf));
-      ICONS.put(ICON_KEY_OUTPUT + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_KEY_OUTPUT + pf));
-      ICONS.put(ICON_CORE_KEY + pf, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_CORE_KEY + pf));
+      ICONS.put(ICON_KEY + pf, AtlasResolver.getLocationIndex(ICON_KEY + pf));
+      ICONS.put(ICON_KEY_INPUT + pf, AtlasResolver.getLocationIndex(ICON_KEY_INPUT + pf));
+      ICONS.put(ICON_KEY_OUTPUT + pf, AtlasResolver.getLocationIndex(ICON_KEY_OUTPUT + pf));
+      ICONS.put(ICON_CORE_KEY + pf, AtlasResolver.getLocationIndex(ICON_CORE_KEY + pf));
     }
     ICON_FILES.put(ICON_TRANSMISSION_KEY, EnderIO.ATLAS_RESOLVER.getTextureFile());
-    ICONS.put(ICON_TRANSMISSION_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(ICON_TRANSMISSION_KEY));
+    ICONS.put(ICON_TRANSMISSION_KEY, AtlasResolver.getLocationIndex(ICON_TRANSMISSION_KEY));
   }
 
   public static final float WIDTH = 0.075f;
@@ -281,6 +281,11 @@ public class PowerConduit extends AbstractConduit implements IPowerConduit {
   @Override
   public int getTextureForOutputMode() {
     return ICONS.get(ICON_KEY_OUTPUT + POSTFIX[subtype]);
+  }
+
+  @Override
+  public String getTransmitionTextureFileForState(CollidableComponent component) {
+    return null;
   }
 
   @Override

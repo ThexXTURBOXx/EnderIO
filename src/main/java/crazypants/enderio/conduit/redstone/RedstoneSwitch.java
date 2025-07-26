@@ -1,6 +1,7 @@
 package crazypants.enderio.conduit.redstone;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +16,6 @@ import crazypants.enderio.conduit.geom.CollidableComponent;
 import crazypants.enderio.conduit.geom.ConduitGeometryUtil;
 import crazypants.enderio.conduit.geom.Offset;
 import crazypants.render.BoundingBox;
-import crazypants.render.IconUtil;
 import crazypants.util.BlockCoord;
 import crazypants.vecmath.Vector3d;
 
@@ -28,8 +28,8 @@ public class RedstoneSwitch extends RedstoneConduit {
   private boolean isOn;
 
   public static void initIcons() {
-    ICONS.put(RedstoneSwitch.SWITHC_ICON_OFF_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(SWITHC_ICON_OFF_KEY));
-    ICONS.put(RedstoneSwitch.SWITCH_ICON_ON_KEY, EnderIO.ATLAS_RESOLVER.getLocationIndex(SWITCH_ICON_ON_KEY));
+    ICONS.put(RedstoneSwitch.SWITHC_ICON_OFF_KEY, AtlasResolver.getLocationIndex(SWITHC_ICON_OFF_KEY));
+    ICONS.put(RedstoneSwitch.SWITCH_ICON_ON_KEY, AtlasResolver.getLocationIndex(SWITCH_ICON_ON_KEY));
   }
 
   @Override

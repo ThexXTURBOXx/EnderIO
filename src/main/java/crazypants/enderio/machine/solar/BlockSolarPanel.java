@@ -1,6 +1,7 @@
 package crazypants.enderio.machine.solar;
 
 import crazypants.enderio.EnderIO;
+import crazypants.enderio.compat.AtlasResolver;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -31,10 +32,10 @@ public class BlockSolarPanel extends BlockContainer {
 
   private static final float BLOCK_HEIGHT = 0.15f;
 
-  int sideIcon = EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:solarPanelSide");
+  int sideIcon = AtlasResolver.getLocationIndex("enderio:solarPanelSide");
 
   private BlockSolarPanel() {
-    super(ModObject.blockSolarPanel.id, EnderIO.ATLAS_RESOLVER.getLocationIndex("enderio:solarPanelTop"), Material.ground);
+    super(ModObject.blockSolarPanel.id, AtlasResolver.getLocationIndex("enderio:solarPanelTop"), Material.ground);
     setHardness(0.5F);
     setStepSound(Block.soundStoneFootstep);
     setBlockName(ModObject.blockSolarPanel.unlocalisedName);
@@ -44,6 +45,7 @@ public class BlockSolarPanel extends BlockContainer {
       setCreativeTab(null);
     }
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, BLOCK_HEIGHT, 1.0F);
+    setTextureFile(EnderIO.ATLAS_RESOLVER.getTextureFile());
   }
 
   private void init() {
