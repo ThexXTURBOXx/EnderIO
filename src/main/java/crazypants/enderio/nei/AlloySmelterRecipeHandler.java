@@ -74,7 +74,7 @@ public class AlloySmelterRecipeHandler extends TemplateRecipeHandler {
   {
     GL11.glColor4f(1, 1, 1, 1);
     // changeTexture(getGuiTexture());
-    gui.bindTexture(getGuiTexture());
+    gui.bindTexture(gui.getTexture(getGuiTexture()));
     gui.drawTexturedModalRect(0, 0, 5, 3, 166, 73);
   }
 

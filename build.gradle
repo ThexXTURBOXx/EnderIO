@@ -57,7 +57,7 @@ unimined.minecraft {
 dependencies {
     shadow(":cglib-nodep-2.2.3")
     implementation(":buildcraft-A-1.4.7-3.4.6-dev")
-    modImplementation(":neiDummyInterface")
+    modImplementation(":NotEnoughItems 1.4.7.1")
 }
 
 tasks.jar {
