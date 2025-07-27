@@ -273,34 +273,40 @@ public class BlockConduitBundle extends BlockContainer {
     return result;
   }
 
-  @Override
-  public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z,
-      int par5) {
+  public static int getStrongPower(IBlockAccess world, int x, int y, int z, int side) {
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (!(te instanceof IConduitBundle)) {
-      return false;
+      return 0;
     }
     IConduitBundle bundle = (IConduitBundle) te;
     IRedstoneConduit con = bundle.getConduit(IRedstoneConduit.class);
     if (con == null) {
-      return false;
+      return 0;
     }
-    return con.isProvidingStrongPower(getOrientation(par5));
+    return con.isProvidingStrongPower(getOrientation(side));
+  }
+
+  public static int getWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+    TileEntity te = world.getBlockTileEntity(x, y, z);
+    if (!(te instanceof IConduitBundle)) {
+      return 0;
+    }
+    IConduitBundle bundle = (IConduitBundle) te;
+    IRedstoneConduit con = bundle.getConduit(IRedstoneConduit.class);
+    if (con == null) {
+      return 0;
+    }
+    return con.isProvidingWeakPower(getOrientation(side));
   }
 
   @Override
-  public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z,
-      int par5) {
-    TileEntity te = world.getBlockTileEntity(x, y, z);
-    if (!(te instanceof IConduitBundle)) {
-      return false;
-    }
-    IConduitBundle bundle = (IConduitBundle) te;
-    IRedstoneConduit con = bundle.getConduit(IRedstoneConduit.class);
-    if (con == null) {
-      return false;
-    }
-    return con.isProvidingWeakPower(getOrientation(par5));
+  public boolean isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int par5) {
+    return getStrongPower(world, x, y, z, par5) > 0;
+  }
+
+  @Override
+  public boolean isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int par5) {
+    return getWeakPower(world, x, y, z, par5) > 0;
   }
 
   @Override

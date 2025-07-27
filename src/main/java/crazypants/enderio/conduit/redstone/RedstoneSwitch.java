@@ -42,11 +42,11 @@ public class RedstoneSwitch extends RedstoneConduit {
   }
 
   @Override
-  public boolean isProvidingStrongPower(ForgeDirection toDirection) {
+  public int isProvidingStrongPower(ForgeDirection toDirection) {
     if (network == null || !network.isNetworkEnabled()) {
-      return false;
+      return 0;
     }
-    return isOn;
+    return isOn ? 15 : 0;
   }
 
   @Override
