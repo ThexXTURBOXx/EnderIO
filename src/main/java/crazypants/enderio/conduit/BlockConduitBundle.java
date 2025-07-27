@@ -3,6 +3,7 @@ package crazypants.enderio.conduit;
 import static net.minecraftforge.common.ForgeDirection.getOrientation;
 
 import crazypants.enderio.compat.AtlasResolver;
+import crazypants.enderio.conduit.render.ConduitBundleRenderer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,8 +48,6 @@ public class BlockConduitBundle extends BlockContainer {
     result.init();
     return result;
   }
-
-  public static int rendererId = -1;
 
   private String connectorIconFile;
   private int connectorIcon;
@@ -228,7 +227,7 @@ public class BlockConduitBundle extends BlockContainer {
 
   @Override
   public int getRenderType() {
-    return rendererId;
+    return ConduitBundleRenderer.ID;
   }
 
   @Override

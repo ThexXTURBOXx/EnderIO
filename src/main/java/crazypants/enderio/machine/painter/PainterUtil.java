@@ -11,14 +11,6 @@ public final class PainterUtil {
   private PainterUtil() {
   }
 
-  public static boolean isMetadataEquivelent(ItemStack one, ItemStack two) {
-    if (one == null || two == null) {
-      return false;
-    }
-    return PainterUtil.getSourceBlockId(one) == PainterUtil.getSourceBlockId(two)
-        && PainterUtil.getSourceBlockMetadata(one) == PainterUtil.getSourceBlockMetadata(two);
-  }
-
   public static ItemStack getSourceStack(ItemStack item) {
     int id = getSourceBlockId(item);
     return id >= 0 ? new ItemStack(id, 1, getSourceBlockMetadata(item)) : null;

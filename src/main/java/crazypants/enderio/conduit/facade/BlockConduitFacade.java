@@ -40,6 +40,14 @@ public class BlockConduitFacade extends Block {
   }
 
   @Override
+  public String getTextureFile() {
+    if (blockOverride != null) {
+      return blockOverride.getTextureFile();
+    }
+    return super.getTextureFile();
+  }
+
+  @Override
   @SideOnly(Side.CLIENT)
   public int getBlockTexture(IBlockAccess ba, int x, int y, int z, int side) {
     TileEntity te = ba.getBlockTileEntity(x, y, z);

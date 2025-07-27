@@ -15,6 +15,7 @@ import crazypants.render.CubeRenderer;
 import java.util.Collection;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeDirection;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.enderio.conduit.IConduitBundle;
@@ -39,25 +40,31 @@ public class DefaultConduitRenderer implements ConduitRenderer {
 
     transmissionScaleFactor = conduit.getTransmitionGeometryScale();
 
+    String texFile;
     int tex;
     boolean active = conduit.isActive();
     for (CollidableComponent component : components) {
       if (renderComponent(component)) {
         float selfIllum = Math.max(worldLight, conduit.getSelfIlluminationForState(component));
+
+        texFile = conduit.getTransmitionTextureFileForState(component);
+        tex = conduit.getTransmitionTextureForState(component);
         if (active && isNSEWUP(component.dir) &&
-            conduit.getTransmitionTextureForState(component) >= 0) {
+            texFile != null && tex >= 0) {
+          ForgeHooksClient.bindTexture(texFile, 0);
           tessellator.setColorRGBA_F(selfIllum + 0.1f, selfIllum + 0.1f,
               selfIllum + 0.1f, 0.75f);
-          CubeRenderer.bind(conduit.getTransmitionTextureFileForState(component));
-          tex = conduit.getTransmitionTextureForState(component);
-          renderTransmission(tex, component, conduit, selfIllum);
+          renderTransmission(texFile, tex, component, conduit, selfIllum);
+          ForgeHooksClient.unbindTexture();
         }
 
-        CubeRenderer.bind(conduit.getTextureFileForState(component));
+        texFile = conduit.getTextureFileForState(component);
         tex = conduit.getTextureForState(component);
-        if (tex >= 0) {
+        if (texFile != null && tex >= 0) {
+          ForgeHooksClient.bindTexture(texFile, 0);
           tessellator.setColorOpaque_F(selfIllum, selfIllum, selfIllum);
-          renderConduit(tex, conduit, component, selfIllum);
+          renderConduit(texFile, tex, conduit, component, selfIllum);
+          ForgeHooksClient.unbindTexture();
         }
       }
 
@@ -65,7 +72,7 @@ public class DefaultConduitRenderer implements ConduitRenderer {
 
   }
 
-  protected void renderConduit(int index, IConduit conduit, CollidableComponent component, float selfIllum) {
+  protected void renderConduit(String texFile, int index, IConduit conduit, CollidableComponent component, float selfIllum) {
     float minU = TextureUtil.getMinU(index);
     float minV = TextureUtil.getMinV(index);
     float maxU = TextureUtil.getMaxU(index);
@@ -77,7 +84,7 @@ public class DefaultConduitRenderer implements ConduitRenderer {
     }
   }
 
-  protected void renderTransmission(int index, CollidableComponent component, IConduit conduit, float selfIllum) {
+  protected void renderTransmission(String texFile, int index, CollidableComponent component, IConduit conduit, float selfIllum) {
     float minU = TextureUtil.getMinU(index);
     float minV = TextureUtil.getMinV(index);
     float maxU = TextureUtil.getMaxU(index);

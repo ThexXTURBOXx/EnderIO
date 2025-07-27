@@ -1,11 +1,13 @@
 package crazypants.enderio.material;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import crazypants.enderio.EnderIO;
@@ -14,6 +16,13 @@ import crazypants.enderio.machine.painter.TileEntityCustomBlock;
 import crazypants.render.RenderUtil;
 
 public class FusedQuartzRenderer implements ISimpleBlockRenderingHandler {
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static final FusedQuartzRenderer INSTANCE = new FusedQuartzRenderer();
+
+  public static void init() {
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
 
   static int renderPass;
 
@@ -31,7 +40,7 @@ public class FusedQuartzRenderer implements ISimpleBlockRenderingHandler {
 
   @Override
   public int getRenderId() {
-    return BlockFusedQuartz.renderId;
+    return ID;
   }
 
   @Override
@@ -63,13 +72,20 @@ public class FusedQuartzRenderer implements ISimpleBlockRenderingHandler {
   }
 
   private void renderFrame(IBlockAccess blockAccess, int x, int y, int z, TileEntityCustomBlock tecb, boolean forceAllEdges) {
+    String textureFile = EnderIO.blockFusedQuartz.getTextureFile();
+    if (tecb != null && tecb.getSourceBlockId() > 0) {
+      textureFile = tecb.getSourceBlock().getTextureFile();
+    }
+
     int texture = EnderIO.blockFusedQuartz.getBlockTextureFromSideAndMetadata(0, 0);
+    ForgeHooksClient.bindTexture(textureFile, 0);
     for (ForgeDirection face : ForgeDirection.VALID_DIRECTIONS) {
       if (tecb != null && tecb.getSourceBlockId() > 0) {
         texture = tecb.getSourceBlock().getBlockTextureFromSideAndMetadata(face.ordinal(), tecb.getSourceBlockMetadata());
       }
       RenderUtil.renderConnectedTextureFace(blockAccess, x, y, z, face, texture, forceAllEdges);
     }
+    ForgeHooksClient.unbindTexture();
   }
 
 }

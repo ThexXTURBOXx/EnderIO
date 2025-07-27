@@ -1,5 +1,6 @@
 package crazypants.enderio.conduit.render;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -22,7 +24,6 @@ import org.lwjgl.opengl.GL12;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.ModObject;
-import crazypants.enderio.conduit.BlockConduitBundle;
 import crazypants.enderio.conduit.ConduitUtil;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.enderio.conduit.IConduitBundle;
@@ -35,9 +36,17 @@ import crazypants.render.RenderUtil;
 
 public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler {
 
-  private Map<ForgeDirection, BoundingBox[]> connectorBounds = new HashMap<ForgeDirection, BoundingBox[]>();
-
   public static final float CONNECTOR_DEPTH = 0.05f;
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static ConduitBundleRenderer INSTANCE;
+
+  public static void init(float conduitScale) {
+    INSTANCE = new ConduitBundleRenderer(conduitScale);
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
+
+  private Map<ForgeDirection, BoundingBox[]> connectorBounds = new HashMap<ForgeDirection, BoundingBox[]>();
 
   public ConduitBundleRenderer(float conduitScale) {
     float connectorWidth = 0.25f + (conduitScale * 0.5f);
@@ -106,12 +115,14 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
         IConduit con = bundle.getConduit(component.conduitType);
         float selfIllum = Math.max(brightness, con.getSelfIlluminationForState(component));
         tessellator.setColorRGBA_F(selfIllum, selfIllum, selfIllum, 1);
-        CubeRenderer.bind(con.getTextureFileForState(component));
+        ForgeHooksClient.bindTexture(con.getTextureFileForState(component), 0);
         CubeRenderer.render(component.bound, con.getTextureForState(component));
+        ForgeHooksClient.unbindTexture();
       } else {
         int tex = EnderIO.blockConduitBundle.getConnectorIcon();
-        CubeRenderer.bind(EnderIO.blockConduitBundle.getConnectorIconFile());
+        ForgeHooksClient.bindTexture(EnderIO.blockConduitBundle.getConnectorIconFile(), 0);
         CubeRenderer.render(component.bound, tex);
+        ForgeHooksClient.unbindTexture();
       }
     }
 
@@ -133,10 +144,11 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
   private void renderExternalConnection(ForgeDirection dir) {
     int tex = EnderIO.blockConduitBundle.getConnectorIcon();
     BoundingBox[] bbs = connectorBounds.get(dir);
-    CubeRenderer.bind(EnderIO.blockConduitBundle.getConnectorIconFile());
+    ForgeHooksClient.bindTexture(EnderIO.blockConduitBundle.getConnectorIconFile(), 0);
     for (BoundingBox bb : bbs) {
       CubeRenderer.render(bb, tex);
     }
+    ForgeHooksClient.unbindTexture();
   }
 
   private BoundingBox[] createConnector(ForgeDirection dir, float connectorDepth, float connectorWidth) {
@@ -205,8 +217,10 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
       BlockConduitFacade facb = (BlockConduitFacade) Block.blocksList[ModObject.blockConduitFacade.actualId];
       facb.setBlockOverride(bundle);
       facb.setBlockBounds(0, 0, 0, 1, 1, 1);
+      ForgeHooksClient.bindTexture(facb.getTextureFile(), 0);
       rb.setRenderBoundsFromBlock(facb);
       rb.renderStandardBlock(facb, x, y, z);
+      ForgeHooksClient.unbindTexture();
       facb.setBlockOverride(null);
 
       bundle.setFacadeId(facadeId, false);
@@ -229,7 +243,7 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
 
   @Override
   public int getRenderId() {
-    return BlockConduitBundle.rendererId;
+    return ID;
   }
 
 }

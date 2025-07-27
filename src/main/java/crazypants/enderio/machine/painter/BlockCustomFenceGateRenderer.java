@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.painter;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockFenceGate;
@@ -9,6 +10,13 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import crazypants.enderio.ModObject;
 
 public class BlockCustomFenceGateRenderer implements ISimpleBlockRenderingHandler {
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static final BlockCustomFenceGateRenderer INSTANCE = new BlockCustomFenceGateRenderer();
+
+  public static void init() {
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
 
   @Override
   public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
@@ -22,7 +30,7 @@ public class BlockCustomFenceGateRenderer implements ISimpleBlockRenderingHandle
 
   @Override
   public int getRenderId() {
-    return BlockCustomFenceGate.renderId;
+    return ID;
   }
 
   @Override

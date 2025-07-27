@@ -20,8 +20,6 @@ import crazypants.enderio.machine.painter.TileEntityCustomBlock;
 
 public class BlockFusedQuartz extends BlockContainer {
 
-  public static int renderId;
-
   public static BlockFusedQuartz create() {
     BlockFusedQuartz result = new BlockFusedQuartz();
     result.init();
@@ -57,7 +55,7 @@ public class BlockFusedQuartz extends BlockContainer {
 
   @Override
   public int getRenderType() {
-    return renderId;
+    return FusedQuartzRenderer.ID;
   }
 
   @Override

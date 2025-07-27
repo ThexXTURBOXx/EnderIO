@@ -25,8 +25,6 @@ public class BlockElectricLight extends BlockContainer {
   private static final float BLOCK_EDGE_MAX = 0.5f + (BLOCK_WIDTH / 2);
   private static final float BLOCK_EDGE_MIN = 0.5f - (BLOCK_WIDTH / 2);
 
-  public static int renderId;
-
   public static BlockElectricLight create() {
     BlockElectricLight result = new BlockElectricLight();
     result.init();
@@ -94,7 +92,7 @@ public class BlockElectricLight extends BlockContainer {
 
   @Override
   public int getRenderType() {
-    return renderId;
+    return ElectricLightRenderer.ID;
   }
 
   @Override

@@ -1,6 +1,8 @@
 package crazypants.enderio.machine.painter;
 
 import crazypants.enderio.compat.AtlasResolver;
+import crazypants.enderio.compat.DynTexBlockInWorldRenderer;
+import crazypants.enderio.compat.IDynTexBlock;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +34,7 @@ import crazypants.enderio.machine.MachineRecipeInput;
 import crazypants.enderio.machine.MachineRecipeRegistry;
 import crazypants.util.Util;
 
-public class BlockCustomStair extends BlockStairs {
+public class BlockCustomStair extends BlockStairs implements IDynTexBlock {
 
   public static BlockCustomStair create() {
     BlockCustomStair result = new BlockCustomStair();
@@ -62,7 +64,7 @@ public class BlockCustomStair extends BlockStairs {
   }
 
   public static ItemStack createItemStackForSourceBlock(int id, int damage) {
-    ItemStack result = new ItemStack(ModObject.blockCustomStair.id, 1, damage);
+    ItemStack result = new ItemStack(ModObject.blockCustomStair.id, 1, 0);
     PainterUtil.setSourceBlock(result, id, damage);
     return result;
   }
@@ -148,12 +150,41 @@ public class BlockCustomStair extends BlockStairs {
     return ((meta & 3) + side.ordinal() == 5) || (side == ForgeDirection.UP && flipped);
   }
 
+  private int renderType = DynTexBlockInWorldRenderer.ID;
+
+  @Override
+  public int getRenderType() {
+    return renderType;
+  }
+
+  @Override
+  public void setOriginalRenderType() {
+    renderType = super.getRenderType();
+  }
+
+  @Override
+  public void setDynRenderType() {
+    renderType = DynTexBlockInWorldRenderer.ID;
+  }
+
+  @Override
+  public String getTextureFile(IBlockAccess world, int x, int y, int z, int blockSide) {
+    TileEntity te = world.getBlockTileEntity(x, y, z);
+    if (te instanceof TileEntityCustomBlock) {
+      TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
+      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length && blocksList[tef.getSourceBlockId()] != null) {
+        return blocksList[tef.getSourceBlockId()].getTextureFile();
+      }
+    }
+    return blocksList[Block.anvil.blockID].getTextureFile();
+  }
+
   @Override
   public int getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileEntityCustomBlock) {
       TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
-      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length) {
+      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length && blocksList[tef.getSourceBlockId()] != null) {
         return blocksList[tef.getSourceBlockId()].getBlockTextureFromSideAndMetadata(blockSide, tef.getSourceBlockMetadata());
       }
     }

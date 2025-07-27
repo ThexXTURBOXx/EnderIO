@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 import crazypants.enderio.conduit.IConduit;
@@ -44,7 +45,7 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
   }
 
   @Override
-  protected void renderConduit(int index, IConduit conduit, CollidableComponent component, float brightness) {
+  protected void renderConduit(String texFile, int index, IConduit conduit, CollidableComponent component, float brightness) {
     float minU = TextureUtil.getMinU(index);
     float minV = TextureUtil.getMinV(index);
     float maxU = TextureUtil.getMaxU(index);
@@ -53,7 +54,7 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
       ILiquidConduit lc = (ILiquidConduit) conduit;
       LiquidStack fluid = lc.getFluidType();
       if (fluid != null) {
-        renderFluidOutline(conduit, component, fluid, brightness);
+        renderFluidOutline(conduit, texFile, component, fluid, brightness);
       }
       BoundingBox[] cubes = toCubes(component.bound);
       for (BoundingBox cube : cubes) {
@@ -65,26 +66,26 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
     }
   }
 
-  private void renderFluidOutline(IConduit conduit, CollidableComponent component, LiquidStack fluid, float selfIllum) {
-    // TODO: Should cache these vertices as relatively heavy weight to calc each
-    // frame
+  private void renderFluidOutline(IConduit conduit, String currTex, CollidableComponent component, LiquidStack fluid, float selfIllum) {
+    // TODO: Should cache these vertices as relatively heavy weight to calc each frame
     int texture = getTextureForLiquid(fluid);
     String textureSheet = getTextureSheetForLiquid(fluid);
     if (texture < 0 || textureSheet == null) {
       return;
     }
+
     boolean changedTexture = false;
-    if (!RenderUtil.BLOCK_TEX.equals(textureSheet)) {
-      RenderUtil.bindTexture(textureSheet);
+    if (!textureSheet.equals(currTex)) {
       Tessellator tes = Tessellator.instance;
       tes.draw();
-
+      ForgeHooksClient.unbindTexture();
+      ForgeHooksClient.bindTexture(textureSheet, 0);
+      tes = Tessellator.instance;
       tes.startDrawingQuads();
-      tes.setColorRGBA_F(selfIllum, selfIllum,
-          selfIllum, 1f);
       changedTexture = true;
     }
 
+    Tessellator.instance.setColorRGBA_F(selfIllum, selfIllum, selfIllum, 1f);
     BoundingBox bbb = component.bound;
     for (ForgeDirection face : ForgeDirection.VALID_DIRECTIONS) {
       if (face != component.dir && face != component.dir.getOpposite()) {
@@ -124,37 +125,44 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
     if (changedTexture) {
       Tessellator tes = Tessellator.instance;
       tes.draw();
-      RenderUtil.bindBlockTexture();
+      ForgeHooksClient.unbindTexture();
+      ForgeHooksClient.bindTexture(currTex, 0);
+      tes = Tessellator.instance;
       tes.startDrawingQuads();
     }
   }
 
   @Override
-  protected void renderTransmission(int index, CollidableComponent component, IConduit conduit, float selfIllum) {
+  protected void renderTransmission(String currTex, int index, CollidableComponent component, IConduit conduit, float selfIllum) {
     float minU = TextureUtil.getMinU(index);
     float minV = TextureUtil.getMinV(index);
     float maxU = TextureUtil.getMaxU(index);
     float maxV = TextureUtil.getMaxV(index);
     String textureSheet = ((ILiquidConduit) conduit).getTextureSheetForLiquid();
+
     boolean changedTexture = false;
-    if (!RenderUtil.BLOCK_TEX.equals(textureSheet)) {
-      RenderUtil.bindTexture(textureSheet);
+    if (!textureSheet.equals(currTex)) {
       Tessellator tes = Tessellator.instance;
       tes.draw();
-
+      ForgeHooksClient.unbindTexture();
+      ForgeHooksClient.bindTexture(textureSheet, 0);
+      tes = Tessellator.instance;
       tes.startDrawingQuads();
-      tes.setColorRGBA_F(selfIllum, selfIllum,
-          selfIllum, 0.75f);
       changedTexture = true;
     }
+
+    Tessellator.instance.setColorRGBA_F(selfIllum, selfIllum, selfIllum, 0.75f);
     BoundingBox[] cubes = toCubes(component.bound);
     for (BoundingBox cube : cubes) {
       drawSection(cube, minU, maxU, minV, maxV, component.dir, true);
     }
+
     if (changedTexture) {
-      RenderUtil.bindBlockTexture();
       Tessellator tes = Tessellator.instance;
       tes.draw();
+      ForgeHooksClient.unbindTexture();
+      ForgeHooksClient.bindTexture(currTex, 0);
+      tes = Tessellator.instance;
       tes.startDrawingQuads();
     }
   }

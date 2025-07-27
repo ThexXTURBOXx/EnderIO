@@ -1,8 +1,10 @@
 package crazypants.enderio.machine.painter;
 
+import crazypants.enderio.compat.IDynTexBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
@@ -21,37 +23,44 @@ public class PaintedItemRenderer implements IItemRenderer {
 
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-
     if (data != null && data.length > 0) {
-      if (type == ItemRenderType.EQUIPPED) {
-        renderEquipped(item, (RenderBlocks) data[0]);
-      } else {
-        renderToInventory(item, (RenderBlocks) data[0]);
-      }
-    }
+      Block paintedBlock = Block.blocksList[item.itemID];
 
+      if (paintedBlock instanceof IDynTexBlock) ((IDynTexBlock) paintedBlock).setOriginalRenderType();
+
+      if (type == ItemRenderType.EQUIPPED) {
+        renderEquipped(paintedBlock, item, (RenderBlocks) data[0]);
+      } else {
+        renderToInventory(paintedBlock, item, (RenderBlocks) data[0]);
+      }
+
+      if (paintedBlock instanceof IDynTexBlock) ((IDynTexBlock) paintedBlock).setDynRenderType();
+    }
   }
 
-  public void renderEquipped(ItemStack item, RenderBlocks renderBlocks) {
+  public void renderEquipped(Block paintedBlock, ItemStack item, RenderBlocks renderBlocks) {
     Block block = PainterUtil.getSourceBlock(item);
+    int meta = PainterUtil.getSourceBlockMetadata(item);
     if (block != null) {
-      renderBlocks.setOverrideBlockTexture(block.getBlockTextureFromSideAndMetadata(2, item.getItemDamage()));
+      ForgeHooksClient.bindTexture(block.getTextureFile(), 0);
+      renderBlocks.setOverrideBlockTexture(block.getBlockTextureFromSideAndMetadata(2, meta));
     }
 
     GL11.glPushMatrix();
     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-    renderBlocks.renderBlockAsItem(Block.blocksList[item.itemID],
-        item.getItemDamage(), 1.0f);
+    renderBlocks.renderBlockAsItem(paintedBlock, meta, 1.0f);
     GL11.glPopMatrix();
     renderBlocks.clearOverrideBlockTexture();
   }
 
-  public void renderToInventory(ItemStack item, RenderBlocks renderBlocks) {
+  public void renderToInventory(Block paintedBlock, ItemStack item, RenderBlocks renderBlocks) {
     Block block = PainterUtil.getSourceBlock(item);
+    int meta = PainterUtil.getSourceBlockMetadata(item);
     if (block != null) {
-      renderBlocks.setOverrideBlockTexture(block.getBlockTextureFromSideAndMetadata(2, item.getItemDamage()));
+      ForgeHooksClient.bindTexture(block.getTextureFile(), 0);
+      renderBlocks.setOverrideBlockTexture(block.getBlockTextureFromSideAndMetadata(2, meta));
     }
-    renderBlocks.renderBlockAsItem(Block.blocksList[item.itemID], item.getItemDamage(), 1.0f);
+    renderBlocks.renderBlockAsItem(paintedBlock, meta, 1.0f);
     renderBlocks.clearOverrideBlockTexture();
   }
 

@@ -1,7 +1,6 @@
 package crazypants.enderio.conduit.liquid;
 
 import crazypants.enderio.compat.AtlasResolver;
-import crazypants.render.RenderUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,10 +35,16 @@ import crazypants.util.BlockCoord;
 
 public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
 
+  static final Map<String, String> ICON_FILES = new HashMap<String, String>();
   static final Map<String, Integer> ICONS = new HashMap<String, Integer>();
 
   @SideOnly(Side.CLIENT)
   public static void initIcons() {
+    ICON_FILES.put(ICON_KEY, AtlasResolver.getTextureFile(ICON_KEY));
+    ICON_FILES.put(ICON_EMPTY_KEY, AtlasResolver.getTextureFile(ICON_EMPTY_KEY));
+    ICON_FILES.put(ICON_CORE_KEY, AtlasResolver.getTextureFile(ICON_CORE_KEY));
+    ICON_FILES.put(ICON_EXTRACT_KEY, AtlasResolver.getTextureFile(ICON_EXTRACT_KEY));
+    ICON_FILES.put(ICON_EMPTY_EXTRACT_KEY, AtlasResolver.getTextureFile(ICON_EMPTY_EXTRACT_KEY));
     ICONS.put(ICON_KEY, AtlasResolver.getLocationIndex(ICON_KEY));
     ICONS.put(ICON_EMPTY_KEY, AtlasResolver.getLocationIndex(ICON_EMPTY_KEY));
     ICONS.put(ICON_CORE_KEY, AtlasResolver.getLocationIndex(ICON_CORE_KEY));
@@ -568,11 +573,16 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
 
   @Override
   public String getTextureFileForState(CollidableComponent component) {
-    if(active && tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
-       tank.getLiquid().asItemStack().getItem() != null) {
-      return tank.getLiquid().asItemStack().getItem().getTextureFile();
+    if(component.dir == ForgeDirection.UNKNOWN) {
+      return ICON_FILES.get(ICON_CORE_KEY);
     }
-    return RenderUtil.BLOCK_TEX;
+    if(isExtractingFromDir(component.dir)) {
+      return ICON_FILES.get(getFluidType() == null ? ICON_EMPTY_EXTRACT_KEY : ICON_EXTRACT_KEY);
+    }
+    if(getFluidType() == null) {
+      return ICON_FILES.get(ICON_EMPTY_KEY);
+    }
+    return ICON_FILES.get(ICON_KEY);
   }
 
   @Override

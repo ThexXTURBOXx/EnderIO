@@ -190,8 +190,6 @@ public class RenderUtil {
       }
     }
 
-    BlockCoord bc = new BlockCoord(x, y, z);
-
     List<ForgeDirection> edges;
     if (forceAllEdges) {
       edges = RenderUtil.getEdgesForFace(face);

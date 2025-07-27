@@ -1,6 +1,13 @@
 package crazypants.enderio.machine.painter;
 
 import crazypants.enderio.compat.AtlasResolver;
+import crazypants.enderio.compat.DynTexBlockInWorldRenderer;
+import crazypants.enderio.compat.IDynTexBlock;
+import crazypants.enderio.crafting.IRecipeInput;
+import crazypants.enderio.crafting.IRecipeOutput;
+import crazypants.enderio.crafting.impl.RecipeInputClass;
+import crazypants.enderio.crafting.impl.RecipeOutput;
+import crazypants.util.Util;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +35,7 @@ import crazypants.enderio.crafting.impl.EnderIoRecipe;
 import crazypants.enderio.machine.MachineRecipeInput;
 import crazypants.enderio.machine.MachineRecipeRegistry;
 
-public class BlockCustomFence extends BlockFence {
+public class BlockCustomFence extends BlockFence implements IDynTexBlock {
 
   public static BlockCustomFence create() {
     BlockCustomFence result = new BlockCustomFence();
@@ -58,7 +65,7 @@ public class BlockCustomFence extends BlockFence {
   }
 
   public static ItemStack createItemStackForSourceBlock(int id, int damage) {
-    ItemStack result = new ItemStack(ModObject.blockCustomFence.id, 1, damage);
+    ItemStack result = new ItemStack(ModObject.blockCustomFence.id, 1, 0);
     PainterUtil.setSourceBlock(result, id, damage);
     return result;
   }
@@ -167,16 +174,43 @@ public class BlockCustomFence extends BlockFence {
     return super.canConnectFenceTo(par1IBlockAccess, par2, par3, par4);
   }
 
+  private int renderType = DynTexBlockInWorldRenderer.ID;
+
+  @Override
+  public int getRenderType() {
+    return renderType;
+  }
+
+  @Override
+  public void setOriginalRenderType() {
+    renderType = super.getRenderType();
+  }
+
+  @Override
+  public void setDynRenderType() {
+    renderType = DynTexBlockInWorldRenderer.ID;
+  }
+
+  @Override
+  public String getTextureFile(IBlockAccess world, int x, int y, int z, int blockSide) {
+    TileEntity te = world.getBlockTileEntity(x, y, z);
+    if (te instanceof TileEntityCustomBlock) {
+      TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
+      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length && blocksList[tef.getSourceBlockId()] != null) {
+        return blocksList[tef.getSourceBlockId()].getTextureFile();
+      }
+    }
+    return blocksList[Block.anvil.blockID].getTextureFile();
+  }
+
   @Override
   public int getBlockTexture(IBlockAccess world, int x, int y, int z, int blockSide) {
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileEntityCustomBlock) {
       TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
-      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length) {
+      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length && blocksList[tef.getSourceBlockId()] != null) {
         return blocksList[tef.getSourceBlockId()].getBlockTextureFromSideAndMetadata(blockSide, tef.getSourceBlockMetadata());
       }
-    } else {
-      System.out.println("BlockCustFence: No tile entity.");
     }
     return blocksList[Block.anvil.blockID].getBlockTexture(world, x, y, z, blockSide);
   }
@@ -256,22 +290,34 @@ public class BlockCustomFence extends BlockFence {
   public static final class PainterTemplate extends BasicPainterTemplate {
 
     public PainterTemplate() {
-      super(Block.fence.blockID/* , Block.netherFence.blockID */);
     }
 
     @Override
     public ItemStack[] getCompletedResult(float chance, MachineRecipeInput... inputs) {
       ItemStack paintSource = MachineRecipeInput.getInputForSlot(1, inputs);
+      if (paintSource == null) {
+        return new ItemStack[0];
+      }
       return new ItemStack[] { createItemStackForSourceBlock(paintSource.itemID, paintSource.getItemDamage()) };
     }
 
     @Override
-    public List<IEnderIoRecipe> getAllRecipes() {
-      IEnderIoRecipe recipe = new EnderIoRecipe(IEnderIoRecipe.PAINTER_ID, DEFAULT_ENERGY_PER_TASK, new ItemStack(Block.fence), new ItemStack(
-          ModObject.blockCustomFence.actualId, 1, 0));
-      return Collections.singletonList(recipe);
+    public boolean isValidTarget(ItemStack target) {
+      if (target == null) {
+        return false;
+      }
+      Block blk = Util.getBlockFromItemId(target.itemID);
+      return blk instanceof BlockFence;
     }
 
+    @Override
+    public List<IEnderIoRecipe> getAllRecipes() {
+      IRecipeInput input = new RecipeInputClass<BlockFence>(new ItemStack(Block.fence), BlockFence.class);
+      IRecipeOutput output = new RecipeOutput(new ItemStack(ModObject.blockCustomFence.actualId, 1, 0));
+
+      IEnderIoRecipe recipe = new EnderIoRecipe(getMachineName(), DEFAULT_ENERGY_PER_TASK, input, output);
+      return Collections.singletonList(recipe);
+    }
   }
 
 }

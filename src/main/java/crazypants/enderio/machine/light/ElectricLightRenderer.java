@@ -1,5 +1,6 @@
 package crazypants.enderio.machine.light;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import java.util.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -12,6 +13,13 @@ import crazypants.render.CubeRenderer;
 import crazypants.render.RenderUtil;
 
 public class ElectricLightRenderer implements ISimpleBlockRenderingHandler {
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static final ElectricLightRenderer INSTANCE = new ElectricLightRenderer();
+
+  public static void init() {
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
 
   @Override
   public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
@@ -70,7 +78,7 @@ public class ElectricLightRenderer implements ISimpleBlockRenderingHandler {
 
   @Override
   public int getRenderId() {
-    return BlockElectricLight.renderId;
+    return ID;
   }
 
 }
