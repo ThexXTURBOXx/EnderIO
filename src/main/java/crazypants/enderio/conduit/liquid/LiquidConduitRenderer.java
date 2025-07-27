@@ -3,6 +3,8 @@ package crazypants.enderio.conduit.liquid;
 import static crazypants.render.CubeRenderer.setupVertices;
 
 import crazypants.enderio.compat.TextureUtil;
+import crazypants.enderio.conduit.geom.ConduitConnectorType;
+import crazypants.enderio.conduit.geom.ConduitGeometryUtil;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -134,11 +136,15 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
 
   @Override
   protected void renderTransmission(String currTex, int index, CollidableComponent component, IConduit conduit, float selfIllum) {
+    if (!(conduit instanceof ILiquidConduit)) return;
+    LiquidStack stack = ((ILiquidConduit) conduit).getFluidType();
+    if (stack == null) return;
+    String textureSheet = getTextureSheetForLiquid(stack);
+
     float minU = TextureUtil.getMinU(index);
     float minV = TextureUtil.getMinV(index);
     float maxU = TextureUtil.getMaxU(index);
     float maxV = TextureUtil.getMaxV(index);
-    String textureSheet = ((ILiquidConduit) conduit).getTextureSheetForLiquid();
 
     boolean changedTexture = false;
     if (!textureSheet.equals(currTex)) {
@@ -151,8 +157,15 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
       changedTexture = true;
     }
 
+    BoundingBox zfFix = component.bound;
+    if (component.dir != null && component.dir.offsetY == 0)
+      zfFix = new BoundingBox(
+              zfFix.minX, zfFix.minY + 0.00001, zfFix.minZ,
+              zfFix.maxX, zfFix.maxY, zfFix.maxZ
+      );
+
     Tessellator.instance.setColorRGBA_F(selfIllum, selfIllum, selfIllum, 0.75f);
-    BoundingBox[] cubes = toCubes(component.bound);
+    BoundingBox[] cubes = toCubes(zfFix);
     for (BoundingBox cube : cubes) {
       drawSection(cube, minU, maxU, minV, maxV, component.dir, true);
     }

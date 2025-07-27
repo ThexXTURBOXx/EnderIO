@@ -399,7 +399,6 @@ public abstract class AbstractConduit implements IConduit {
     }
 
     List<CollidableComponent> result = new ArrayList<CollidableComponent>();
-    CollidableCache cc = CollidableCache.instance;
 
     for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
       Collection<CollidableComponent> col = getCollidables(dir);

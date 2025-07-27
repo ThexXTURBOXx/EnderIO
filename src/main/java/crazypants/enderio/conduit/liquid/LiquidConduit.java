@@ -265,7 +265,6 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
     return getConectionMode(dir) == ConnectionMode.INPUT;
   }
 
-  @Override
   public void setExtractingFromDir(ForgeDirection dir, boolean extracting) {
     if(isExtractingFromDir(dir) == extracting) {
       return;
@@ -598,15 +597,6 @@ public class LiquidConduit extends AbstractConduit implements ILiquidConduit {
   @Override
   public String getTransmitionTextureFileForState(CollidableComponent component) {
     if(active && tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
-       tank.getLiquid().asItemStack().getItem() != null) {
-      return tank.getLiquid().asItemStack().getItem().getTextureFile();
-    }
-    return null;
-  }
-
-  @Override
-  public String getTextureSheetForLiquid() {
-    if(tank.getLiquid() != null && tank.getLiquid().asItemStack() != null &&
        tank.getLiquid().asItemStack().getItem() != null) {
       return tank.getLiquid().asItemStack().getItem().getTextureFile();
     }
