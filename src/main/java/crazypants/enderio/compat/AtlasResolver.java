@@ -1,6 +1,7 @@
 package crazypants.enderio.compat;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import crazypants.render.RenderUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -58,12 +59,14 @@ public class AtlasResolver {
 
     public static int getLocationIndex(String location) {
         String[] split = location.split(":", 2);
-        return get(split[0]).getIndexInAtlas((split.length < 2 ? location : split[1]));
+        AtlasResolver resolver = get(split[0]);
+        return resolver == null ? 0 : resolver.getIndexInAtlas((split.length < 2 ? location : split[1]));
     }
 
     public static String getTextureFile(String location) {
         String[] split = location.split(":", 2);
-        return get(split[0]).getTextureFile();
+        AtlasResolver resolver = get(split[0]);
+        return resolver == null ? RenderUtil.BLOCK_TEX : resolver.getTextureFile();
     }
 
     public String getDomain() {

@@ -80,7 +80,7 @@ public class BlockConduitBundle extends BlockContainer {
       }
     } else if (CollidableComponent.currentMop == target) {
       CollidableComponent cc = CollidableComponent.currentComponent;
-      IConduit con = cb.getConduit(cc.conduitType);
+      IConduit con = cc == null ? null : cb.getConduit(cc.conduitType);
       if (con != null) {
         tex = con.getTextureForState(cc);
       }
