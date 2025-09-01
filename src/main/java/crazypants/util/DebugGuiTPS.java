@@ -64,7 +64,7 @@ public class DebugGuiTPS extends JFrame {
         contentPane.add(l);
       }
     }
-    revalidate();
+    // TODO PORT JAVA 7+ ONLY: revalidate();
     repaint();
 
   }

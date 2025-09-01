@@ -1,0 +1,7 @@
+[versions]
+shadow = '8.3.8'
+unimined = '1.4.1'
+
+[plugins]
+shadow = { id = 'com.gradleup.shadow', version.ref = 'shadow' }
+unimined = { id = 'xyz.wagyourtail.unimined', version.ref = 'unimined' }

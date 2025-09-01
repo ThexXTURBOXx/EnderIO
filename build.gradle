@@ -1,0 +1,131 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import xyz.wagyourtail.unimined.mapping.formats.at.LegacyATReader
+
+import java.nio.file.Files
+import java.nio.file.LinkOption
+
+plugins {
+    id 'java'
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.unimined)
+}
+
+group = project.mod_group
+version = project.mod_version
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(6)
+    }
+}
+
+repositories {
+    flatDir {
+        name = 'lib'
+        dirs('lib')
+    }
+    unimined.fabricMaven
+    unimined.legacyFabricMaven
+    unimined.minecraftForgeMaven
+    unimined.wagYourMaven('releases')
+}
+
+configurations {
+    runtimeOnly.extendsFrom(shadow)
+}
+
+LegacyATReader.leinient = true // Forge's AT just ignores invalid entries
+
+unimined.minecraft {
+    version project.mc_version
+
+    minecraftForge {
+        loader project.forge_version
+    }
+
+    mappings {
+        stubs(["official", "searge"]) {
+            c("BaseMod", "net/minecraft/src/BaseMod")
+            c("ModLoader", "net/minecraft/src/ModLoader")
+        }
+    }
+
+    defaultRemapJar = false
+    remap(tasks.shadowJar)
+}
+
+dependencies {
+    shadow(":cglib-nodep-2.2.3")
+    implementation(":neiDummyInterface")
+}
+
+tasks.jar {
+    finalizedBy("shadowJar")
+}
+
+tasks.shadowJar {
+    finalizedBy("remapShadowJar")
+    configurations = [project.configurations.shadow]
+}
+
+sourceSets.configureEach { ss ->
+    def processSource = tasks.register("process${ss.name.capitalize()}Source", Sync) {
+        from ss.java
+        inputs.property 'mod_version', project.mod_version
+        inputs.property 'mc_version', project.mc_version
+        filter(ReplaceTokens, tokens: [
+                MOD_VERSION: project.mod_version,
+                MC_VERSION : project.mc_version
+        ])
+        into layout.buildDirectory.dir("src/${ss.name}")
+    }
+
+    tasks.named(ss.compileJavaTaskName) {
+        source = processSource.get()
+        dependsOn processSource
+    }
+
+    tasks.named(ss.processResourcesTaskName) {
+        inputs.property("mod_version", mod_version)
+        inputs.property("mc_version", mc_version)
+        filesMatching("mcmod.info") {
+            expand(inputs.properties)
+        }
+    }
+}
+
+// Create main symlink for easier symlink access
+tasks.register('symlinkJars') {
+    dependsOn 'build'
+
+    doLast {
+        File symlinkDir = layout.buildDirectory.dir("libs").get().asFile;
+        File[] files = symlinkDir.listFiles({ f ->
+            f.isFile() && !Files.isSymbolicLink(f.toPath()) && f.name.endsWith(".jar")
+        } as FileFilter)
+
+        for (File file : files) {
+            java.nio.file.Path symlinkPath = symlinkDir.toPath().resolve(file.getName().replace("-${mod_version}", "")).toAbsolutePath()
+            java.nio.file.Path targetPath = file.toPath().toAbsolutePath()
+
+            if (Files.exists(symlinkPath, LinkOption.NOFOLLOW_LINKS)) {
+                java.nio.file.Path currentLink = Files.readSymbolicLink(symlinkPath)
+                if (currentLink == targetPath) continue
+
+                Files.delete(symlinkPath)
+            }
+
+            try {
+                Files.createSymbolicLink(symlinkPath, targetPath)
+            } catch (IOException e) {
+                throw new GradleException("Error creating generic symlink", e)
+            }
+        }
+    }
+}
+build.finalizedBy symlinkJars
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-Xlint:unchecked"
+    options.deprecation = true
+}
