@@ -10,8 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import crazypants.enderio.conduit.BlockConduitBundle;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.enderio.conduit.TileConduitBundle;
 import crazypants.enderio.conduit.facade.FacadeRenderer;
@@ -31,16 +29,13 @@ import crazypants.enderio.enderface.TileEnderIO;
 import crazypants.enderio.machine.AbstractMachineBlock;
 import crazypants.enderio.machine.hypercube.HyperCubeRenderer;
 import crazypants.enderio.machine.hypercube.TileHyperCube;
-import crazypants.enderio.machine.light.BlockElectricLight;
 import crazypants.enderio.machine.light.ElectricLightRenderer;
-import crazypants.enderio.machine.painter.BlockCustomFenceGate;
 import crazypants.enderio.machine.painter.BlockCustomFenceGateRenderer;
 import crazypants.enderio.machine.painter.PaintedItemRenderer;
 import crazypants.enderio.machine.power.CapacitorBankRenderer;
 import crazypants.enderio.machine.power.TileCapacitorBank;
 import crazypants.enderio.machine.reservoir.ReservoirRenderer;
 import crazypants.enderio.machine.reservoir.TileReservoir;
-import crazypants.enderio.material.BlockFusedQuartz;
 import crazypants.enderio.material.FusedQuartzFrameRenderer;
 import crazypants.enderio.material.FusedQuartzRenderer;
 import crazypants.enderio.material.MachinePartRenderer;
@@ -88,19 +83,13 @@ public class ClientProxy extends CommonProxy {
 
     // Renderers
 
-    ConduitBundleRenderer cbr = new ConduitBundleRenderer((float) Config.conduitScale);
-    BlockConduitBundle.rendererId = RenderingRegistry.getNextAvailableRenderId();
-    RenderingRegistry.registerBlockHandler(cbr);
+    ConduitBundleRenderer.init((float) Config.conduitScale);
 
-    BlockCustomFenceGateRenderer bcfgr = new BlockCustomFenceGateRenderer();
-    BlockCustomFenceGate.renderId = RenderingRegistry.getNextAvailableRenderId();
-    RenderingRegistry.registerBlockHandler(bcfgr);
+    BlockCustomFenceGateRenderer.init();
 
-    BlockFusedQuartz.renderId = RenderingRegistry.getNextAvailableRenderId();
-    RenderingRegistry.registerBlockHandler(new FusedQuartzRenderer());
+    FusedQuartzRenderer.init();
 
-    BlockElectricLight.renderId = RenderingRegistry.getNextAvailableRenderId();
-    RenderingRegistry.registerBlockHandler(new ElectricLightRenderer());
+    ElectricLightRenderer.init();
 
     CapacitorBankRenderer capr = new CapacitorBankRenderer();
     ClientRegistry.bindTileEntitySpecialRenderer(TileCapacitorBank.class, capr);
@@ -125,7 +114,7 @@ public class ClientProxy extends CommonProxy {
 
     MinecraftForgeClient.registerItemRenderer(EnderIO.itemConduitFacade.itemID, new FacadeRenderer());
 
-    ClientRegistry.bindTileEntitySpecialRenderer(TileConduitBundle.class, cbr);
+    ClientRegistry.bindTileEntitySpecialRenderer(TileConduitBundle.class, ConduitBundleRenderer.INSTANCE);
     conduitRenderers.add(RedstoneSwitchRenderer.getInstance());
     conduitRenderers.add(new LiquidConduitRenderer());
     conduitRenderers.add(new PowerConduitRenderer());

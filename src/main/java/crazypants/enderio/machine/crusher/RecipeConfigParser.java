@@ -282,7 +282,7 @@ public class RecipeConfigParser extends DefaultHandler {
 
   private void addOutputStack(Attributes attributes) {
     ItemStack stack = getItemStack(attributes);
-    if(stack == null) {
+    if(stack == null || stack.getItemDamage() < 0) {
       return;
     }
     recipe.addOutput(new CrusherOutput(stack, getFloatValue(AT_CHANCE, attributes, 1f)));
@@ -364,7 +364,7 @@ public class RecipeConfigParser extends DefaultHandler {
       return null;
     }
 
-    int itemMeta = getIntValue(AT_ITEM_META, attributes, 0);
+    int itemMeta = getIntOrWildcardValue(AT_ITEM_META, attributes, "*", -1, 0);
     int stackSize = getIntValue(AT_NUMBER, attributes, 1);
 
     return new ItemStack(itemID, stackSize, itemMeta);
@@ -384,6 +384,17 @@ public class RecipeConfigParser extends DefaultHandler {
       return Integer.parseInt(getStringValue(qName, attributes, def + ""));
     } catch (Exception e) {
       Log.warn(LP + "Could not parse a valid int for attribute " + qName + " with value " + getStringValue(qName, attributes, null));
+      return def;
+    }
+  }
+
+  private int getIntOrWildcardValue(String qName, Attributes attributes, String wildcard, int wildcardRet, int def) {
+    try {
+      String value = getStringValue(qName, attributes, def + "");
+      if (value == null ? wildcard == null : value.equals(wildcard)) return wildcardRet;
+      return Integer.parseInt(value);
+    } catch (Exception e) {
+      Log.warn(LP + "Could not parse a valid int/wildcard for attribute " + qName + " with value " + getStringValue(qName, attributes, null));
       return def;
     }
   }

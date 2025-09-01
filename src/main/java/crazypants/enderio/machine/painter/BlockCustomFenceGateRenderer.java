@@ -6,9 +6,17 @@ import net.minecraft.block.BlockFenceGate;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import crazypants.enderio.ModObject;
 
 public class BlockCustomFenceGateRenderer implements ISimpleBlockRenderingHandler {
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static final BlockCustomFenceGateRenderer INSTANCE = new BlockCustomFenceGateRenderer();
+
+  public static void init() {
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
 
   @Override
   public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
@@ -22,7 +30,7 @@ public class BlockCustomFenceGateRenderer implements ISimpleBlockRenderingHandle
 
   @Override
   public int getRenderId() {
-    return BlockCustomFenceGate.renderId;
+    return ID;
   }
 
   @Override

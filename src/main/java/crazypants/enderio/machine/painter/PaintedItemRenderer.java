@@ -23,35 +23,37 @@ public class PaintedItemRenderer implements IItemRenderer {
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
     if (data != null && data.length > 0) {
+      Block paintedBlock = Block.blocksList[item.itemID];
       if (type == ItemRenderType.EQUIPPED_FIRST_PERSON || type == ItemRenderType.EQUIPPED) {
-        renderEquipped(item, (RenderBlocks) data[0]);
+        renderEquipped(paintedBlock, item, (RenderBlocks) data[0]);
       } else {
-        renderToInventory(item, (RenderBlocks) data[0]);
+        renderToInventory(paintedBlock, item, (RenderBlocks) data[0]);
       }
     }
 
   }
 
-  public void renderEquipped(ItemStack item, RenderBlocks renderBlocks) {
+  public void renderEquipped(Block paintedBlock, ItemStack item, RenderBlocks renderBlocks) {
     Block block = PainterUtil.getSourceBlock(item);
+    int meta = PainterUtil.getSourceBlockMetadata(item);
     if (block != null) {
-      renderBlocks.setOverrideBlockTexture(renderBlocks.getBlockIconFromSideAndMetadata(block, 2, item.getItemDamage()));
+      renderBlocks.setOverrideBlockTexture(renderBlocks.getBlockIconFromSideAndMetadata(block, 2, meta));
     }
 
     GL11.glPushMatrix();
     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-    renderBlocks.renderBlockAsItem(Block.blocksList[item.itemID],
-        item.getItemDamage(), 1.0f);
+    renderBlocks.renderBlockAsItem(paintedBlock, meta, 1.0f);
     GL11.glPopMatrix();
     renderBlocks.clearOverrideBlockTexture();
   }
 
-  public void renderToInventory(ItemStack item, RenderBlocks renderBlocks) {
+  public void renderToInventory(Block paintedBlock, ItemStack item, RenderBlocks renderBlocks) {
     Block block = PainterUtil.getSourceBlock(item);
+    int meta = PainterUtil.getSourceBlockMetadata(item);
     if (block != null) {
-      renderBlocks.setOverrideBlockTexture(renderBlocks.getBlockIconFromSideAndMetadata(block, 2, item.getItemDamage()));
+      renderBlocks.setOverrideBlockTexture(renderBlocks.getBlockIconFromSideAndMetadata(block, 2, meta));
     }
-    renderBlocks.renderBlockAsItem(Block.blocksList[item.itemID], item.getItemDamage(), 1.0f);
+    renderBlocks.renderBlockAsItem(paintedBlock, meta, 1.0f);
     renderBlocks.clearOverrideBlockTexture();
   }
 

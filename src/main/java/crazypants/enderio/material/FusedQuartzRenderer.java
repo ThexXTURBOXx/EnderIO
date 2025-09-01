@@ -9,12 +9,20 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.machine.painter.PainterUtil;
 import crazypants.enderio.machine.painter.TileEntityCustomBlock;
 import crazypants.render.RenderUtil;
 
 public class FusedQuartzRenderer implements ISimpleBlockRenderingHandler {
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static final FusedQuartzRenderer INSTANCE = new FusedQuartzRenderer();
+
+  public static void init() {
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
 
   static int renderPass;
 
@@ -32,7 +40,7 @@ public class FusedQuartzRenderer implements ISimpleBlockRenderingHandler {
 
   @Override
   public int getRenderId() {
-    return BlockFusedQuartz.renderId;
+    return ID;
   }
 
   @Override

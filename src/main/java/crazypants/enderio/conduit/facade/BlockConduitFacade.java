@@ -146,7 +146,7 @@ public class BlockConduitFacade extends Block {
     return new Mimic(id, meta);
   }
 
-  class Mimic {
+  static class Mimic {
     int id;
     int meta;
     Block block;

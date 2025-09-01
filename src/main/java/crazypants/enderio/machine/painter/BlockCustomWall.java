@@ -25,9 +25,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.ModObject;
 import crazypants.enderio.crafting.IEnderIoRecipe;
+import crazypants.enderio.crafting.IRecipeInput;
+import crazypants.enderio.crafting.IRecipeOutput;
 import crazypants.enderio.crafting.impl.EnderIoRecipe;
+import crazypants.enderio.crafting.impl.RecipeInputClass;
+import crazypants.enderio.crafting.impl.RecipeOutput;
 import crazypants.enderio.machine.MachineRecipeInput;
 import crazypants.enderio.machine.MachineRecipeRegistry;
+import crazypants.util.Util;
 
 public class BlockCustomWall extends BlockWall implements ITileEntityProvider {
 
@@ -55,7 +60,7 @@ public class BlockCustomWall extends BlockWall implements ITileEntityProvider {
   }
 
   public static ItemStack createItemStackForSourceBlock(int id, int damage) {
-    ItemStack result = new ItemStack(ModObject.blockCustomWall.id, 1, damage);
+    ItemStack result = new ItemStack(ModObject.blockCustomWall.id, 1, 0);
     PainterUtil.setSourceBlock(result, id, damage);
     return result;
   }
@@ -242,19 +247,32 @@ public class BlockCustomWall extends BlockWall implements ITileEntityProvider {
   public static final class PainterTemplate extends BasicPainterTemplate {
 
     public PainterTemplate() {
-      super(Block.cobblestoneWall.blockID);
     }
 
     @Override
     public ItemStack[] getCompletedResult(float chance, MachineRecipeInput... inputs) {
       ItemStack paintSource = MachineRecipeInput.getInputForSlot(1, inputs);
+      if (paintSource == null) {
+        return new ItemStack[0];
+      }
       return new ItemStack[] { createItemStackForSourceBlock(paintSource.itemID, paintSource.getItemDamage()) };
     }
 
     @Override
+    public boolean isValidTarget(ItemStack target) {
+      if (target == null) {
+        return false;
+      }
+      Block blk = Util.getBlockFromItemId(target.itemID);
+      return blk instanceof BlockWall;
+    }
+
+    @Override
     public List<IEnderIoRecipe> getAllRecipes() {
-      IEnderIoRecipe recipe = new EnderIoRecipe(IEnderIoRecipe.PAINTER_ID, DEFAULT_ENERGY_PER_TASK, new ItemStack(Block.cobblestoneWall), new ItemStack(
-          ModObject.blockCustomWall.actualId, 1, 0));
+      IRecipeInput input = new RecipeInputClass<BlockWall>(new ItemStack(Block.cobblestoneWall), BlockWall.class);
+      IRecipeOutput output = new RecipeOutput(new ItemStack(ModObject.blockCustomWall.actualId, 1, 0));
+
+      IEnderIoRecipe recipe = new EnderIoRecipe(getMachineName(), DEFAULT_ENERGY_PER_TASK, input, output);
       return Collections.singletonList(recipe);
     }
   }

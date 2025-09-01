@@ -59,7 +59,6 @@ public abstract class AbstractMachineBlock<T extends AbstractMachineEntity> exte
     return REDSTONE_CONTROL_ICONS[mode.ordinal()];
   }
 
-  @SideOnly(Side.CLIENT)
   protected Icon[][] iconBuffer;
 
   protected final Random random;

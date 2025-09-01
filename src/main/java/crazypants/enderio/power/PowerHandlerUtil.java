@@ -26,6 +26,7 @@ public class PowerHandlerUtil {
   }
 
   public static float getStoredEnergyForItem(ItemStack item) {
+    if (item == null) return 0;
     NBTTagCompound tag = item.getTagCompound();
     if(tag == null) {
       return 0;
@@ -34,6 +35,7 @@ public class PowerHandlerUtil {
   }
 
   public static void setStoredEnergyForItem(ItemStack item, float storedEnergy) {
+    if (item == null) return;
     NBTTagCompound tag = item.getTagCompound();
     if(tag == null) {
       tag = new NBTTagCompound();

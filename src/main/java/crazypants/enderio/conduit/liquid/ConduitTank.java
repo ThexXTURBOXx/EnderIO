@@ -150,6 +150,7 @@ public class ConduitTank implements ILiquidTank {
   }
 
   public boolean containsValidLiquid() {
+    if (getFluidAmount() <= 0) return false;
     String name = LiquidDictionary.findLiquidName(fluid);
     return name != null && !name.isEmpty();
   }

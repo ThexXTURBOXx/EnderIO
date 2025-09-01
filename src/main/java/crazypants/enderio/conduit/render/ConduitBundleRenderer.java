@@ -21,9 +21,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.ModObject;
-import crazypants.enderio.conduit.BlockConduitBundle;
 import crazypants.enderio.conduit.ConduitUtil;
 import crazypants.enderio.conduit.IConduit;
 import crazypants.enderio.conduit.IConduitBundle;
@@ -36,9 +36,17 @@ import crazypants.render.RenderUtil;
 
 public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler {
 
-  private Map<ForgeDirection, BoundingBox[]> connectorBounds = new HashMap<ForgeDirection, BoundingBox[]>();
-
   public static final float CONNECTOR_DEPTH = 0.05f;
+
+  public static final int ID = RenderingRegistry.getNextAvailableRenderId();
+  public static ConduitBundleRenderer INSTANCE;
+
+  public static void init(float conduitScale) {
+    INSTANCE = new ConduitBundleRenderer(conduitScale);
+    RenderingRegistry.registerBlockHandler(ID, INSTANCE);
+  }
+
+  private Map<ForgeDirection, BoundingBox[]> connectorBounds = new HashMap<ForgeDirection, BoundingBox[]>();
 
   public ConduitBundleRenderer(float conduitScale) {
     float connectorWidth = 0.25f + (conduitScale * 0.5f);
@@ -227,7 +235,7 @@ public class ConduitBundleRenderer extends TileEntitySpecialRenderer implements 
 
   @Override
   public int getRenderId() {
-    return BlockConduitBundle.rendererId;
+    return ID;
   }
 
 }

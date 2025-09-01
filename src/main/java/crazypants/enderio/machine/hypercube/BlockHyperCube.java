@@ -153,27 +153,29 @@ public class BlockHyperCube extends Block implements ITileEntityProvider, IGuiHa
       tag.setBoolean("channelIsPublic", chan.isPublic());
       if(!chan.isPublic()) {
         tag.setString("channelUser", chan.user);
-      }                    
+      }
     }
   }
-  
+
   private Channel getChannelFromItem(ItemStack itemStack) {
+    if (itemStack == null) return null;
+
     NBTTagCompound tag = itemStack.getTagCompound();
     if(tag == null) {
-      return null;      
+      return null;
     }
-    
+
     String channelName = tag.getString("channelName");
     if(channelName == null || channelName.trim().isEmpty()) {
       return null;
     }
-    
+
     String user = null;
     if(!tag.getBoolean("channelIsPublic")) {
       user = tag.getString("channelUser");
     }
     return new Channel(channelName, user);
-    
+
   }
 
   @Override

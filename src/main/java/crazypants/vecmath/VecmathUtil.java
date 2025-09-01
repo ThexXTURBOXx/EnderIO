@@ -6,7 +6,7 @@ public class VecmathUtil {
 
   /**
    * Returns the distance from a point to a plane.
-   * 
+   *
    * @param plane
    *          the plane.
    * @param point
@@ -43,7 +43,7 @@ public class VecmathUtil {
    * placing the result into r. The plane equation can be summarised as the
    * normal vector of the plane (A,B,C) and the distance to the plane from the
    * origin (D).
-   * 
+   *
    * @param a
    *          vector a.
    * @param b
@@ -80,7 +80,7 @@ public class VecmathUtil {
 
   /**
    * Projects the point onto the plane.
-   * 
+   *
    * @param plane
    *          the plane.
    * @param point
@@ -98,7 +98,7 @@ public class VecmathUtil {
 
   /**
    * This method calculates the intersection between a line and a plane.
-   * 
+   *
    * @param plane
    *          the plane (x,y,z = normal, w = distance from origin)
    * @param pointInLine
@@ -135,9 +135,7 @@ public class VecmathUtil {
   /**
    * This function computes the ray that goes from the eye, through the
    * specified pixel.
-   * 
-   * @param camera
-   *          the camera.
+   *
    * @param x
    *          the x pixel location (x = 0 is the left most pixel)
    * @param y
@@ -321,7 +319,7 @@ public class VecmathUtil {
 
   /**
    * Creates a perspective projection matrix.
-   * 
+   *
    * @param fovDegrees
    *          The field of view angle in degrees.
    * @param near
@@ -355,7 +353,7 @@ public class VecmathUtil {
 
   /**
    * Creates a projection matrix as per glFrustrum.
-   * 
+   *
    * @param left
    *          coordinate of left clip plane.
    * @param right
@@ -392,7 +390,7 @@ public class VecmathUtil {
 
   /**
    * Sets the orthographic projection matrix.
-   * 
+   *
    * @param left
    *          the left value.
    * @param right
@@ -425,7 +423,7 @@ public class VecmathUtil {
 
   /**
    * Sets the near and far values on an existing perspective projection matrix.
-   * 
+   *
    * @param projMat
    *          the matrix to be modified.
    * @param near
@@ -458,7 +456,7 @@ public class VecmathUtil {
 
   /**
    * Creates a look at matrix.
-   * 
+   *
    * @param eyePos
    *          the position of the eye.
    * @param lookAtPos
@@ -500,7 +498,7 @@ public class VecmathUtil {
 
   /**
    * Pre-multiplies the vector by the matrix.
-   * 
+   *
    * @param v
    *          the vector.
    * @param mat
@@ -524,7 +522,7 @@ public class VecmathUtil {
 
   /**
    * Extracts the s,t,r and q eye planes from the specified matrix.
-   * 
+   *
    * @param matrix
    *          the matrix to extract the planes from.
    * @return the s,t,r and q planes from the specified matrix.
@@ -554,7 +552,7 @@ public class VecmathUtil {
 
   /**
    * Computes the cross product of the two tuples.
-   * 
+   *
    * @param vec1
    *          the first tuple.
    * @param vec2
@@ -570,7 +568,7 @@ public class VecmathUtil {
 
   /**
    * Returns the distance between the two point from and to.
-   * 
+   *
    * @param from
    *          the from point.
    * @param to
@@ -583,7 +581,7 @@ public class VecmathUtil {
 
   /**
    * Returns the distance squared between the two point from and to.
-   * 
+   *
    * @param from
    *          the from point.
    * @param to
@@ -596,7 +594,7 @@ public class VecmathUtil {
 
   /**
    * Extracts the directional vectors from the specified view matrix.
-   * 
+   *
    * @param matrix
    *          the view matrix.
    * @param upVecOut
@@ -623,7 +621,7 @@ public class VecmathUtil {
 
   /**
    * Extracts the up vector from the specified view matrix.
-   * 
+   *
    * @param matrix
    *          the matrix.
    * @return the up vector from the specified view matrix.

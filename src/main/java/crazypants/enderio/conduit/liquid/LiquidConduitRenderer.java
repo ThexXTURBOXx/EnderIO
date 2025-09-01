@@ -61,8 +61,7 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
   }
 
   private void renderFluidOutline(IConduit conduit, CollidableComponent component, LiquidStack fluid, float selfIllum) {
-    // TODO: Should cache these vertices as relatively heavy weight to calc each
-    // frame
+    // TODO: Should cache these vertices as relatively heavy weight to calc each frame
     Icon texture = getTextureForLiquid(fluid);
     String textureSheet = getTextureSheetForLiquid(fluid);
     if (texture == null || textureSheet == null) {
@@ -126,7 +125,11 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
 
   @Override
   protected void renderTransmission(Icon tex, CollidableComponent component, IConduit conduit, float selfIllum) {
-    String textureSheet = ((ILiquidConduit) conduit).getTextureSheetForLiquid();
+    if (!(conduit instanceof ILiquidConduit)) return;
+    LiquidStack stack = ((ILiquidConduit) conduit).getFluidType();
+    if (stack == null) return;
+    String textureSheet = getTextureSheetForLiquid(stack);
+
     boolean changedTexture = false;
     if (!RenderUtil.BLOCK_TEX.equals(textureSheet)) {
       Tessellator tes = Tessellator.instance;
@@ -138,7 +141,15 @@ public class LiquidConduitRenderer extends DefaultConduitRenderer {
           selfIllum, 0.75f);
       changedTexture = true;
     }
-    BoundingBox[] cubes = toCubes(component.bound);
+
+    BoundingBox zfFix = component.bound;
+    if (component.dir != null && component.dir.offsetY == 0)
+      zfFix = new BoundingBox(
+              zfFix.minX, zfFix.minY + 0.00001, zfFix.minZ,
+              zfFix.maxX, zfFix.maxY, zfFix.maxZ
+      );
+
+    BoundingBox[] cubes = toCubes(zfFix);
     for (BoundingBox cube : cubes) {
       drawSection(cube, tex.getMinU(), tex.getMaxU(), tex.getMinV(), tex.getMaxV(), component.dir, true);
     }

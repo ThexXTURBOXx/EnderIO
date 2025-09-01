@@ -46,8 +46,7 @@ public class FusedQuartzFrameRenderer implements IItemRenderer {
 
   private void renderFrame(ItemStack item) {
     GL11.glDisable(GL11.GL_LIGHTING);
-    FusedQuartzRenderer r = new FusedQuartzRenderer();
-    r.renderFrameItem(item);
+    FusedQuartzRenderer.INSTANCE.renderFrameItem(item);
     GL11.glEnable(GL11.GL_LIGHTING);
   }
 

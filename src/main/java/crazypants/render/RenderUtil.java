@@ -91,6 +91,7 @@ public class RenderUtil {
   }
 
   public static void bindTexture(String string) {
+    if (string == null) return;
     engine().bindTexture(string);
   }
 
@@ -193,8 +194,6 @@ public class RenderUtil {
         return;
       }
     }
-
-    BlockCoord bc = new BlockCoord(x, y, z);
 
     List<ForgeDirection> edges;
     if (forceAllEdges) {

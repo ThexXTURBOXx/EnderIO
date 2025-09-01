@@ -106,8 +106,7 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
       }
 
       // We can get an input from the block when:
-      return Block.blocksList[id].canProvidePower() || // The block can provide
-                                                       // power
+      return Block.blocksList[id].canProvidePower() || // The block can provide power
           // Or its getting a strong signal that we are not providing
           gettingStrongPower;
       // ( world.getBlockPowerInput(loc.x, loc.y, loc.z) == 15 &&
@@ -122,8 +121,7 @@ public class RedstoneConduit extends AbstractConduit implements IRedstoneConduit
     for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
       if (canConnectToExternal(dir)) {
         int input = getExternalPowerLevel(dir);
-        if (input > 1) { // need to degrade external signals by one as they
-                         // enter
+        if (input > 1) { // need to degrade external signals by one as they enter
           BlockCoord loc = getLocation().getLocation(dir);
           Signal signal = new Signal(loc.x, loc.y, loc.z, input - 1, SignalColor.RED);
           res.add(signal);

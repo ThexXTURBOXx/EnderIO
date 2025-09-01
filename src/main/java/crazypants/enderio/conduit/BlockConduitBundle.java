@@ -35,6 +35,7 @@ import crazypants.enderio.ModObject;
 import crazypants.enderio.conduit.geom.CollidableComponent;
 import crazypants.enderio.conduit.geom.ConduitConnectorType;
 import crazypants.enderio.conduit.redstone.IRedstoneConduit;
+import crazypants.enderio.conduit.render.ConduitBundleRenderer;
 import crazypants.enderio.machine.painter.PainterUtil;
 import crazypants.render.BoundingBox;
 import crazypants.util.Util;
@@ -48,8 +49,6 @@ public class BlockConduitBundle extends Block implements ITileEntityProvider {
     result.init();
     return result;
   }
-
-  public static int rendererId = -1;
 
   private Icon connectorIcon;
 
@@ -226,7 +225,7 @@ public class BlockConduitBundle extends Block implements ITileEntityProvider {
 
   @Override
   public int getRenderType() {
-    return rendererId;
+    return ConduitBundleRenderer.ID;
   }
 
   @Override

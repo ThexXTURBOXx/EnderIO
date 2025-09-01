@@ -71,7 +71,7 @@ public class BlockCustomSlab extends BlockHalfSlab implements ITileEntityProvide
   }
 
   public static ItemStack createItemStackForSourceBlock(int id, int damage) {
-    ItemStack result = new ItemStack(ModObject.blockCustomSlab.id, 1, damage);
+    ItemStack result = new ItemStack(ModObject.blockCustomSlab.id, 1, 0);
     PainterUtil.setSourceBlock(result, id, damage);
     return result;
   }
@@ -81,7 +81,7 @@ public class BlockCustomSlab extends BlockHalfSlab implements ITileEntityProvide
     TileEntity te = world.getBlockTileEntity(x, y, z);
     if (te instanceof TileEntityCustomBlock) {
       TileEntityCustomBlock tef = (TileEntityCustomBlock) te;
-      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length) {
+      if (tef.getSourceBlockId() > 0 && tef.getSourceBlockId() < Block.blocksList.length && blocksList[tef.getSourceBlockId()] != null) {
         return blocksList[tef.getSourceBlockId()].getIcon(blockSide, tef.getSourceBlockMetadata());
       }
     }
